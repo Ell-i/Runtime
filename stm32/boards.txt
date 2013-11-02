@@ -1,10 +1,5 @@
-# See: http://code.google.com/p/arduino/wiki/Platforms
-
-menu.cpu=Processor  # Is this needed?
-
-##############################################################
-
-build.xxxflags = XXX # See if this works?
+# For more info:
+# https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification
 
 ##############################################################
 
@@ -23,9 +18,10 @@ ellduino.build.f_cpu=48000000L
 ellduino.build.core=arduelli
 ellduino.build.board=STM32F051_ELLDUINO
 ellduino.build.variant=ellduino
+ellduino.build.variant_system_libs=-lstm32
 
-ellduino.build.ldscript=linker_scripts/gcc/flash-discovery.ld
-ellduino.build.extra_flags=-D__STM32F051__ -mthumb {build.xxx_flags} 
+ellduino.build.ldscript=linker_scripts/flash-ellduino.ld
+ellduino.build.extra_flags=-D__STM32F051__
 
 ##############################################################
 
@@ -44,6 +40,7 @@ stmf0discovery.build.f_cpu=48000000L
 stmf0discovery.build.board=STM32F051_DISCOVERY
 stmf0discovery.build.core=arduelli
 stmf0discovery.build.variant=stm32f0discovery
+stmf0discovery.build.variant_system_libs=-lstm32
 
-stmf0discovery.build.ldscript=linker_scripts/gcc/flash-discovery.ld
-stmf0discovery.build.extra_flags=-D__STM32F051__ -mthumb {build.xxx_flags} 
+stmf0discovery.build.ldscript=linker_scripts/flash-stmf0discovery.ld
+stmf0discovery.build.extra_flags=-D__STM32F051__
