@@ -1,4 +1,6 @@
 #
+# Copyright (c) 2013 ELL-i co-operative.
+#
 # Ell-i version of the Arduino 32 bit Core and the Ell-i platform
 #
 # For more info:
@@ -69,11 +71,14 @@ recipe.ar.pattern=   "{compiler.cmd.ar}"  {compiler.cmd.ar.flags} "{build.path}/
 ## Combine gc-sections, archives, and objects into an elf
 recipe.c.combine.pattern="{compiler.cmd.ld}" {compiler.cmd.ld.flags} {compiler.cmd.ld.out} {compiler.cmd.ld.objs} {compiler.cmd.ld.libs}
 
+## Create eeprom
+recipe.objcopy.eep.pattern=
+
 ## Create hex
 recipe.objcopy.hex.pattern="{compiler.cmd.elf2hex}" {compiler.cmd.elf2hex.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
 
 ## Compute size
-recipe.size.pattern="{compiler.path}{compiler.cmd.size}" -A "{build.path}/{build.project_name}.elf"
+recipe.size.pattern="{compiler.cmd.size}" -A "{build.path}/{build.project_name}.elf"
 recipe.size.regex=\.text\s+([0-9]+).*
 
 # STM32 Uploader tools
