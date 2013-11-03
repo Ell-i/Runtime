@@ -22,49 +22,54 @@ compiler.cmd.ld=     {compiler.prefix}ld
 compiler.cmd.ar=     {compiler.prefix}ar
 compiler.cmd.size=   {compiler.prefix}size
 
-compiler.cmd.elf2hex=       {compiler.prefix}objcopy
-compiler.cmd.elf2hex.flags= -O ihex
-
 compiler.cflags.debug=      -g
 compiler.cflags.optimise=   -Os --param max-inline-insns-single=500
 compiler.cflags.warnings=   -Wall
 compiler.cflags.sections=   -ffunction-sections -fdata-sections -fno-common
 compiler.cflags.libraries=  -nostdlib
 compiler.cflags.target=     -mcpu={build.mcu} -mthumb
-
 compiler.cflags.defines=    -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DELLI_{build.board} -DARDUINO_ARCH_{build.arch}
+
+compiler.cflags.1=          {compiler.cflags.debug} {compiler.cflags.optimise} {compiler.cflags.warnings}
+compiler.cflags.2=          {compiler.cflags.sections} {compiler.cflags.libraries} {compiler.cflags.target}
+compiler.cflags.3=          {compiler.cflags.defines}
+compiler.cflags=            {compiler.cflags.1} {compiler.cflags.2} {compiler.cflags.2}
 
 compiler.cxxflags=          -fno-rtti -fno-exceptions
 
-compiler.cflags=            {compiler.cflags.debug} {compiler.cflags.optimise} {compiler.cflags.warnings} {compiler.cflags.sections} {compiler.cflags.libraries} {compiler.cflags.target} {compiler.cflags.defines}
+# this can be overriden in boards.txt
+build.extra_flags=
 
-compiler.cmd.cc.flags=      -c -std=c99     {compiler.cflags}
-compiler.cmd.cxx.flags=     -c -std=gnu++0x {compiler.cflags} {compiler.cxxflags}
+compiler.cmd.cc.flags=      -c -std=c99     {compiler.cflags}                      {build.extra_flags}
+compiler.cmd.cxx.flags=     -c -std=gnu++0x {compiler.cflags} {compiler.cxxflags}  {build.extra_flags}
 compiler.cmd.as.flags=      {compiler.cflags.debug} -assembler-with-cpp
 
 compiler.cmd.ar.flags=      -rcs
 
-compiler.ldflags.common=    --gc-sections --cref --check-sections --entry=Reset_Handler --unresolved-symbols=report-all --warn-common --warn-section-align --warn-unresolved-symbols
+compiler.ldflags.common=    --gc-sections --cref --check-sections --entry=Reset_Handler --unresolved-symbols=report-all
+compiler.ldflags.warnings=  --warn-common --warn-unresolved-symbols
 compiler.ldflags.ldscript=  "-T{build.variant.path}/{build.ldscript}"
 compiler.ldflags.map=       "-Map={build.path}/{build.project_name}.map"
 
-compiler.cmd.ld.flags=      {compiler.ldflags.common} {compiler.ldflags.ldscript} {compiler.ldflags.map}
+compiler.cmd.ld.flags=      {compiler.ldflags.common} {compiler.ldflags.warnings} {compiler.ldflags.ldscript} {compiler.ldflags.map}
 
 compiler.cmd.ld.out=        -o "{build.path}/{build.project_name}.elf"
 compiler.cmd.ld.objs=       --start-group {object_files} "{build.path}/{archive_file}" --end-group
 compiler.cmd.ld.libs=       "-L{build.path}" "-L{build.variant.path}/lib" "{build.variant_system_libs}" -lgcc
 
-# this can be overriden in boards.txt
-build.extra_flags=
+compiler.cmd.elf2hex=       {compiler.prefix}objcopy
+compiler.cmd.elf2hex.flags= -O ihex
+compiler.cmd.elf2hex.files= "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
+
 
 # STM32 compile patterns -- the left hand strings are fixed in the IDE
 # --------------------------------------------------------------------
 
 ## Compile C files
-recipe.c.o.pattern=  "{compiler.cmd.cc}"  {compiler.cmd.cc.flags}  {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
+recipe.c.o.pattern=  "{compiler.cmd.cc}"  {compiler.cmd.cc.flags}  {includes} "{source_file}" -o "{object_file}"
 
 ## Compile C++ files
-recipe.cpp.o.pattern="{compiler.cmd.cxx}" {compiler.cmd.cxx.flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.cmd.cxx}" {compiler.cmd.cxx.flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Create archives
 recipe.ar.pattern=   "{compiler.cmd.ar}"  {compiler.cmd.ar.flags} "{build.path}/{archive_file}" "{object_file}"
@@ -76,7 +81,7 @@ recipe.c.combine.pattern="{compiler.cmd.ld}" {compiler.cmd.ld.flags} {compiler.c
 recipe.objcopy.eep.pattern=
 
 ## Create hex
-recipe.objcopy.hex.pattern="{compiler.cmd.elf2hex}" {compiler.cmd.elf2hex.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
+recipe.objcopy.hex.pattern="{compiler.cmd.elf2hex}" {compiler.cmd.elf2hex.flags} {compiler.cmd.elf2hex.files}
 
 ## Compute size
 recipe.size.pattern="{compiler.cmd.size}" -A "{build.path}/{build.project_name}.elf"
