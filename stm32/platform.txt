@@ -18,7 +18,7 @@ compiler.prefix=     {compiler.path}arm-none-eabi-
 
 compiler.cmd.cc=     {compiler.prefix}gcc
 compiler.cmd.cxx=    {compiler.prefix}g++
-compiler.cmd.ld=     {compiler.prefix}g++
+compiler.cmd.ld=     {compiler.prefix}ld
 compiler.cmd.ar=     {compiler.prefix}ar
 compiler.cmd.size=   {compiler.prefix}size
 
@@ -43,15 +43,15 @@ compiler.cmd.as.flags=      {compiler.cflags.debug} -assembler-with-cpp
 
 compiler.cmd.ar.flags=      -rcs
 
-compiler.ldflags.common=    -Wl,--gc-sections -Wl,--cref -Wl,--check-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols
+compiler.ldflags.common=    --gc-sections --cref --check-sections --entry=Reset_Handler --unresolved-symbols=report-all --warn-common --warn-section-align --warn-unresolved-symbols
 compiler.ldflags.ldscript=  "-T{build.variant.path}/{build.ldscript}"
-compiler.ldflags.map=       "-Wl,-Map,{build.path}/{build.project_name}.map"
+compiler.ldflags.map=       "-Map={build.path}/{build.project_name}.map"
 
 compiler.cmd.ld.flags=      {compiler.ldflags.common} {compiler.ldflags.ldscript} {compiler.ldflags.map}
 
 compiler.cmd.ld.out=        -o "{build.path}/{build.project_name}.elf"
-compiler.cmd.ld.objs=       -Wl,--start-group {object_files} "{build.path}/{archive_file}" -Wl,--end-group
-compiler.cmd.ld.libs=       "-L{build.path}" -L"{build.variant.path}" "{build.variant_system_libs}" -lm -lgcc
+compiler.cmd.ld.objs=       --start-group {object_files} "{build.path}/{archive_file}" --end-group
+compiler.cmd.ld.libs=       "-L{build.path}" "-L{build.variant.path}/lib" "{build.variant_system_libs}" -lgcc
 
 # this can be overriden in boards.txt
 build.extra_flags=
