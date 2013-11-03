@@ -160,9 +160,9 @@ SECTIONS
     /* remove the debugging information from the standard libraries */
     /DISCARD/ :
     {
-      libc.a ( * )
-      libm.a ( * )
-      libgcc.a ( * )
+      *libc.a ( * )
+      *libm.a ( * )
+      *libgcc.a ( * )
     }
 
     /*

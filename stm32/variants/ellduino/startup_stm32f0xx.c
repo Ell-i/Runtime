@@ -4,9 +4,9 @@
  * License TBD
  *
  * @author:  Pekka Nikander <pekka.nikander@ell-i.org>
- * 
+ *
  * @brief:  STM32F0XX devices startup code, written mostly in C
- *          Based on startup_stm32f0xx.s, for STM32F05x, 
+ *          Based on startup_stm32f0xx.s, for STM32F05x,
  *          distribute by STMicroelectronics but enhanced also
  *          for STM32F03x.
  */
@@ -17,7 +17,7 @@
 
 /*
  * The main motivation of writing this is C is go give those beginners
- * that don't want to study assembler syntax in detail a chance to 
+ * that don't want to study assembler syntax in detail a chance to
  * understand what is going on during the start time.
  *
  * If you modify this, be sure to compile this into assembler and
@@ -86,7 +86,7 @@ void CEC_IRQHandler(void)       __attribute__((weak, alias ("Default_Handler")))
 
 /**
  * Interrupt vector table for STM32F0 Cortex-M0.
- * 
+ *
  * Must be placed at the address 0x00000000, typically in flash.
  */
 
@@ -168,7 +168,7 @@ void Reset_Handler(void) {
     register uint32_t *ram   = &_sdata;
     register uint32_t *edata = &_edata;
 
-    while (ram < edata) 
+    while (ram < edata)
         *ram++ = *flash++;
 
     /* Clear zero-initialised RAM */
@@ -199,6 +199,3 @@ void Default_Handler(void) {
     for (;;)
         ;
 }
-               
-
-
