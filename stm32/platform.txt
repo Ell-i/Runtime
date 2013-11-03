@@ -26,7 +26,8 @@ compiler.cmd.elf2hex=       {compiler.prefix}objcopy
 compiler.cmd.elf2hex.flags= -O ihex
 
 compiler.cflags.debug=      -g
-compiler.cflags.optimise=   -Os -w --param max-inline-insns-single=500
+compiler.cflags.optimise=   -Os --param max-inline-insns-single=500
+compiler.cflags.warnings=   -Wall
 compiler.cflags.sections=   -ffunction-sections -fdata-sections -fno-common
 compiler.cflags.libraries=  -nostdlib
 compiler.cflags.target=     -mcpu={build.mcu} -mthumb
@@ -35,7 +36,7 @@ compiler.cflags.defines=    -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version
 
 compiler.cxxflags=          -fno-rtti -fno-exceptions
 
-compiler.cflags=            {compiler.cflags.debug} {compiler.cflags.optimise} {compiler.cflags.sections} {compiler.cflags.libraries} {compiler.cflags.target} {compiler.cflags.defines}
+compiler.cflags=            {compiler.cflags.debug} {compiler.cflags.optimise} {compiler.cflags.warnings} {compiler.cflags.sections} {compiler.cflags.libraries} {compiler.cflags.target} {compiler.cflags.defines}
 
 compiler.cmd.cc.flags=      -c -std=c99     {compiler.cflags}
 compiler.cmd.cxx.flags=     -c -std=gnu++0x {compiler.cflags} {compiler.cxxflags}
