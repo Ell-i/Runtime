@@ -55,31 +55,32 @@ SECTIONS
          * used only in shared libraries.
          *
          * They are *not* used in the ELL-i runtime.  However, we are
-         * keeping the sections here mainly as a comment, in the case
-         * they will ever get supported. 
+         * keeping the sections here, checking that they are empty.
          */
         . = ALIGN(4);
+        __init_start = .;
 	KEEP (*(.init))
-
         . = ALIGN(4);
-        __preinit_array_start = .;
         KEEP (*(.preinit_array))
-        __preinit_array_end = .;
-
         . = ALIGN(4);
-        __init_array_start = .;
         KEEP (*(SORT(.init_array.*)))
         KEEP (*(.init_array))
-        __init_array_end = .;
+        __init_end = .;
+
+        ASSERT(__init_start == __init_end, "Non-zero-size .init, .preinit_array, or .init_array section.");
 
         /*
-         * Support C++ static constructors, in both user code and the C libraries. 
+         * We do not Support C++ static constructors, either.
          */
         . = ALIGN(0x4);
-        KEEP (*crtbegin.o(.ctors))
+        __ctor_begin = .;
+        KEEP (*crtbegin.o(.ctors))       /* The initial dummy, empty entry */
         KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
         KEEP (*(SORT(.ctors.*)))
-        KEEP (*crtend.o(.ctors))
+        KEEP (*crtend.o(.ctors))         /* The last NULL entry */
+        __ctor_end = .;
+
+        ASSERT(__ctor_begin == __ctor_end, "C++ static constructors are not supported in this runtime.");
 
         /*
          * XXX Add here ELL-i read-only sections for peripheral initialisation
