@@ -16,6 +16,9 @@ version=1.5.4
 compiler.path=       {runtime.ide.path}/hardware/tools/g++_arm_none_eabi/bin/
 compiler.prefix=     {compiler.path}arm-none-eabi-
 
+# Temporary, to be replaced with gcc -print-libgcc-file-name
+compiler.libgcc=     {compiler.path}../lib/gcc/arm-none-eabi/4.4.1/libgcc.a
+
 compiler.cmd.cc=     {compiler.prefix}gcc
 compiler.cmd.cxx=    {compiler.prefix}g++
 compiler.cmd.ld=     {compiler.prefix}ld
@@ -55,7 +58,7 @@ compiler.cmd.ld.flags=      {compiler.ldflags.common} {compiler.ldflags.warnings
 
 compiler.cmd.ld.out=        -o "{build.path}/{build.project_name}.elf"
 compiler.cmd.ld.objs=       --start-group {object_files} "{build.path}/{archive_file}" --end-group
-compiler.cmd.ld.libs=       "-L{build.path}" "-L{build.variant.path}/lib" "{build.variant_system_libs}" -lgcc
+compiler.cmd.ld.libs=       "-L{build.path}" "-L{build.variant.path}/lib" "{build.variant_system_libs}"
 
 compiler.cmd.elf2hex=       {compiler.prefix}objcopy
 compiler.cmd.elf2hex.flags= -O ihex
@@ -75,7 +78,7 @@ recipe.cpp.o.pattern="{compiler.cmd.cxx}" {compiler.cmd.cxx.flags} {includes} "{
 recipe.ar.pattern=   "{compiler.cmd.ar}"  {compiler.cmd.ar.flags} "{build.path}/{archive_file}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects into an elf
-recipe.c.combine.pattern="{compiler.cmd.ld}" {compiler.cmd.ld.flags} {compiler.cmd.ld.out} {compiler.cmd.ld.objs} {compiler.cmd.ld.libs}
+recipe.c.combine.pattern="{compiler.cmd.ld}" {compiler.cmd.ld.flags} {compiler.cmd.ld.out} {compiler.cmd.ld.objs} {compiler.cmd.ld.libs} {compiler.libgcc}
 
 ## Create eeprom
 recipe.objcopy.eep.pattern=
