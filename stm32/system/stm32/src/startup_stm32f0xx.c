@@ -15,9 +15,7 @@
 #include <stdlib.h>
 #include <main.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <system_stm32f0xx.h>
 
 /*
  * The main motivation of writing this is C is go give those beginners
@@ -45,9 +43,24 @@ extern uint32_t _estack;
  * as we use with -ffunction-sections.  Hence, we don't need any
  * attribute for them. */
 
-void Reset_Handler(void)        __attribute__((/*reset*/, naked));
+#ifdef __cplusplus
+extern "C" {
+#endif
+    /*
+     * The Reset_Handler and Default_handler must be defined in the C
+     * naming space, even in the Emulator, or the linkage will fail.
+     */
 
-void Default_Handler(void)      __attribute__((interrupt, naked));
+    // Must be in the C context, as this is called in that way from SystemInit
+    void Reset_Handler(void)        __attribute__((/*reset*/, naked));
+
+    // Must be in the C context, for alias attribute to compile
+    void Default_Handler(void)      __attribute__((interrupt, naked));
+
+#ifdef __cplusplus
+}
+#endif
+
 
 void NMI_Handler(void)          __attribute__((weak, alias ("Default_Handler")));
 void HardFault_Handler(void)    __attribute__((weak, alias ("Default_Handler")));
@@ -154,11 +167,6 @@ extern uint32_t _sidata, _sdata, _edata, _sbss, _ebss;
 /**
  * Reset handler
  */
-
-/* XXX: Move to the proper system header */
-extern void SystemInit(void);
-extern void __libc_init_array(void);
-
 void Reset_Handler(void) {
     /* XXX: I'm not sure if this stack initialisation is *really*
      *      needed.  According to ARM documentation the CPU should
@@ -206,6 +214,3 @@ void Default_Handler(void) {
         ;
 }
 
-#ifdef __cplusplus
-}
-#endif

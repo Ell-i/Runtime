@@ -8,7 +8,7 @@
 
 #include <main.h>
 
-void main() {
+int main(void) {
     setup();
     for (;;)
         loop();

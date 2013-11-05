@@ -46,7 +46,7 @@ VPATH += $(TOP)tests $(TOP)cores/arduelli
 all:  $(APP_NAME)
 
 clean::
-	rm -f $(APP_NAME).*
+	rm -f $(APP_NAME)*
 	rm -f $(APP_OBJS)
 	rm -f make.map
 

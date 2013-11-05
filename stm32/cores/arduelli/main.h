@@ -6,6 +6,11 @@
  * @see startup_stm32f0xx/4xx.c for the underlying startup code
  */
 
-extern void main(void);
+#ifdef __cplusplus
+extern "C" { int main(void); }
+#else
+extern int  main(void);
+#endif
+
 extern void setup(void);
 extern void loop(void);
