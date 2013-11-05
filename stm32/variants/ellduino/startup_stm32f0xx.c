@@ -15,6 +15,10 @@
 #include <stdlib.h>
 #include <main.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * The main motivation of writing this is C is go give those beginners
  * that don't want to study assembler syntax in detail a chance to
@@ -91,55 +95,55 @@ void CEC_IRQHandler(void)       __attribute__((weak, alias ("Default_Handler")))
  */
 
 void *const g_pfnVectors[] __attribute__((section(".isr_vector"))) = {
-    &_estack,
-    Reset_Handler,
-    NMI_Handler,
-    HardFault_Handler,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    SVC_Handler,
-    0,
-    0,
-    PendSV_Handler,
-    SysTick_Handler,
-    WWDG_IRQHandler,
-    PVD_IRQHandler,
-    RTC_IRQHandler,
-    FLASH_IRQHandler,
-    RCC_IRQHandler,
-    EXTI0_1_IRQHandler,
-    EXTI2_3_IRQHandler,
-    EXTI4_15_IRQHandler,
-    TS_IRQHandler,
-    DMA1_Channel1_IRQHandler,
-    DMA1_Channel2_3_IRQHandler,
-    DMA1_Channel4_5_IRQHandler,
-    ADC1_COMP_IRQHandler,
-    TIM1_BRK_UP_TRG_COM_IRQHandler,
-    TIM1_CC_IRQHandler,
-    TIM2_IRQHandler,
-    TIM3_IRQHandler,
-    TIM6_DAC_IRQHandler,
-    0,
-    TIM14_IRQHandler,
-    TIM15_IRQHandler,
-    TIM16_IRQHandler,
-    TIM17_IRQHandler,
-    I2C1_IRQHandler,
-    I2C2_IRQHandler,
-    SPI1_IRQHandler,
-    SPI2_IRQHandler,
-    USART1_IRQHandler,
-    USART2_IRQHandler,
-    0,
-    CEC_IRQHandler,
-    0,
-    BootRAM,         /* @0x108. Fro boot in RAM mode for STM32F0xx */
+    (void*)&_estack,
+    (void*)Reset_Handler,
+    (void*)NMI_Handler,
+    (void*)HardFault_Handler,
+    (void*)0,
+    (void*)0,
+    (void*)0,
+    (void*)0,
+    (void*)0,
+    (void*)0,
+    (void*)0,
+    (void*)SVC_Handler,
+    (void*)0,
+    (void*)0,
+    (void*)PendSV_Handler,
+    (void*)SysTick_Handler,
+    (void*)WWDG_IRQHandler,
+    (void*)PVD_IRQHandler,
+    (void*)RTC_IRQHandler,
+    (void*)FLASH_IRQHandler,
+    (void*)RCC_IRQHandler,
+    (void*)EXTI0_1_IRQHandler,
+    (void*)EXTI2_3_IRQHandler,
+    (void*)EXTI4_15_IRQHandler,
+    (void*)TS_IRQHandler,
+    (void*)DMA1_Channel1_IRQHandler,
+    (void*)DMA1_Channel2_3_IRQHandler,
+    (void*)DMA1_Channel4_5_IRQHandler,
+    (void*)ADC1_COMP_IRQHandler,
+    (void*)TIM1_BRK_UP_TRG_COM_IRQHandler,
+    (void*)TIM1_CC_IRQHandler,
+    (void*)TIM2_IRQHandler,
+    (void*)TIM3_IRQHandler,
+    (void*)TIM6_DAC_IRQHandler,
+    (void*)0,
+    (void*)TIM14_IRQHandler,
+    (void*)TIM15_IRQHandler,
+    (void*)TIM16_IRQHandler,
+    (void*)TIM17_IRQHandler,
+    (void*)I2C1_IRQHandler,
+    (void*)I2C2_IRQHandler,
+    (void*)SPI1_IRQHandler,
+    (void*)SPI2_IRQHandler,
+    (void*)USART1_IRQHandler,
+    (void*)USART2_IRQHandler,
+    (void*)0,
+    (void*)CEC_IRQHandler,
+    (void*)0,
+    (void*)BootRAM,         /* @0x108. Fro boot in RAM mode for STM32F0xx */
 };
 
 /*
@@ -160,8 +164,10 @@ void Reset_Handler(void) {
      *      needed.  According to ARM documentation the CPU should
      *      do it itself.
      */
+#ifndef EMULATOR
     register void *const stack = &_estack;
     __asm__ volatile ("mov    sp, %0" : : "r" (stack));
+#endif
 
     /* Copy initialised non-const data from flash to RAM */
     register uint32_t *flash = &_sidata;
@@ -186,7 +192,7 @@ void Reset_Handler(void) {
     // but we do not support them!
 
     /* Call the main program */
-    main(0, 0);
+    main();
     /* Loop forever */
     for (;;)
         ;
@@ -199,3 +205,7 @@ void Default_Handler(void) {
     for (;;)
         ;
 }
+
+#ifdef __cplusplus
+}
+#endif
