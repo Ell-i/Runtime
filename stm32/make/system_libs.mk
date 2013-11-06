@@ -17,7 +17,7 @@ include $(MAKEDIR)$(TARGET).mk
 # Define system library objects.  Add new objects here.
 #
 
-SYSTEM_OBJS += system_stm32f0xx.o startup_stm32f0xx.o
+SYSTEM_OBJS += clock_stm32f0xx.o system_stm32f0xx.o startup_stm32f0xx.o
 
 #
 # Define the system libraries.  Add a new one for each variant.

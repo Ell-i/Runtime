@@ -192,8 +192,10 @@ void Reset_Handler(void) {
     while (bss < ebss)
         *bss++ = 0;
 
-    /* Call the system clock initialisation function. */
+    /* Configure PLL, AHB/APBx prescalers and Flash settings. */
     SystemInit();
+    /* Configure the System clock frequency. */
+    SystemSetSysClock();
 
     /* Do NOT call C++ static constructors */
     // C++ static constructors would normally be initialised from here
