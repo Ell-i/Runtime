@@ -24,15 +24,18 @@ define expand
 $(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
 endef
 
-CC  := $(call expand,compiler.cmd.cc)
-CXX := $(call expand,compiler.cmd.cxx)
-LD  := $(call expand,compiler.cmd.ld)
-AR  := $(call expand,compiler.cmd.ar)
+CC  	 := $(call expand,compiler.cmd.cc)
+CXX      := $(call expand,compiler.cmd.cxx)
+LD       := $(call expand,compiler.cmd.ld)
+AR       := $(call expand,compiler.cmd.ar)
+ELF2HEX  := $(call expand,compiler.cmd.elf2hex)
 
 CFLAGS   := $(call expand,compiler.cmd.cc.flags)
 CXXFLAGS := $(call expand,compiler.cmd.cxx.flags)
 LDFLAGS  := $(call expand,compiler.cmd.ld.flags)
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
+EHFLAGS  := $(call expand,compiler.cmd.elf2hex.flags)
+
 
 LIBS     := $(call expand,compiler.cmd.ld.libs)
 

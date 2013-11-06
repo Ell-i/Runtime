@@ -43,7 +43,7 @@ APP_OBJS := main.o sketch.o
 
 VPATH += $(TOP)tests $(TOP)cores/arduelli
 
-all:  $(APP_NAME)
+all:  $(APP_NAME) $(APP_NAME).hex
 
 clean::
 	rm -f $(APP_NAME)*
@@ -53,3 +53,11 @@ clean::
 $(APP_NAME):	$(APP_OBJS) $(SYSTEM_LIBS)
 	$(LD) $(LDFLAGS) -o $@ $(APP_OBJS) $(SYSTEM_LIBS) $(LIBS)
 
+#
+# Define rules for producing .hex files
+#
+
+.PHONY:	.hex
+
+%.hex:	%
+	$(ELF2HEX) $(EHFLAGS) $< $@
