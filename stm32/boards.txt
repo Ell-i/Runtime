@@ -20,7 +20,7 @@ ellduino.build.board=STM32F051_ELLDUINO
 ellduino.build.variant=ellduino
 ellduino.build.variant_system_libs=-lstm32f0
 
-ellduino.build.ldscript=lib/flash.ld
+ellduino.build.ldscript=ld/flash.ld
 ellduino.build.extra_flags=-D__STM32F051__
 
 ##############################################################
@@ -42,5 +42,5 @@ stm32f0discovery.build.core=arduelli
 stm32f0discovery.build.variant=stm32f0discovery
 stm32f0discovery.build.variant_system_libs=-lstm32f0
 
-stm32f0discovery.build.ldscript=lib/flash.ld
+stm32f0discovery.build.ldscript=ld/flash.ld
 stm32f0discovery.build.extra_flags=-D__STM32F051__

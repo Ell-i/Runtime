@@ -22,4 +22,4 @@ build.board=STM32F051_ELLDUINO
 build.variant=ellduino
 build.variant_system_libs=-lstm32f0
 
-build.ldscript=lib/flash.ld
+build.ldscript=ld/flash.ld

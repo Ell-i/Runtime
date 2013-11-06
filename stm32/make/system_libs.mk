@@ -23,8 +23,8 @@ SYSTEM_OBJS += clock_stm32f0xx.o system_stm32f0xx.o startup_stm32f0xx.o
 # Define the system libraries.  Add a new one for each variant.
 #
 SYSTEM_LIBS := \
-    $(TOP)variants/ellduino/lib/libstm32f0.a \
-    $(TOP)variants/stm32f0discovery/lib/libstm32f0.a
+    $(TOP)variants/ellduino/libstm32f0.a \
+    $(TOP)variants/stm32f0discovery/libstm32f0.a
 
 #
 # Define source directories

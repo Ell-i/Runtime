@@ -58,7 +58,7 @@ compiler.cmd.ld.flags=      {compiler.ldflags.common} {compiler.ldflags.warnings
 
 compiler.cmd.ld.out=        -o "{build.path}/{build.project_name}.elf"
 compiler.cmd.ld.objs=       {object_files} "{build.path}/{archive_file}"
-compiler.cmd.ld.libs=       "-L{build.path}" "-L{build.variant.path}/lib" "{build.variant_system_libs}"
+compiler.cmd.ld.libs=       "-L{build.path}" "-L{build.variant.path}" "{build.variant_system_libs}"
 
 compiler.cmd.elf2hex=       {compiler.prefix}objcopy
 compiler.cmd.elf2hex.flags= -O ihex
