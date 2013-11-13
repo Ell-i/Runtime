@@ -19,6 +19,8 @@ SYSTEM_OBJS += \
 	startup_stm32f0xx.o \
 	clock_stm32f0xx.o \
 	system_stm32f0xx.o \
+	system_init.o \
+	$(VARIANT)_gpio.o \
 
 #
 # Define the system libraries.  Add a new one for each variant.

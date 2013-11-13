@@ -38,7 +38,15 @@ SECTIONS
         *(.text)                   /* Normal code */
         *(.text.*)                 /* Normal code in -ffunction-sections */
         *(.rodata)                 /* Read-only data (constants) */
-        *(.rodata*)                /* Read only data in -fdata-sections */
+        *(.rodata*)                /* Read-only data in -fdata-sections */
+
+        /*
+         * XXX
+         */
+        . = ALIGN(4);
+        __peripheral_start = .;
+        KEEP (*(.peripheral.*)) /* Read-only peripheral initialisation data */
+        __peripheral_end = .;
 
         /* 
          * The following sections are needed to jump from ARM code to Thumb
