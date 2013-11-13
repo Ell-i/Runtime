@@ -16,3 +16,9 @@
 *.exe
 *.out
 *.app
+*.map
+*.hex
+*.lst
+
+# Build sketch
+stm32/build/sketch*
