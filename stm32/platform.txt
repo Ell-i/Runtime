@@ -38,7 +38,7 @@ compiler.cflags.2=          {compiler.cflags.sections} {compiler.cflags.librarie
 compiler.cflags.3=          {compiler.cflags.defines}
 compiler.cflags=            {compiler.cflags.1} {compiler.cflags.2} {compiler.cflags.3}
 
-compiler.cxxflags=          -fno-rtti -fno-exceptions
+compiler.cxxflags=          -fno-rtti -fno-exceptions -fno-threadsafe-statics
 
 # this can be overriden in boards.txt
 build.extra_flags=

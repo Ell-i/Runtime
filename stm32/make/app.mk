@@ -4,20 +4,14 @@
 # Compile and link an application
 #
 
-ifeq ($(TOP),)
-TOP=../
-endif
+TOP ?=../
 
-ifeq ($(MAKEDIR),)
-MAKEDIR=$(TOP)make/
-endif
+MAKEDIR ?= $(TOP)make/
 
 #
 # Define the variant to build for
 #
-ifeq ($(VARIANT),)
-VARIANT=ellduino
-endif
+VARIANT ?= ellduino
 
 #
 # Set up the compilation environment, identical to the Arduino IDE,
@@ -29,29 +23,31 @@ include $(MAKEDIR)system_libs.mk
 # Define the app name
 #
 
-APP_NAME := main
+APP ?= sketch
 
 #
 # Define app library objects.  Add new objects here.
 #
 
-APP_OBJS := main.o sketch.o
+APP_OBJS ?= main.o $(APP).o
 
 #
 # Rules
 #
 
-VPATH += $(TOP)tests $(TOP)cores/arduelli
+VPATH += $(TOP)cores/arduelli
 
-all:  $(APP_NAME) $(APP_NAME).hex
+all:  $(APP) $(APP).hex
 
 clean::
-	rm -f $(APP_NAME)*
+	rm -f $(APP)
+	rm -f $(APP).hex
+	rm -f $(APP).lst
 	rm -f $(APP_OBJS)
 	rm -f make.map
 
-$(APP_NAME):	$(APP_OBJS) $(SYSTEM_LIBS)
-	$(LD) $(LDFLAGS) -o $@ $(APP_OBJS) $(SYSTEM_LIBS) $(LIBS)
+$(APP):	$(APP_OBJS) $(SYSTEM_LIBS)
+	$(LD) $(LDFLAGS) -o $@ $(APP_OBJS) $(LIBS)
 
 #
 # Define rules for producing .hex files

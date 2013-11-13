@@ -2,9 +2,7 @@
 # Copyright (c) 2013 ELL-i co-operative.
 #
 
-ifeq ($(TARGET),)
-TARGET=arduino
-endif
+TARGET ?= arduino
 
 all:
 	make TARGET=$(TARGET) -f ../make/app.mk all

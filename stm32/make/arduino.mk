@@ -11,6 +11,7 @@ EXTRA_CFLAGS += \
 	-I$(TOP)cores/arduelli \
 	-I$(TOP)system/stm32/inc \
 	-I$(TOP)system/stm32/CMSIS/Include \
+	-I$(TOP)variants/$(VARIANT)
 
 #
 # No user serviceable parts below
@@ -24,20 +25,19 @@ define expand
 $(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
 endef
 
-CC  	 := $(call expand,compiler.cmd.cc)
-CXX      := $(call expand,compiler.cmd.cxx)
-LD       := $(call expand,compiler.cmd.ld)
-AR       := $(call expand,compiler.cmd.ar)
-ELF2HEX  := $(call expand,compiler.cmd.elf2hex)
+$(eval CC  	:= $(call expand,compiler.cmd.cc))
+$(eval CXX      := $(call expand,compiler.cmd.cxx))
+$(eval LD       := $(call expand,compiler.cmd.ld))
+$(eval AR       := $(call expand,compiler.cmd.ar))
+$(eval ELF2HEX  := $(call expand,compiler.cmd.elf2hex))
 
-CFLAGS   := $(call expand,compiler.cmd.cc.flags)
-CXXFLAGS := $(call expand,compiler.cmd.cxx.flags)
-LDFLAGS  := $(call expand,compiler.cmd.ld.flags)
-ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
-EHFLAGS  := $(call expand,compiler.cmd.elf2hex.flags)
+$(eval CFLAGS   := $(call expand,compiler.cmd.cc.flags))
+$(eval CXXFLAGS := $(call expand,compiler.cmd.cxx.flags))
+$(eval LDFLAGS  := $(call expand,compiler.cmd.ld.flags))
+$(eval ARFLAGS  := $(call expand,compiler.cmd.ar.flags))
+$(eval EHFLAGS  := $(call expand,compiler.cmd.elf2hex.flags))
 
-
-LIBS     := $(call expand,compiler.cmd.ld.libs)
+$(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
 
 CFLAGS   += $(EXTRA_CFLAGS)
 CXXFLAGS += $(EXTRA_CFLAGS)

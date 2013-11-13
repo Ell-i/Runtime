@@ -4,9 +4,7 @@
 # Compile and create the system libraries
 #
 
-ifeq ($(MAKEDIR),)
-MAKEDIR=$(TOP)make/
-endif
+MAKEDIR ?= $(TOP)make/
 
 #
 # Set up the compilation environment, identical to the Arduino IDE
@@ -17,7 +15,10 @@ include $(MAKEDIR)$(TARGET).mk
 # Define system library objects.  Add new objects here.
 #
 
-SYSTEM_OBJS += clock_stm32f0xx.o system_stm32f0xx.o startup_stm32f0xx.o
+SYSTEM_OBJS += \
+	startup_stm32f0xx.o \
+	clock_stm32f0xx.o \
+	system_stm32f0xx.o \
 
 #
 # Define the system libraries.  Add a new one for each variant.
