@@ -24,6 +24,7 @@ void setup() {
     pinMode(1, INPUT_PULLUP);
     pinMode(2, INPUT_PULLDOWN);
     pinMode(3, OUTPUT);
+
 #endif
 }
 
