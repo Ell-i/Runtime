@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 ELL-i co-operative.
+ * Copyright (c) 2013 ELL-i co-op.
  *
  * This is part of ELL-i software.
  *
@@ -17,30 +17,16 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>
+#include "Arduino.h"
 
-#include "../../system/stm32/inc/stm32f0xx.h"  // XXX FIX PATH
+void setup() {
+    pinMode(0, OUTPUT);
+    digitalWrite(0, 0);
+    digitalWrite(0, 1);
+}
 
-/*
- * Undefine the main address defines in the real stm32f0xx.h, causing
- * a compile error on all constructs that use them.
- */
-#undef FLASH_BASE
-#undef SRAM_BASE
-#undef PERIPH_BASE
-
-#undef RCC
-#undef FLASH
-#undef GPIOA
-#undef GPIOB
-#undef GPIOC
-#undef GPIOD
-#undef GPIOE
-#undef GPIOF
-#undef GPIOG
-#undef GPIOH
-
-#include <RCC.h>
-#include <FLASH.h>
-#include <GPIO.h>
-
+void loop() {
+#ifdef EMULATOR
+    exit(0);
+#endif
+}

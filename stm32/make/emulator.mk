@@ -69,5 +69,5 @@ LIBS += -lstdc++ $(LIBGCC_LIBRARY)
 # Additional system objects
 #
 
-SYSTEM_OBJS := emulator.o Register.o RCC.o FLASH.o
-VPATH := $(TOP)emulator/src
+SYSTEM_OBJS := emulator.o Register.o RCC.o FLASH.o GPIO.o
+VPATH += $(TOP)emulator/src

@@ -24,25 +24,35 @@
  */
 
 #ifndef _ARDUELLI_GPIO_H_
-#define _ARDUELLI_GPIO_H_
+# define _ARDUELLI_GPIO_H_
 
-#include <stm32f0xx.h>
-#include <system_init.h>
+# include <stm32f0xx.h>
+# include <system_init.h>
 
-/*
- * Static, compile-time-only records for reset-time initialisation GPIO ports A-D and F.
+/***************************
  *
- * For each of the ports, we set the corresponding ENable bit in the RCC AHBENR register.
- * Other than that, the factory defaults are good enough for us.
+ * Static, compile-time-only records for boot-time initialisation
+ * of GPIO ports.
  *
- * Note that the actual record is placed at the .init.default linker section, causing
- * the reset-time code called from main() to initialise the GPIO.  If the GPIO is not
- * used, the record won't be placed at the .init.default section, and the GPIO won't
- * be enabled.
+ * For each of the ports, we set the corresponding Enable bit in the
+ * RCC AHBENR register.  Other than that, the factory defaults are
+ * good enough for us.
+ *
+ * Note that the actual record is placed at the SYSTEM_INIT_SECTION
+ * linker section, causing the boot-time initialisation code called from main() to
+ * initialise the GPIO.  If the GPIO is not used, the record won't be
+ * placed at the .init.default section, and the GPIO won't be enabled.
  */
 
-#define GPIO_INIT_DEFAULT(port) \
-    extern const SystemInitRecord GPIO ## port ## _INIT
+/**
+ * Declares an GPIO init record so that they are externally
+ * visible.
+ *
+ * XXX TBD Move to variant.h
+ */
+
+#  define GPIO_INIT_DEFAULT(port) \
+    extern const SystemInitRecordArray GPIO ## port ## _INIT
 
 GPIO_INIT_DEFAULT(A);
 GPIO_INIT_DEFAULT(B);
@@ -50,30 +60,91 @@ GPIO_INIT_DEFAULT(C);
 GPIO_INIT_DEFAULT(D);
 GPIO_INIT_DEFAULT(F);
 
-#define GPIO_INIT_DEFAULT_DEFINITION(port)                              \
-    const SystemInitRecordMaskOnly                                      \
-    GPIO ## port ## _INIT_DefaultRecords[] = {                          \
-        {                                                               \
-            .init_r_address = &RCC->AHBENR,                             \
-            .init_r_mask = RCC_AHBENR_GPIO ## port ## EN,               \
-        },                                                              \
-    };                                                                  \
-    const SystemInitRecord                                              \
-      GPIO ## port ## _INIT                                             \
-      __attribute__((section(".peripheral.default.GPIO" # port))) = {   \
-        .init_record_type   = MASK_ONLY,                                \
-        .init_record_number = COUNT_OF(GPIO ## port ##_INIT_DefaultRecords), \
-        .init_records_mask_only = GPIO ## port ## _INIT_DefaultRecords, \
-    }
-
-/* Corresponding definitions in <variant>_gpio.c */
-
-/*********************************************************************************/
-
-/*
- * Mode
+/**
+ * Defines an GPIO init record and makes it visible through the
+ * @see SYSTEM_INIT_SECTION.
+ * @param port The GPIO port as a single letter
+ *
+ * See the corresponding definitions in <variant>_gpio.c
+ *
+ * XXX (later): At the moment these are NOT declared as static, to
+ * make sure that the compiler does *not* optimise these away.  It
+ * would be good for someone to see if the definitions work also if
+ * they are static, as they don't need to pollute the name space.
  */
 
+#define DEFINE_GPIO_PORT(port)                                          \
+    const SystemInitRecordOnesOnly                                      \
+    GPIO ## port ## _INIT_DefaultRecords[] = {                          \
+        {                                                               \
+            IF(init_r_address) &RCC->AHBENR,                            \
+            IF(init_r_ones)    RCC_AHBENR_GPIO ## port ## EN,           \
+        },                                                              \
+    };                                                                  \
+    const SystemInitRecordArray                                         \
+      GPIO ## port ## _INIT                                             \
+       __attribute__((section(SYSTEM_INIT_SECTION(GPIO ## port))))      \
+        = {                                                             \
+        IF(init_record_type)   ONES_ONLY,                                     \
+        IF(init_record_number) COUNT_OF(GPIO ## port ##_INIT_DefaultRecords), \
+        IF(init_padding) 0,                                                   \
+        { IF(init_records_ones_only) GPIO ## port ## _INIT_DefaultRecords, }, \
+    }
+
+/**
+ * A const data structure describing each Arduino-compatible GPIO pin
+ * in the target boards.  Each variant defines an array of these data
+ * structures.  The Arduino PIN numbers act as indices to the array.
+ *
+ * In the typical case, the GPIO pins are described as a static const
+ * array, arranged in such a way that the compiler is able to optimise
+ * the array completely away, generating code that accesses the GPIO
+ * registers directly.
+ *
+ * @member gpio_port  A pointer to the GPIO port register bank
+ * @member gpio_mask  Mask for BSRR / BRR register access
+ * @member gpio_pin   Pin number
+ *
+ * @see DEFINE_GPIO_PIN
+ */
+
+struct GPIO {
+#ifdef EMULATOR
+    GeneralPurposeInputOutput *const
+                                  gpio_port; /* Representation of the emulator GPIO port */
+#else
+    GPIO_TypeDef *const           gpio_port; /* Pointer to the GPIO registers */
+#endif
+    const uint32_t                gpio_mask; /* GPIO pin mask for BSRR / BRR register */
+    const uint8_t                 gpio_pin;  /* GPIO pin number, as an integer */
+};
+
+/**
+ * Defines a pin in a compact way.  This macro simply expands into a
+ * struct initialisation.
+ *
+ * Used in the <variant>/gpio_<variant>.h, to define a static const array of
+ * pins.  The array is then optimised away by the compiler.
+ *
+ * @see struct GPIO
+ */
+#define DEFINE_GPIO_PIN(port, pin)         \
+{                                          \
+    IF(gpio_port) GPIO ## port,            \
+    IF(gpio_mask) GPIO_ODR_ ## pin,        \
+    IF(gpio_pin)  pin,                     \
+}
+
+
+/*********************************************************************************
+ *
+ * Arduino-compatible GPIO data structures and interfaces
+ *
+ */
+
+/**
+ * Arduino GPIO pin mode.
+ */
 enum pin_mode {
     INPUT          = 0,
     INPUT_PULLUP   = 1,
@@ -81,21 +152,24 @@ enum pin_mode {
     OUTPUT         = 3,
 };
 
-#define PIN_MODES (OUTPUT+1)
+#define PIN_MODE_NUMBER (OUTPUT+1)
 
-
-static const uint32_t GPIO_pin_mode_moder_values[PIN_MODES] = {
+/*
+ * STM32F GPIO MODER register values for the particular pin mode,
+ * @see RM0091 Reference manual Section 8.4.1, page 129.
+ */
+static const uint32_t GPIO_pin_mode_moder_values[PIN_MODE_NUMBER] = {
     0, 0, 0, GPIO_MODER_MODER0_0,
 };
-static const uint32_t GPIO_pin_mode_pupdr_values[PIN_MODES] = {
+/* STM32F GPIO PUPDR register values for the particular pin mode,
+ * @see RM0091 Reference manual Section 8.4.4, page 130.
+ */
+static const uint32_t GPIO_pin_mode_pupdr_values[PIN_MODE_NUMBER] = {
     0, GPIO_PUPDR_PUPDR0_0, GPIO_PUPDR_PUPDR0_1, 0,
 };
 
-
-/*********************************************************************************/
-
 /*
- * Define a type for an Arduino pin, i.e. basically an index
+ * They type for Arduino pins, i.e., basically an index
  * to the pin description table, defined below.
  *
  * XXX: Try to replace with an explicit class that has an explicit
@@ -103,30 +177,5 @@ static const uint32_t GPIO_pin_mode_pupdr_values[PIN_MODES] = {
  *      but is worth trying with a good compiler (LLVM?).
  */
 typedef const uint32_t pin_t;
-
-/*
- * A const data structure for describing each Arduino-compatible GPIO pin
- * in the target boards.  Each variant defines an array of these
- * data structures.  The Arduino PIN numbers act as indices to the array.
- *
- * XXX define data structure contents
- */
-
-struct GPIO {
-    GPIO_TypeDef *const           gpio_port; /* Pointer to the GPIO registers */
-    const uint32_t                gpio_mask; /* GPIO pin mask for BSRR / BRR register */
-    const uint8_t                 gpio_pin;  /* GPIO pin number, as an integer */
-};
-
-/*
- * A macro, used in the variant/gpio_xxx.h, for defining the pins in a compact way.
- * This macro simply expands into a struct initialisation.
- */
-#define DEFINE_GPIO(port, pin)             \
-{                                          \
-    .gpio_port = GPIO ## port,             \
-    .gpio_mask = GPIO_ODR_ ## pin,         \
-    .gpio_pin  = pin,                      \
-}
 
 #endif//_ARDUELLI_GPIO_H_

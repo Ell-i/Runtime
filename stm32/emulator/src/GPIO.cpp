@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2013-2014 ELL-i co-operative.
+ * Copyright (c) 2014 ELL-i co-operative
  *
- * This is part of ELL-i software.
+ * This file is part of ELL-i software.
  *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,30 +17,20 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>
-
-#include "../../system/stm32/inc/stm32f0xx.h"  // XXX FIX PATH
-
-/*
- * Undefine the main address defines in the real stm32f0xx.h, causing
- * a compile error on all constructs that use them.
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2013-2014
+ *
+ * @brief Emulated STM32F0/STM32F4 GPIO registers
  */
-#undef FLASH_BASE
-#undef SRAM_BASE
-#undef PERIPH_BASE
 
-#undef RCC
-#undef FLASH
-#undef GPIOA
-#undef GPIOB
-#undef GPIOC
-#undef GPIOD
-#undef GPIOE
-#undef GPIOF
-#undef GPIOG
-#undef GPIOH
-
-#include <RCC.h>
-#include <FLASH.h>
 #include <GPIO.h>
+
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOA;
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOB;
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOC;
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOD;
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOE;
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOF;
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOG;
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOH;
 
