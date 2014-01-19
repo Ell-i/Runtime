@@ -17,10 +17,14 @@
 # along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-TARGET ?= arduino
+PLATFORM ?= arduino
+# PLATFORM = emulator
 
 all:
-	make TARGET=$(TARGET) -f ../make/app.mk all
+	make PLATFORM=$(PLATFORM) -f ../make/app.mk all
 
 clean:
-	make TARGET=$(TARGET) -f ../make/app.mk clean
+	make PLATFORM=$(PLATFORM) -f ../make/app.mk clean
+
+sketch.cpp: Makefile
+	echo "#include <Arduino.h>\nvoid setup() {}\nvoid loop() {}" > sketch.cpp

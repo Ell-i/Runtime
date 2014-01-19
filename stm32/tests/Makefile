@@ -17,6 +17,9 @@
 TARGETS = \
     test_pinMode \
 
+PLATFORM ?= arduino
+# PLATFORM = emulator
+
 .PHONY : $(TARGETS) all clean
 
 all:	$(TARGETS)
@@ -26,5 +29,5 @@ clean:	$(TARGETS)
 clean:	TARGET=clean
 
 $(TARGETS): %:
-	$(MAKE) -C $* -f `pwd`/../make/app.mk TOP=`pwd`/../ APP=$@ TARGET=arduino $(TARGET)
+	$(MAKE) -C $* -f `pwd`/../make/app.mk TOP=`pwd`/../ APP=$@ PLATFORM=$(PLATFORM) $(TARGET)
 

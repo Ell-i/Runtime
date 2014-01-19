@@ -9,7 +9,7 @@ MAKEDIR ?= $(TOP)make/
 #
 # Set up the compilation environment, identical to the Arduino IDE
 #
-include $(MAKEDIR)$(TARGET).mk
+include $(MAKEDIR)$(PLATFORM).mk
 
 #
 # Define system library objects.  Add new objects here.
