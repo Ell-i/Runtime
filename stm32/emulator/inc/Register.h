@@ -36,10 +36,11 @@ protected:
         , value_(value)
         {};
 public:
-    uint32_t operator =  (uint32_t);
-    uint32_t operator |= (uint32_t);
-    uint32_t operator &= (uint32_t);
-    uint32_t operator &  (uint32_t);
+    uint32_t  operator =  (uint32_t);
+    uint32_t  operator |= (uint32_t);
+    uint32_t  operator &= (uint32_t);
+    uint32_t  operator &  (uint32_t);
+    uint32_t *operator &  ();
 };
 
 #define DEFINE_REGISTER(periph, name, value)                  \
@@ -47,7 +48,8 @@ class Class ## name : public Register {                       \
 public:                                                       \
     Class ## name() : Register(# periph, # name, value) {};   \
     uint32_t operator=(uint32_t arg) {                        \
-        std::cout << periph_ << ":" << name_ << ":" << "=" << arg << '\n'; \
+        std::cout << periph_ << ":" << name_ << ":" << "="    \
+            << arg << '\n';                                   \
         return value_ = arg;                                  \
     }                                                         \
 } name

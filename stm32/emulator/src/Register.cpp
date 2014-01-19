@@ -21,16 +21,24 @@
 
 uint32_t Register::operator |= (uint32_t arg) {
     // XXX move setbase to a better location
-    std::cout << std::setbase(16) << periph_ << ":" << name_ << ":" << value_ << "|=" << arg << '\n';
+    std::cout << std::setbase(16) << periph_
+              << ':' << name_ << ':' << value_ << "|=" << arg << '\n';
     return value_ |= arg;
 }
 
 uint32_t Register::operator &= (uint32_t arg) {
-    std::cout << periph_ << ":" << name_ << ":" << value_ << "&=" << arg << '\n';
+    std::cout << periph_ << ':'
+              << name_ << ':' << value_ << "&=" << arg << '\n';
     return value_ &= arg;
 }
 
 uint32_t Register::operator &  (uint32_t arg) {
-    std::cout << periph_ << ":" << name_ << ":" << value_ << "&" << arg << '\n';
+    std::cout << periph_ << ':'
+              << name_ << ':' << value_ << '&' << arg << '\n';
     return value_ & arg;
+}
+
+uint32_t *Register::operator & () {
+    std::cout << '&' << periph_ << ':' << name_ << '\n';
+    return (uint32_t *)&value_;
 }
