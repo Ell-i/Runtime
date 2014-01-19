@@ -17,6 +17,9 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _EMULATOR_STM32F0XX_
+#define _EMULATOR_STM32F0XX_
+
 #include <stdint.h>
 
 #include "../../system/stm32/inc/stm32f0xx.h"  // XXX FIX PATH
@@ -44,3 +47,4 @@
 #include <FLASH.h>
 #include <GPIO.h>
 
+#endif //_EMULATOR_STM32F0XX_

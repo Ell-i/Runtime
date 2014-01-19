@@ -22,6 +22,7 @@
  */
 
 #include "arduelli_gpio.h"
+#include "ellduino_gpio.h" // XXX replace with variant.h
 
 /*
  * With the current Arduino API, it is not possible to reliably

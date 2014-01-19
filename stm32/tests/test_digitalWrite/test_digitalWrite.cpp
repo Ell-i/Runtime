@@ -17,7 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Arduino.h"
+#include "wiring_digital.h"
 
 void setup() {
     pinMode(0, OUTPUT);

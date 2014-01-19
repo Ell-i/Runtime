@@ -17,6 +17,9 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _RCC_H_
+#define _RCC_H_
+
 #include <Register.h>
 
 class ResetClockControl {
@@ -40,3 +43,5 @@ public:
 };
 
 ResetClockControl *const RCC = &ResetClockControl::RCC;
+
+#endif //_RCC_H_

@@ -28,11 +28,16 @@ define expand
 $(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
 endef
 
-
+ifeq ($(shell uname -s),Darwin)
+CC  := llvm-g++
+CXX := llvm-g++
+# LD  := g++ -m32 -march=i386
+LD  := llvm-g++
+else
 CC  := g++
 CXX := g++
-# LD  := g++ -m32 -march=i386
-LD  := g++
+LD  := g++ -m32 -march=i386
+endif
 AR  := ar
 ELF2HEX := :
 
