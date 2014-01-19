@@ -44,10 +44,12 @@ clean::
 	rm -f $(APP).hex
 	rm -f $(APP).lst
 	rm -f $(APP_OBJS)
+	rm -f $(PRE_OBJS)
+	rm -f $(POST_OBJS)
 	rm -f make.map
 
-$(APP):	$(APP_OBJS) $(SYSTEM_LIBS)
-	$(LD) $(LDFLAGS) -o $@ $(APP_OBJS) $(LIBS)
+$(APP):	$(APP_OBJS) $(SYSTEM_LIBS) $(PRE_OBJS) $(POST_OBJS)
+	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS)
 
 #
 # Define rules for producing .hex files

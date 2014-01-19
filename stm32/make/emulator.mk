@@ -15,6 +15,7 @@ EXTRA_CFLAGS += \
 	-I$(TOP)cores/arduelli \
 	-I$(TOP)system/stm32/inc \
 	-I$(TOP)system/stm32/CMSIS/Include \
+	-I$(TOP)variants/$(VARIANT) \
 
 #
 # No user serviceable parts below
@@ -33,6 +34,7 @@ CXX := g++
 # LD  := g++ -m32 -march=i386
 LD  := g++
 AR  := ar
+ELF2HEX := :
 
 CFLAGS   := \
   $(subst -std=c99,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cc.flags)))
@@ -43,10 +45,16 @@ CXXFLAGS := \
 LDFLAGS  := -m32 -demangle
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
 
-LIBS     := $(call expand,compiler.cmd.ld.libs)
+$(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
 
 CFLAGS   += $(EXTRA_CFLAGS)
 CXXFLAGS += $(EXTRA_CFLAGS)
+
+#
+# Arrange segments
+#
+PRE_OBJS  := emulator_pre.o
+POST_OBJS := emulator_post.o
 
 #
 # Figure out the GCC installation directories to locate libc.a
