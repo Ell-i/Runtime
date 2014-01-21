@@ -26,4 +26,5 @@
 #include <main.h>
 #include <ellduino_gpio.h> // XXX To be placed into the variant.h!
 #include <ellduino_timer.h>
+#include <ellduino_usart.h>
 #include <wiring_digital.h>

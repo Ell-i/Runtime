@@ -51,10 +51,13 @@
 #undef TIM16
 #undef TIM17
 
+#undef USART1
+#undef USART2
 
 #include <RCC.h>
 #include <FLASH.h>
 #include <GPIO.h>
 #include <TIM.h>
+#include <USART.H>
 
 #endif //_EMULATOR_STM32F0XX_
