@@ -21,7 +21,7 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2013-2014
  */
 
-#include <arduelli_gpio.h>
+#include <ellduino_gpio.h>
 
 /*
  * Boot-time definitions for the STM32F0 series MCU ports.

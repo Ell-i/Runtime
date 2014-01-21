@@ -27,6 +27,7 @@
 # define _ARDUELLI_GPIO_H_
 
 # include <stm32f0xx.h>
+# include <stm32f0xx_extra.h>
 # include <system_init.h>
 
 /***************************
@@ -47,18 +48,10 @@
 /**
  * Declares an GPIO init record so that they are externally
  * visible.
- *
- * XXX TBD Move to variant.h
  */
 
 #  define GPIO_INIT_DEFAULT(port) \
     extern const SystemInitRecordArray GPIO ## port ## _INIT
-
-GPIO_INIT_DEFAULT(A);
-GPIO_INIT_DEFAULT(B);
-GPIO_INIT_DEFAULT(C);
-GPIO_INIT_DEFAULT(D);
-GPIO_INIT_DEFAULT(F);
 
 /**
  * Defines an GPIO init record and makes it visible through the

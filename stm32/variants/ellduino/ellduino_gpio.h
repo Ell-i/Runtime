@@ -26,6 +26,17 @@
 # include <arduelli_gpio.h>
 
 /**
+ * Declarations for externally visible GPIO init records.
+ *
+ * STM32F0 has A, B, C, D, and F GPIO ports.
+ */
+GPIO_INIT_DEFAULT(A);
+GPIO_INIT_DEFAULT(B);
+GPIO_INIT_DEFAULT(C);
+GPIO_INIT_DEFAULT(D);
+GPIO_INIT_DEFAULT(F);
+
+/**
  * An array of Arduino-compatible GPIO pins, index by the Arduino Pin
  * index.
  *
