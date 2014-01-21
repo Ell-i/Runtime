@@ -22,7 +22,7 @@ TARGETS = \
 PLATFORM ?= arduino
 # PLATFORM = emulator
 
-.PHONY : $(TARGETS) all clean
+.PHONY : $(TARGETS) all clean tests
 
 all:	$(TARGETS)
 all:	TARGET=all
@@ -33,3 +33,6 @@ clean:	TARGET=clean
 $(TARGETS): %:
 	$(MAKE) -C $* -f `pwd`/../make/app.mk TOP=`pwd`/../ APP=$@ PLATFORM=$(PLATFORM) $(TARGET)
 
+tests:	PLATFORM = emulator
+tests:  $(TARGETS)
+	for t in $(TARGETS); do ./$$t/$$t; done
