@@ -18,6 +18,7 @@ TARGETS = \
     test_pinMode \
     test_digitalRead \
     test_digitalWrite \
+    test_analogWrite \
 
 PLATFORM ?= arduino
 # PLATFORM = emulator
