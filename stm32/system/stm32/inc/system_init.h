@@ -103,6 +103,20 @@ typedef struct {
 } SystemInitRecordOnesAndZeroes;
 
 /**
+ * The SystemInitRecordData16WithOffset XXX
+ */
+typedef struct {
+    const uint16_t           init_data16;
+} SystemInitRecordData16NoAddress;
+
+/**
+ * The SystemInitRecordData16WithOffset XXX
+ */
+typedef struct {
+    const uint32_t           init_data32;
+} SystemInitRecordData32NoAddress;
+
+/**
  * The SystemInitRecordMaskAndWait XXX
  */
 
@@ -123,9 +137,10 @@ typedef struct {
 enum system_init_r_type {
     ONES_ONLY = 0,
     ONES_AND_ZEROES = 1,
+    DATA16_NO_ADDRESS = 2,
+    DATA32_NO_ADDRESS = 3,
+    SYSTEM_INIT_TYPE_NUMBER
 };
-
-#define SYSTEM_INIT_TYPE_NUMBER (ONES_AND_ZEROES + 1)
 
 /**
  * An explicitly sized array of SystemInitRecords.
@@ -146,16 +161,15 @@ enum system_init_r_type {
  * the linker (used for emulator) on Mac OS X places the records so.
  */
 typedef struct {
-    const enum system_init_r_type   init_record_type;
-    const uint8_t                   init_record_number;
-# ifdef EMULATOR
-    const uint32_t                  init_padding; // XXX FIXME
-# else
-    const uint8_t                   init_padding; // XXX FIXME
-# endif
+    const enum system_init_r_type   init_record_type;    // Type of SystemInitRecords in the union
+    const uint8_t                   init_record_number;  // Number of SystemInitRecords
+    const int32_t                   init_record_offset;  // Offset to be added to the addresses
+                                                         // in the SystemInitRecords
     const union {
-        const SystemInitRecordOnesOnly *      init_records_ones_only;
-        const SystemInitRecordOnesAndZeroes * init_records_ones_and_zeroes;
+        const SystemInitRecordOnesOnly *        init_records_ones_only;
+        const SystemInitRecordOnesAndZeroes *   init_records_ones_and_zeroes;
+        const SystemInitRecordData16NoAddress * init_records_data16_no_address;
+        const SystemInitRecordData32NoAddress * init_records_data32_no_address;
     };
 } SystemInitRecordArray;
 
@@ -173,8 +187,10 @@ typedef struct {
 extern "C" {
 # endif
 
-extern void SystemInitOnesOnly(     const SystemInitRecordArray *records);
-extern void SystemInitOnesAndZeroes(const SystemInitRecordArray *records);
+extern void SystemInitOnesOnly(       const SystemInitRecordArray *records);
+extern void SystemInitOnesAndZeroes(  const SystemInitRecordArray *records);
+extern void SystemInitData16NoAddress(const SystemInitRecordArray *records);
+extern void SystemInitData32NoAddress(const SystemInitRecordArray *records);
 
 extern void SystemInitPeripherals(void);
 
@@ -187,7 +203,7 @@ extern void SystemInitPeripherals(void);
  */
 
 # ifdef __cplusplus
-#  define IF(x)
+#  define IF(x) x:
 # else
 #  define IF(x) .x=
 # endif
