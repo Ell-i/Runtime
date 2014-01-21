@@ -17,44 +17,35 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _EMULATOR_STM32F0XX_
-#define _EMULATOR_STM32F0XX_
+#ifndef _TIM_H_
+#define _TIM_H_
 
-#include <stdint.h>
+#include <Register.h>
 
-#include "../../system/stm32/inc/stm32f0xx.h"  // XXX FIX PATH
+class Timer {
+public:
+    DEFINE_REGISTER(TIM, CCR1, 0x00000000);
+    DEFINE_REGISTER(TIM, CCR2, 0x00000000);
+    DEFINE_REGISTER(TIM, CCR3, 0x00000000);
+    DEFINE_REGISTER(TIM, CCR4, 0x00000000);
+protected:
+    Timer() {}
+public:
+    static Timer TIM1;
+    static Timer TIM2;
+    static Timer TIM3;
+    static Timer TIM14;
+    static Timer TIM15;
+    static Timer TIM16;
+    static Timer TIM17;
+};
 
-/*
- * Undefine the main address defines in the real stm32f0xx.h, causing
- * a compile error on all constructs that use them.
- */
-#undef FLASH_BASE
-#undef SRAM_BASE
-#undef PERIPH_BASE
+Timer *const TIM1  = &Timer::TIM1;
+Timer *const TIM2  = &Timer::TIM2;
+Timer *const TIM3  = &Timer::TIM3;
+Timer *const TIM14 = &Timer::TIM14;
+Timer *const TIM15 = &Timer::TIM15;
+Timer *const TIM16 = &Timer::TIM16;
+Timer *const TIM17 = &Timer::TIM17;
 
-#undef RCC
-#undef FLASH
-#undef GPIOA
-#undef GPIOB
-#undef GPIOC
-#undef GPIOD
-#undef GPIOE
-#undef GPIOF
-#undef GPIOG
-#undef GPIOH
-
-#undef TIM1
-#undef TIM2
-#undef TIM3
-#undef TIM14
-#undef TIM15
-#undef TIM16
-#undef TIM17
-
-
-#include <RCC.h>
-#include <FLASH.h>
-#include <GPIO.h>
-#include <TIM.h>
-
-#endif //_EMULATOR_STM32F0XX_
+#endif //_TIM_H_
