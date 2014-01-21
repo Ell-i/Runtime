@@ -32,7 +32,13 @@ uint32_t Register::operator &= (uint32_t arg) {
     return value_ &= arg;
 }
 
-uint32_t Register::operator &  (uint32_t arg) {
+uint32_t Register16::operator &  (uint32_t arg) {
+    std::cout << periph_ << ':'
+              << name_ << ':' << value_ << '&' << arg << '\n';
+    return value_ & arg;
+}
+
+uint32_t Register32::operator &  (uint32_t arg) {
     std::cout << periph_ << ':'
               << name_ << ':' << value_ << '&' << arg << '\n';
     return value_ & arg;

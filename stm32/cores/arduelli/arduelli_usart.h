@@ -79,7 +79,7 @@
         = {                                                             \
         IF(init_record_type)   ONES_ONLY,                               \
         IF(init_record_number) COUNT_OF(USART ## usart ##_RCC_INIT_DefaultRecords), \
-        IF(init_record_offset) 0,                                       \
+        { IF(init_record_offset) 0 },                                   \
         { IF(init_records_ones_only) USART ## usart ## _RCC_INIT_DefaultRecords, }, \
     };                                                                  \
     const SystemInitRecordArray                                         \
@@ -88,7 +88,7 @@
         = {                                                             \
         IF(init_record_type)   DATA32_NO_ADDRESS,                       \
         IF(init_record_number) COUNT_OF(init_records2),                 \
-        IF(init_record_offset) (int32_t)USART ## usart,                 \
+        { IF(init_record_address32) &USART ## usart->CR1 },             \
         { IF(init_records_data32_no_address) init_records, },           \
     }
 

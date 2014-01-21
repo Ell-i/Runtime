@@ -163,8 +163,12 @@ enum system_init_r_type {
 typedef struct {
     const enum system_init_r_type   init_record_type;    // Type of SystemInitRecords in the union
     const uint8_t                   init_record_number;  // Number of SystemInitRecords
-    const int32_t                   init_record_offset;  // Offset to be added to the addresses
+    const union {
+        const int32_t               init_record_offset;  // Offset to be added to the addresses
                                                          // in the SystemInitRecords
+        volatile uint16_t *const    init_record_address16; // Base register address for 16_no_address
+        volatile uint32_t *const    init_record_address32; // Base register address for 32_no_address
+    };
     const union {
         const SystemInitRecordOnesOnly *        init_records_ones_only;
         const SystemInitRecordOnesAndZeroes *   init_records_ones_and_zeroes;

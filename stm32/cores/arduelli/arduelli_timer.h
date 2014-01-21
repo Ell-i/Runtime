@@ -79,7 +79,7 @@
         = {                                                             \
         IF(init_record_type)   ONES_ONLY,                               \
         IF(init_record_number) COUNT_OF(TIM ## timer ##_RCC_INIT_DefaultRecords), \
-        IF(init_record_offset) 0,                                       \
+        { IF(init_record_offset) 0 },                                   \
         { IF(init_records_ones_only) TIM ## timer ## _RCC_INIT_DefaultRecords, }, \
     };                                                                  \
     const SystemInitRecordArray                                         \
@@ -88,7 +88,7 @@
         = {                                                             \
         IF(init_record_type)   DATA16_NO_ADDRESS,                       \
         IF(init_record_number) COUNT_OF(init_records1),                 \
-        IF(init_record_offset) (int32_t)TIM ## timer,                   \
+        { IF(init_record_address16) &TIM ## timer->CR1 },               \
         { IF(init_records_data16_no_address) init_records1, },          \
     };                                                                  \
     const SystemInitRecordArray                                         \
@@ -97,7 +97,7 @@
         = {                                                             \
         IF(init_record_type)   DATA16_NO_ADDRESS,                       \
         IF(init_record_number) COUNT_OF(init_records2),                 \
-        IF(init_record_offset) (int32_t)TIM ## timer,                   \
+        { IF(init_record_address16) &TIM ## timer->CR1 },               \
         { IF(init_records_data16_no_address) init_records2, },          \
     }
 

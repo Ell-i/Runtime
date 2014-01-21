@@ -57,7 +57,7 @@ void SystemInitData16NoAddress(const SystemInitRecordArray *ra) {
     const SystemInitRecordData16NoAddress *r
         = (const SystemInitRecordData16NoAddress *)ra->init_records_data16_no_address;
 
-    register volatile uint16_t *a = (volatile uint16_t *const)ra->init_record_offset;
+    register volatile uint16_t *a = ra->init_record_address16;
     for (int i = 0; i < ra->init_record_number; i++) {
         *a = r->init_data16;   // Write 16 bits
         a += 2;                // Advance by 32 bits
@@ -68,7 +68,7 @@ void SystemInitData32NoAddress(const SystemInitRecordArray *ra) {
     const SystemInitRecordData32NoAddress *r
         = (const SystemInitRecordData32NoAddress *)ra->init_records_data32_no_address;
 
-    register volatile uint32_t *a = (volatile uint32_t *const)ra->init_record_offset;
+    register volatile uint32_t *a = ra->init_record_address32;
     for (int i = 0; i < ra->init_record_number; i++) {
         *a = r->init_data32;   // Write 32 bits
         a++;                   // Advance by 32 bits

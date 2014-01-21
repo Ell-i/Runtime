@@ -80,7 +80,7 @@
         = {                                                             \
         IF(init_record_type)   ONES_ONLY,                                     \
         IF(init_record_number) COUNT_OF(GPIO ## port ##_INIT_DefaultRecords), \
-        IF(init_record_offset) 0,                                             \
+        { IF(init_record_offset) 0 },                                   \
         { IF(init_records_ones_only) GPIO ## port ## _INIT_DefaultRecords, }, \
     }
 

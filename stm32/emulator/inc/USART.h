@@ -28,12 +28,12 @@
 
 class UniversalSynchronousAsynchronousReceiverTransmitter {
 public:
-    DEFINE_REGISTER(USART, CR1,      0);
-    DEFINE_REGISTER(USART, CR2,      0);
-    DEFINE_REGISTER(USART, CR3,      0);
-    DEFINE_REGISTER(USART, BRR,      0);
-    DEFINE_REGISTER(USART, GTPR,     0);
-    DEFINE_REGISTER(USART, RTOR,     0);
+    DEFINE_REGISTER(32, USART, CR1,      0);
+    DEFINE_REGISTER(32, USART, CR2,      0);
+    DEFINE_REGISTER(32, USART, CR3,      0);
+    DEFINE_REGISTER(32, USART, BRR,      0);
+    DEFINE_REGISTER(32, USART, GTPR,     0);
+    DEFINE_REGISTER(32, USART, RTOR,     0);
 protected:
     UniversalSynchronousAsynchronousReceiverTransmitter() {}
 public:

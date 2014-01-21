@@ -40,6 +40,15 @@ public:
     uint32_t  operator =  (uint32_t);
     uint32_t  operator |= (uint32_t);
     uint32_t  operator &= (uint32_t);
+};
+
+class Register32 : public Register {
+protected:
+    Register32(std::string periph, std::string name, uint32_t value)
+        : Register(periph, name, value)
+        {};
+
+public:
     uint32_t  operator &  (uint32_t);
     uint32_t *operator &  () const {
         // This must be inlined here as a simple const operator, otherwise
@@ -49,10 +58,26 @@ public:
     };
 };
 
-#define DEFINE_REGISTER(periph, name, value)                  \
-class Class ## name : public Register {                       \
+class Register16 : public Register {
+protected:
+    Register16(std::string periph, std::string name, uint32_t value)
+        : Register(periph, name, value)
+        {};
+
+public:
+    uint32_t  operator &  (uint32_t);
+    uint16_t *operator &  () const {
+        // This must be inlined here as a simple const operator, otherwise
+        // the compiler will not be able to evaluate expressions using
+        // it at the compile time, causing problems...
+        return (uint16_t *)&value_;
+    };
+};
+
+#define DEFINE_REGISTER(size, periph, name, value)            \
+class Class ## name : public Register ## size {               \
 public:                                                       \
-    Class ## name() : Register(# periph, # name, value) {};   \
+    Class ## name() : Register ## size (# periph, # name, value) {};   \
     uint32_t operator=(uint32_t arg) {                        \
         std::cout << periph_ << ":" << name_ << ":" << "="    \
             << arg << '\n';                                   \
