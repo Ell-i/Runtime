@@ -28,6 +28,6 @@ void setup() {
 
 void loop() {
 #ifdef EMULATOR
-    exit(0);
+    _exit(0);
 #endif
 }
