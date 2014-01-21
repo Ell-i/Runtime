@@ -37,8 +37,3 @@ uint32_t Register::operator &  (uint32_t arg) {
               << name_ << ':' << value_ << '&' << arg << '\n';
     return value_ & arg;
 }
-
-uint32_t *Register::operator & () {
-    std::cout << '&' << periph_ << ':' << name_ << '\n';
-    return (uint32_t *)&value_;
-}

@@ -35,12 +35,18 @@ protected:
         , name_(name)
         , value_(value)
         {};
+
 public:
     uint32_t  operator =  (uint32_t);
     uint32_t  operator |= (uint32_t);
     uint32_t  operator &= (uint32_t);
     uint32_t  operator &  (uint32_t);
-    uint32_t *operator &  ();
+    uint32_t *operator &  () const {
+        // This must be inlined here as a simple const operator, otherwise
+        // the compiler will not be able to evaluate expressions using
+        // it at the compile time, causing problems...
+        return (uint32_t *)&value_;
+    };
 };
 
 #define DEFINE_REGISTER(periph, name, value)                  \
