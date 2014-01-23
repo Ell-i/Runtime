@@ -21,6 +21,9 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2013-2014
  */
 
+#ifndef _WIRING_DIGITAL_H_
+# define _WIRING_DIGITAL_H_
+
 #include "arduelli_gpio.h"
 #include "ellduino_gpio.h" // XXX replace with variant.h
 
@@ -63,3 +66,4 @@ void  digitalWrite(pin_t pin, uint32_t val) {
         GPIOPIN[pin].gpio_port->BRR  = GPIOPIN[pin].gpio_mask;
 }
 
+#endif//_WIRING_DIGITAL_H_
