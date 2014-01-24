@@ -93,14 +93,25 @@ const SystemInitFunctionType SystemInitFunctions[SYSTEM_INIT_TYPE_NUMBER] = {
 extern unsigned int __peripheral_start, __peripheral_end;
 
 void SystemInitPeripherals(void) {
+#ifdef EMULATOR
+    // XXX FIXME.  Now we simply jump over the void *__peripheral_start, defined
+    // in emulator_pre.c.  Instead of this, in Linux we should use a linker script
+    // similar to the Cortex-M0 one, and in Mac OS X use the -alias LD option
+    // However, for the latter we know what is the first peripheral, and that
+    // we won't know for sure before we implement the segment order file for Mac OS X.
     const SystemInitRecordArray *const peri_start
-        = (const SystemInitRecordArray *)&__peripheral_start;
+        = (const SystemInitRecordArray *const)((char *)&__peripheral_start + 8);
+#else
+    const SystemInitRecordArray *const peri_start
+        = (const SystemInitRecordArray *const)&__peripheral_start;
+#endif
     const SystemInitRecordArray *const peri_end
-        = (const SystemInitRecordArray *)&__peripheral_end;
+        = (const SystemInitRecordArray *const)&__peripheral_end;
 
     for (register const SystemInitRecordArray *ir = peri_start; ir < peri_end; ir++) {
 #ifdef EMULATOR
-        std::cout << "InitRecord: " << (uint32_t)ir << " type: " << ir->init_record_type << '\n';
+        std::cout << "InitRecord: " << (uint32_t)ir << " type: " << ir->init_record_type
+                  << " count: " << (uint32_t)ir->init_record_number << '\n';
 #endif
         SystemInitFunctions[ir->init_record_type](ir);
     }

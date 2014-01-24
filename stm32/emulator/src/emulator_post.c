@@ -17,5 +17,5 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-extern void *__peripheral_end __attribute__((section(".text,.peripheral")));
-void *__peripheral_end = (void *)(&__peripheral_end);
+extern void *const __peripheral_end __attribute__((section(".text,.peripheral")));
+void *const __peripheral_end = 0;

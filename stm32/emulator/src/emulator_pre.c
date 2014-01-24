@@ -17,5 +17,5 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-extern void *__peripheral_start __attribute__((section(".text,.peripheral")));
-void *__peripheral_start = (char *)(&__peripheral_start) + 8; // XXX FIXME
+extern void *const __peripheral_start __attribute__((section(".text,.peripheral")));
+void *const __peripheral_start = 0;
