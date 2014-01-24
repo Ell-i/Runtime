@@ -21,6 +21,9 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+#ifndef _WIRING_ANALOG_H_
+# define _WIRING_ANALOG_H_
+
 #include "ellduino_gpio.h"  // XXX replace with variant.h
 #include "ellduino_timer.h" // XXX replace with variant.h
 #include "wiring_digital.h" // XXX Make sure the GPIO registers are initialised
@@ -53,3 +56,5 @@ const void * __TIM17 = &TIM17_INIT;
  */
 
 #include "wiring_analog_analogWrite.h"
+
+#endif//_WIRING_ANALOG_H_

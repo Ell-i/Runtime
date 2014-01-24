@@ -90,13 +90,13 @@ const SystemInitFunctionType SystemInitFunctions[SYSTEM_INIT_TYPE_NUMBER] = {
 /*
  * Start and end addresses of the peripheral initialisation records.
  */
-extern int __peripheral_start, __peripheral_end;
+extern unsigned int __peripheral_start, __peripheral_end;
 
 void SystemInitPeripherals(void) {
     const SystemInitRecordArray *const peri_start
-        = (const SystemInitRecordArray *)__peripheral_start;
+        = (const SystemInitRecordArray *)&__peripheral_start;
     const SystemInitRecordArray *const peri_end
-        = (const SystemInitRecordArray *)__peripheral_end;
+        = (const SystemInitRecordArray *)&__peripheral_end;
 
     for (register const SystemInitRecordArray *ir = peri_start; ir < peri_end; ir++) {
 #ifdef EMULATOR

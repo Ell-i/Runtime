@@ -28,3 +28,4 @@
 #include <ellduino_timer.h>
 #include <ellduino_usart.h>
 #include <wiring_digital.h>
+#include <wiring_analog.h>
