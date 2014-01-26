@@ -19,6 +19,7 @@ TARGETS = \
     test_digitalRead \
     test_digitalWrite \
     test_analogWrite \
+    test_Serial_begin \
 
 PLATFORM ?= arduino
 # PLATFORM = emulator
