@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2014 ELL-i co-operative.
+ * Copyright (c) 2013-2014 ELL-i co-operative.
+ *
+ * This is part of ELL-i software.
  *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,25 +14,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ELL-i software.  If not, see
- * <http://www.gnu.org/licenses/>.
+ * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Authors:  Pekka Nikander <pekka.nikander@ell-i.org>  2014
- */
+#include <USART.h>
 
-#ifndef _ELLDUINO_USART_H_
-# define _ELLDUINO_USART_H_
+UniversalSynchronousAsynchronousReceiverTransmitter 
+UniversalSynchronousAsynchronousReceiverTransmitter::USART1;
+UniversalSynchronousAsynchronousReceiverTransmitter 
+UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
 
-# include <arduelli_usart.h>
-
-/**
- * Declarations for externally visible USART init records.
- *
- * STM32F0 has USART ports 1 and 2.
- */
-USART_INIT_DEFAULT(1);
-USART_INIT_DEFAULT(2);
-
-#endif//_ELLDUINO_USART_H_

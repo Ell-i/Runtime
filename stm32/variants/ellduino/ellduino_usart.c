@@ -33,11 +33,11 @@
 # ifndef offsetof
 #  define offsetof(st, m) ((uint32_t)(&((st *)0)->m))
 # endif
-# define D32(p, r, v) [offsetof(p, r)] = { v }
+# define D32(p, r, v) [offsetof(p, r)/sizeof(uint32_t)] = { v }
 #endif
 
 const SystemInitRecordData32NoAddress USART_INIT_DefaultRecords[] = {
-    D32(USART1, CR1,
+    D32(USART_TypeDef, CR1,
         0
         | ! USART_CR1_EOBIE    /* 0: No smartcard end of block interrupts */
         | ! USART_CR1_RTOIE    /* 0: No receiver timeout interrupts */
@@ -61,11 +61,11 @@ const SystemInitRecordData32NoAddress USART_INIT_DefaultRecords[] = {
         | ! USART_CR1_UESM     /* 0: Wakeup from stop disabled */
         | ! USART_CR1_UE       /* 0: Do not enable the USART, only configure it at this time */
         ),
-    D32(USART1, CR2,
+    D32(USART_TypeDef, CR2,
         0
         | ! USART_CR2_ADD      /* 0x00: Default value, addressing not used */
         | ! USART_CR2_RTOEN    /* 0:    Default value, Receiver timeout disabled */
-        | ! USART_CR2_ABRMOD   /* 00:   Default value, autobaud not used */
+        | ! USART_CR2_ABRMODE  /* 00:   Default value, autobaud not used */
         | ! USART_CR2_ABREN    /* 0:    Autobaud rate detection disabled */
         | ! USART_CR2_MSBFIRST /* 0:    Default value, LSB first */
         | ! USART_CR2_DATAINV  /* 0:    Default value, normal logic */
@@ -82,7 +82,7 @@ const SystemInitRecordData32NoAddress USART_INIT_DefaultRecords[] = {
         | ! USART_CR2_LBDL     /* 0:    Default value, LIN mode not used */
         | ! USART_CR2_ADDM7    /* 0:    Default value, addressing not used */
         ),
-    D32(USART1, CR3,
+    D32(USART_TypeDef, CR3,
         0
         | ! USART_CR3_WUFIE    /* 0:    Defalut value, wakeup from stop not used */
         | ! USART_CR3_WUS      /* 00:   Default value, wakeup from stop not used */
@@ -105,11 +105,11 @@ const SystemInitRecordData32NoAddress USART_INIT_DefaultRecords[] = {
         | ! USART_CR3_EIE      /* 0:    Disable error interrupts, XXX TBD */
         ),
     /* Default to 115200 bauds at 48 MHz clock, see Table 48 on page 589 of RM0091 */
-    D32(USART1, BRR, 0x1A1),
+    D32(USART_TypeDef, BRR, 0x1A1),
     /* Guard time and prescaler not needed as IrDA nor smartcard are used */
-    D32(USART1, GTPR, 0),
+    D32(USART_TypeDef, GTPR, 0),
     /* Receiver timeout not used */
-    D32(USART1, RTOR, 0),
+    D32(USART_TypeDef, RTOR, 0),
 };
 
 /*
@@ -121,5 +121,5 @@ const SystemInitRecordData32NoAddress USART_INIT_DefaultRecords[] = {
  * peripheral ports accordingly.
  */
 
-DEFINE_USART_PORT(1);
-DEFINE_USART_PORT(2);
+DEFINE_USART_DEVICE(/*USART*/1, /*APB*/2, USART_INIT_DefaultRecords);
+DEFINE_USART_DEVICE(/*USART*/2, /*APB*/1, USART_INIT_DefaultRecords);
