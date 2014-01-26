@@ -25,27 +25,7 @@
 # define _WIRING_DIGITAL_H_
 
 #include "arduelli_gpio.h"
-#include "ellduino_gpio.h" // XXX replace with variant.h
-
-/*
- * With the current Arduino API, it is not possible to reliably
- * determine at compile time which GPIO ports are used and which are
- * not.  Hence, the only viable option at the moment is to explicitly
- * refer to the GPIO system init records, by creating explicit
- * references to them.  With the -fdata-sections gcc options, the
- * __GPIOx names below will be deleted during link time, leaving only
- * the referenced and explicitly kept GPIOx_INIT records into the
- * linked code (due to the corresponding linker KEEP directive.)
- *
- * Another option would be to create an explicit references from the
- * code, but that is even worse since it would generate runtime code.
- */
-
-const void * __GPIOA = &GPIOA_INIT;
-const void * __GPIOB = &GPIOB_INIT;
-const void * __GPIOC = &GPIOC_INIT;
-const void * __GPIOD = &GPIOD_INIT;
-const void * __GPIOF = &GPIOF_INIT;
+#include "ellduino_gpio.h" // XXX replace with variant_gpio.h
 
 /**************************************
  * Arduino APIs

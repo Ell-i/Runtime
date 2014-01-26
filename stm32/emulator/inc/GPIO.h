@@ -29,7 +29,7 @@ public:
     //DEFINE_REGISTER(32, GPIO, ODR, 0);
     DEFINE_REGISTER(32, GPIO, BSRR, 0);
     //DEFINE_REGISTER(32, GPIO, LCKR, 0);
-    //DEFINE_REGISTER(32, GPIO, AFR[2], 0);
+    DEFINE_REGISTER(32, GPIO, AFR, 0)[2];
     DEFINE_REGISTER(32, GPIO, BRR, 0);
 protected:
     GeneralPurposeInputOutput() {}

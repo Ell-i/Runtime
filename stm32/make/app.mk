@@ -29,7 +29,8 @@ APP ?= sketch
 # Define app library objects.  Add new objects here.
 #
 
-APP_OBJS ?= main.o $(APP).o
+APP_OBJS ?= main.o $(APP).o $(VARIANT).o
+
 
 #
 # Rules
