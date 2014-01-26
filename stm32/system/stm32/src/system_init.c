@@ -100,7 +100,7 @@ void SystemInitPeripherals(void) {
     // However, for the latter we know what is the first peripheral, and that
     // we won't know for sure before we implement the segment order file for Mac OS X.
     const SystemInitRecordArray *const peri_start
-        = (const SystemInitRecordArray *const)((char *)&__peripheral_start + 8);
+        = (const SystemInitRecordArray *const)((char *)&__peripheral_start + sizeof(void *const));
 #else
     const SystemInitRecordArray *const peri_start
         = (const SystemInitRecordArray *const)&__peripheral_start;

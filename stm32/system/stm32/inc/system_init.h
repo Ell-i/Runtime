@@ -206,10 +206,6 @@ extern void SystemInitPeripherals(void);
  * XXX TBD
  */
 
-# ifdef __cplusplus
-#  define IF(x) x:
-# else
-#  define IF(x) .x=
-# endif
+# define IF(x) .x=
 
 #endif//_SYSTEM_INIT_H_

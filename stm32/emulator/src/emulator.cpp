@@ -19,9 +19,10 @@
 
 #include <stdint.h>
 
-uint32_t _sidata, _sdata, _edata, _sbss, _ebss;
 
 extern "C" {
+    uint32_t _sidata, _sdata, _edata, _sbss, _ebss;
+
     void Reset_Handler(void);
 }
 

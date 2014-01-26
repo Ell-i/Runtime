@@ -4,11 +4,10 @@
 # Define make variables for the Emulator
 #
 
-VARIABLE_FILES := $(TOP)make/arduino.txt $(TOP)platform.txt
+VARIABLE_FILES := $(TOP)make/emulator.txt $(TOP)make/arduino.txt $(TOP)platform.txt
 
 EXTRA_CFLAGS += \
         -DEMULATOR \
-	-m32 -march=i386 \
 	-D__STM32F051__ \
 	-Dmain=emulated_main \
 	-I$(TOP)emulator/inc \
@@ -29,9 +28,8 @@ $(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
 endef
 
 ifeq ($(shell uname -s),Darwin)
-CC  := llvm-g++
-CXX := llvm-g++
-# LD  := g++ -m32 -march=i386
+CC  := clang++ -x c++
+CXX := clang++ -x c++
 LD  := llvm-g++
 else
 CC  := g++
@@ -62,13 +60,10 @@ PRE_OBJS  := emulator_pre.o
 POST_OBJS := emulator_post.o
 
 #
-# Figure out the GCC installation directories to locate libc.a
+# C++ standard library
 #
 
-LIBGCC_LIBRARY := \
-	$(shell $(CC) -m32 -print-libgcc-file-name)
-
-LIBS += -lstdc++ $(LIBGCC_LIBRARY)
+LIBS += -lstdc++
 
 #
 # Additional system objects

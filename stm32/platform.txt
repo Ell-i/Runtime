@@ -43,14 +43,15 @@ compiler.cmd.ar=     {compiler.prefix}ar
 compiler.cmd.size=   {compiler.prefix}size
 
 compiler.cflags.debug=      -g
-compiler.cflags.optimise=   -Os --param max-inline-insns-single=500
+compiler.cflags.inline=     --param max-inline-insns-single=500
+compiler.cflags.optimise=   -Os
 compiler.cflags.warnings=   -Wall
 compiler.cflags.sections=   -ffunction-sections -fdata-sections -fno-common
 compiler.cflags.libraries=  -nostdlib
 compiler.cflags.target=     -mcpu={build.mcu} -mthumb
 compiler.cflags.defines=    -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DELLI_{build.board} -DARDUINO_ARCH_{build.arch}
 
-compiler.cflags.1=          {compiler.cflags.debug} {compiler.cflags.optimise} {compiler.cflags.warnings}
+compiler.cflags.1=          {compiler.cflags.debug} {compiler.cflags.optimise} {compiler.cflags.inline} {compiler.cflags.warnings}
 compiler.cflags.2=          {compiler.cflags.sections} {compiler.cflags.libraries} {compiler.cflags.target}
 compiler.cflags.3=          {compiler.cflags.defines}
 compiler.cflags=            {compiler.cflags.1} {compiler.cflags.2} {compiler.cflags.3}
@@ -61,7 +62,7 @@ compiler.cxxflags=          -fno-rtti -fno-exceptions -fno-threadsafe-statics
 build.extra_flags=
 
 compiler.cmd.cc.flags=      -c -std=c99     {compiler.cflags}                      {build.extra_flags}
-compiler.cmd.cxx.flags=     -c -std=gnu++0x {compiler.cflags} {compiler.cxxflags}  {build.extra_flags}
+compiler.cmd.cxx.flags=     -c -std=c++11   {compiler.cflags} {compiler.cxxflags}  {build.extra_flags}
 compiler.cmd.as.flags=      {compiler.cflags.debug} -assembler-with-cpp
 
 compiler.cmd.ar.flags=      -rcs

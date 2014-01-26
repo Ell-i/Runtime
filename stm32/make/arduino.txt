@@ -4,6 +4,10 @@
 # Arduino IDE variable equivalents used in Makefiles
 #
 
+# Object files in cores/<core> and variants/<variant>
+
+object_files= {build.variant}.o
+
 runtime.ide.path=../../..
 runtime.ide.version=1.5.4
 
