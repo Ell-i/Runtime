@@ -25,6 +25,7 @@
 #define _USART_H_
 
 #include <Register.h>
+#include <stm32f0xx.h>
 
 class UniversalSynchronousAsynchronousReceiverTransmitter {
 public:
@@ -32,6 +33,8 @@ public:
     DEFINE_REGISTER(32, USART, CR2,      0);
     DEFINE_REGISTER(32, USART, CR3,      0);
     DEFINE_REGISTER(32, USART, BRR,      0);
+    DEFINE_REGISTER(32, USART, TDR,      0);
+    DEFINE_REGISTER(32, USART, ISR,      USART_ISR_TXE);
     DEFINE_REGISTER(32, USART, GTPR,     0);
     DEFINE_REGISTER(32, USART, RTOR,     0);
 protected:

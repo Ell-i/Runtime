@@ -26,13 +26,15 @@
 #include <stm32f0xx.h>
 #include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
 #include <ellduino_usart.h>  // XXX To be placed into the variant.h!
+#include <arduelli_thread.h> // XXX TBD -- is this the right file name?
 #include <Arduino_Stream.h>
 
 class Serial : public Stream {
 public:
     const USART usart_;
     constexpr Serial(const USART &);
-    void begin(unsigned long) const;
+    void begin(uint32_t) const;
+    void write(uint8_t) const;
 };
 
 #define DEFINE_SERIAL(usart_number, gpio_letter, tx_pin, af) \
@@ -42,7 +44,7 @@ public:
 constexpr Serial::Serial(const USART &usart)
     : usart_(usart) {}
 
-inline void Serial::begin(unsigned long baudrate) const {
+inline void Serial::begin(uint32_t baudrate) const {
     /* Place the GPIO pins into the right alternative function */
     register uint32_t afr = *usart_.gpio_afr_;
     afr &= usart_.gpio_afr_mask_;
@@ -60,4 +62,12 @@ inline void Serial::begin(unsigned long baudrate) const {
 
     /* Enable the transmitter and the USART */
     usart_.usart_->CR1 |= USART_CR1_TE | USART_CR1_UE;
+}
+
+inline void Serial::write(uint8_t c) const {
+    usart_.usart_->TDR = c;
+
+    while ((usart_.usart_->ISR & USART_ISR_TXE) == 0) {
+        yield();
+    }
 }

@@ -123,4 +123,4 @@ struct USART {
     IF(gpio_moder_ones_) (GPIO_MODER_MODER0_1| GPIO_MODER_MODER1_1) << ((tx_pin % 8) * 2), \
     }
 
-#endif//_ARDUELLI_PWM_H_
+#endif//_ARDUELLI_USART_H_
