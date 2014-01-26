@@ -20,6 +20,7 @@ TARGETS = \
     test_digitalWrite \
     test_analogWrite \
     test_Serial_begin \
+    test_Serial_write_uint8 \
 
 PLATFORM ?= arduino
 # PLATFORM = emulator
