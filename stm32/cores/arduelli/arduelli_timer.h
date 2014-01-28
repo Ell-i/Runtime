@@ -63,6 +63,11 @@
  * make sure that the compiler does *not* optimise these away.  It
  * would be good for someone to see if the definitions work also if
  * they are static, as they don't need to pollute the name space.
+ *
+ * XXX FIXME The inverse ordering the declarations of TIMx_RCC_INIT >
+ * TIMx_INIT1 > TIMx_INIT makes the linker to order them correctly
+ * at the initalization table. This should be concretely specified at
+ * @flash.ld
  */
 
 #define DEFINE_TIMER(apbus, timer, init_records1, init_records2)        \
@@ -74,13 +79,13 @@
         },                                                              \
     };                                                                  \
     const SystemInitRecordArray                                         \
-      TIM ## timer ## _RCC_INIT                                         \
+      TIM ## timer ## _INIT                                             \
        __attribute__((section(SYSTEM_INIT_SECTION(TIM ## timer))))      \
         = {                                                             \
-        IF(init_record_type)   ONES_ONLY,                               \
-        IF(init_record_number) COUNT_OF(TIM ## timer ##_RCC_INIT_DefaultRecords), \
-        { IF(init_record_offset) 0 },                                   \
-        { IF(init_records_ones_only) TIM ## timer ## _RCC_INIT_DefaultRecords, }, \
+        IF(init_record_type)   DATA16_NO_ADDRESS,                       \
+        IF(init_record_number) COUNT_OF(init_records2),                 \
+        { IF(init_record_address16) &TIM ## timer->CR1 },               \
+        { IF(init_records_data16_no_address) init_records2, },          \
     };                                                                  \
     const SystemInitRecordArray                                         \
       TIM ## timer ## _INIT1                                            \
@@ -92,13 +97,13 @@
         { IF(init_records_data16_no_address) init_records1, },          \
     };                                                                  \
     const SystemInitRecordArray                                         \
-      TIM ## timer ## _INIT                                             \
+      TIM ## timer ## _RCC_INIT                                         \
        __attribute__((section(SYSTEM_INIT_SECTION(TIM ## timer))))      \
         = {                                                             \
-        IF(init_record_type)   DATA16_NO_ADDRESS,                       \
-        IF(init_record_number) COUNT_OF(init_records2),                 \
-        { IF(init_record_address16) &TIM ## timer->CR1 },               \
-        { IF(init_records_data16_no_address) init_records2, },          \
+        IF(init_record_type)   ONES_ONLY,                               \
+        IF(init_record_number) COUNT_OF(TIM ## timer ##_RCC_INIT_DefaultRecords), \
+        { IF(init_record_offset) 0 },                                   \
+        { IF(init_records_ones_only) TIM ## timer ## _RCC_INIT_DefaultRecords, }, \
     }
 
 /**
