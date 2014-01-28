@@ -166,7 +166,7 @@ typedef struct {
     const union {
         const int32_t               init_record_offset;  // Offset to be added to the addresses
                                                          // in the SystemInitRecords
-        volatile uint16_t *const    init_record_address16; // Base register address for 16_no_address
+        volatile uint32_t *const    init_record_address16; // Base register address for 16_no_address
         volatile uint32_t *const    init_record_address32; // Base register address for 32_no_address
     };
     const union {
