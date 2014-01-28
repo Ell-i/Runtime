@@ -33,7 +33,7 @@
 # ifndef offsetof
 #  define offsetof(st, m) ((uint32_t)(&((st *)0)->m))
 # endif
-# define D16(p, r, v) [offsetof(p, r)] = { v }
+# define D16(p, r, v) [offsetof(p, r)/sizeof(uint32_t)] = { v }
 #endif
 
 const SystemInitRecordData16NoAddress TIM_INIT_DefaultRecords[] = {
