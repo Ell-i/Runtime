@@ -38,4 +38,4 @@ $(TARGETS): %:
 
 tests:	PLATFORM = emulator
 tests:  $(TARGETS)
-	for t in $(TARGETS); do ./$$t/$$t; done
+	for t in $(TARGETS); do DYLD_BIND_AT_LAUNCH=1 ./$$t/$$t; done
