@@ -43,11 +43,11 @@ const void * __GPIOC = &GPIOC_INIT;
 const void * __GPIOD = &GPIOD_INIT;
 const void * __GPIOF = &GPIOF_INIT;
 
-const void * __TIM1 = &TIM1_INIT;
-const void * __TIM2 = &TIM2_INIT;
-const void * __TIM3 = &TIM3_INIT;
-const void * __TIM14 = &TIM14_INIT;
-const void * __TIM15 = &TIM15_INIT;
-const void * __TIM16 = &TIM16_INIT;
-const void * __TIM17 = &TIM17_INIT;
+const void * __TIM1 = &TIM1_INIT1;
+const void * __TIM2 = &TIM2_INIT1;
+const void * __TIM3 = &TIM3_INIT1;
+const void * __TIM14 = &TIM14_INIT1;
+const void * __TIM15 = &TIM15_INIT1;
+const void * __TIM16 = &TIM16_INIT1;
+const void * __TIM17 = &TIM17_INIT1;
 

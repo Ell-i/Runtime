@@ -181,9 +181,9 @@ typedef struct {
  * A linker section (aka segment) for SystemInitRecordArrays.
  */
 # ifdef __MACH__
-#  define SYSTEM_INIT_SECTION(port) ".text,.peripheral"
+#  define SYSTEM_INIT_SECTION(sect, port) ".text,.peripheral"
 # else
-#  define SYSTEM_INIT_SECTION(port) ".peripheral.default." # port
+#  define SYSTEM_INIT_SECTION(sect, port) ".peripheral." # sect # port
 # endif
 
 

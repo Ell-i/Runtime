@@ -56,7 +56,8 @@ SECTIONS
          */
         . = ALIGN(4);
         __peripheral_start = .;
-        KEEP (*(.peripheral.*)) /* Read-only peripheral initialisation data */
+        KEEP (*(.peripheral.RCC*))      /* Read-only RCC initialisation data */
+        KEEP (*(SORT(.peripheral.*)))  /* Read-only peripheral initialisation data */
         __peripheral_end = .;
 
         /* 

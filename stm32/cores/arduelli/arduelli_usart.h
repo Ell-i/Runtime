@@ -75,7 +75,7 @@
     };                                                                  \
     const SystemInitRecordArray                                         \
       USART ## usart ## _RCC_INIT                                       \
-       __attribute__((section(SYSTEM_INIT_SECTION(USART ## usart))))    \
+       __attribute__((section(SYSTEM_INIT_SECTION(RCC, USART ## usart))))\
         = {                                                             \
         IF(init_record_type)   ONES_ONLY,                               \
         IF(init_record_number) COUNT_OF(USART ## usart ##_RCC_INIT_DefaultRecords), \
@@ -84,7 +84,7 @@
     };                                                                  \
     const SystemInitRecordArray                                         \
       USART ## usart ## _INIT                                           \
-       __attribute__((section(SYSTEM_INIT_SECTION(USART ## usart))))    \
+       __attribute__((section(SYSTEM_INIT_SECTION(1, USART ## usart)))) \
         = {                                                             \
         IF(init_record_type)   DATA32_NO_ADDRESS,                       \
         IF(init_record_number) COUNT_OF(init_records),                  \
