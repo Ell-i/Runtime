@@ -119,8 +119,8 @@ struct USART {
     IF(gpio_afr_mask_)   (GPIO_AFRL_AFRL0 | GPIO_AFRL_AFRL1) << ((tx_pin % 8) * 4), \
     IF(gpio_afr_ones_)   (af              | af << 4        ) << ((tx_pin % 8) * 4), \
     IF(gpio_moder_)      &GPIO ## gpio_letter->MODER,                   \
-    IF(gpio_moder_mask_) (GPIO_MODER_MODER0  | GPIO_MODER_MODER1  ) << ((tx_pin % 8) * 2), \
-    IF(gpio_moder_ones_) (GPIO_MODER_MODER0_1| GPIO_MODER_MODER1_1) << ((tx_pin % 8) * 2), \
+    IF(gpio_moder_mask_) (GPIO_MODER_MODER0  | GPIO_MODER_MODER1  ) << (tx_pin * 2), \
+    IF(gpio_moder_ones_) (GPIO_MODER_MODER0_1| GPIO_MODER_MODER1_1) << (tx_pin * 2), \
     }
 
 #endif//_ARDUELLI_USART_H_
