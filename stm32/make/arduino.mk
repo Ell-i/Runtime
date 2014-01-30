@@ -47,6 +47,6 @@ CXXFLAGS += $(EXTRA_CFLAGS)
 #
 
 LIBGCC_LIBRARY := \
-	$(shell $(CC) -print-libgcc-file-name)
+	$(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 
 LIBS += $(LIBGCC_LIBRARY)
