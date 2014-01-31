@@ -46,12 +46,28 @@
  */
 
 /**
+ * XXX (later) This code is based on the assumption that the C++ version of 
+ * the D32 macro will be used. Although it cuould be removed and use the direct
+ * value, it is still used to keep homogeneity.
+ */
+
+#ifdef __cplusplus
+# define D32(p, r, v) { v }
+#else
+# ifndef offsetof
+#  define offsetof(st, m) ((uint32_t)(&((st *)0)->m))
+# endif
+# define D32(p, r, v) [offsetof(p, r)/sizeof(uint32_t)] = { v }
+#endif
+
+/**
  * Declares an GPIO init record so that they are externally
  * visible.
  */
 
-#  define GPIO_INIT_DEFAULT(port) \
-    extern const SystemInitRecordArray GPIO ## port ## _INIT
+#  define GPIO_INIT_DEFAULT(port)                                       \
+    extern const SystemInitRecordArray GPIO ## port ## _INIT1,          \
+        GPIO ## port ## _INIT2, GPIO ## port ## _RCC_INIT
 
 /**
  * Defines an GPIO init record and makes it visible through the
@@ -66,23 +82,159 @@
  * they are static, as they don't need to pollute the name space.
  */
 
-#define DEFINE_GPIO_PORT(port)                                          \
+#define DEFINE_GPIO_PORT(port, init_records1, init_records2)            \
     const SystemInitRecordOnesOnly                                      \
-    GPIO ## port ## _INIT_DefaultRecords[] = {                          \
+    GPIO ## port ## _RCC_INIT_DefaultRecords[] = {                      \
         {                                                               \
             IF(init_r_address) &RCC->AHBENR,                            \
             IF(init_r_ones)    RCC_AHBENR_GPIO ## port ## EN,           \
         },                                                              \
     };                                                                  \
     const SystemInitRecordArray                                         \
-      GPIO ## port ## _INIT                                             \
+      GPIO ## port ## _RCC_INIT                                         \
         __attribute__((section(SYSTEM_INIT_SECTION(RCC, GPIO ## port))))\
         = {                                                             \
         IF(init_record_type)   ONES_ONLY,                               \
-        IF(init_record_number) COUNT_OF(GPIO ## port ##_INIT_DefaultRecords), \
+        IF(init_record_number) COUNT_OF(GPIO ## port ## _RCC_INIT_DefaultRecords), \
         { IF(init_record_offset) 0 },                                   \
-        { IF(init_records_ones_only) GPIO ## port ## _INIT_DefaultRecords, }, \
+        { IF(init_records_ones_only) GPIO ## port ## _RCC_INIT_DefaultRecords, }, \
+    };                                                                  \
+    const SystemInitRecordArray                                         \
+      GPIO ## port ## _INIT1                                            \
+       __attribute__((section(SYSTEM_INIT_SECTION(1, GPIO ## port))))   \
+        = {                                                             \
+        IF(init_record_type)   DATA32_NO_ADDRESS,                       \
+        IF(init_record_number) COUNT_OF(init_records1),                 \
+        { IF(init_record_address32) &GPIO ## port->MODER },             \
+        { IF(init_records_data32_no_address) init_records1, },          \
+    };                                                                  \
+    const SystemInitRecordArray                                         \
+      GPIO ## port ## _INIT2                                            \
+       __attribute__((section(SYSTEM_INIT_SECTION(2, GPIO ## port))))   \
+        = {                                                             \
+        IF(init_record_type)   DATA32_NO_ADDRESS,                       \
+        IF(init_record_number) COUNT_OF(init_records2),                 \
+        { IF(init_record_address32) &GPIO ## port->AFR[0] },            \
+        { IF(init_records_data32_no_address) init_records2, },          \
     }
+
+
+#define DEFINE_GPIO_PIN_INIT(port, pin, mode, type, speed, pupd, af)    \
+    static const uint32_t __GPIO ## port ## _PIN ## pin ## _MODE =      \
+        GPIO_MODER_MODER0_ ## mode<< (pin * 2);                         \
+    static const uint32_t __GPIO ## port ## _PIN ## pin ## _TYPE =      \
+        GPIO_OTYPER_OT_0_ ## type<< (pin * 1);                          \
+    static const uint32_t __GPIO ## port ## _PIN ## pin ## _SPEED =     \
+        GPIO_OSPEEDR_OSPEEDR0_ ## speed<< (pin * 2);                    \
+    static const uint32_t __GPIO ## port ## _PIN ## pin ## _PUPD =      \
+        GPIO_PUPDR_PUPDR0_ ## pupd<< (pin * 2);                         \
+    static const uint32_t __GPIO ## port ## _PIN ## pin ## _AF =        \
+        GPIO_AFRx_AFRx0_AF ## af<< ((pin % 8) * 4)
+
+
+#define DEFINE_GPIO_INIT_RECORD(port)                                   \
+const SystemInitRecordData32NoAddress GPIO ## port ## _INIT_DefaultRecords[] = { \
+    D32(GPIO_TypeDef, MODER,                                            \
+        0                                                               \
+        | __GPIO ## port ## _PIN0_MODE                                  \
+        | __GPIO ## port ## _PIN1_MODE                                  \
+        | __GPIO ## port ## _PIN2_MODE                                  \
+        | __GPIO ## port ## _PIN3_MODE                                  \
+        | __GPIO ## port ## _PIN4_MODE                                  \
+        | __GPIO ## port ## _PIN5_MODE                                  \
+        | __GPIO ## port ## _PIN6_MODE                                  \
+        | __GPIO ## port ## _PIN7_MODE                                  \
+        | __GPIO ## port ## _PIN8_MODE                                  \
+        | __GPIO ## port ## _PIN9_MODE                                  \
+        | __GPIO ## port ## _PIN10_MODE                                 \
+        | __GPIO ## port ## _PIN11_MODE                                 \
+        | __GPIO ## port ## _PIN12_MODE                                 \
+        | __GPIO ## port ## _PIN13_MODE                                 \
+        | __GPIO ## port ## _PIN14_MODE                                 \
+        | __GPIO ## port ## _PIN15_MODE                                 \
+        ),                                                              \
+    D32(GPIO_TypeDef, OTYPER,                                           \
+        0                                                               \
+        | __GPIO ## port ## _PIN0_TYPE                                  \
+        | __GPIO ## port ## _PIN1_TYPE                                  \
+        | __GPIO ## port ## _PIN2_TYPE                                  \
+        | __GPIO ## port ## _PIN3_TYPE                                  \
+        | __GPIO ## port ## _PIN4_TYPE                                  \
+        | __GPIO ## port ## _PIN5_TYPE                                  \
+        | __GPIO ## port ## _PIN6_TYPE                                  \
+        | __GPIO ## port ## _PIN7_TYPE                                  \
+        | __GPIO ## port ## _PIN8_TYPE                                  \
+        | __GPIO ## port ## _PIN9_TYPE                                  \
+        | __GPIO ## port ## _PIN10_TYPE                                 \
+        | __GPIO ## port ## _PIN11_TYPE                                 \
+        | __GPIO ## port ## _PIN12_TYPE                                 \
+        | __GPIO ## port ## _PIN13_TYPE                                 \
+        | __GPIO ## port ## _PIN14_TYPE                                 \
+        | __GPIO ## port ## _PIN15_TYPE                                 \
+        ),                                                              \
+    D32(GPIO_TypeDef, OSPEEDR,                                          \
+        0                                                               \
+        | __GPIO ## port ## _PIN0_SPEED                                 \
+        | __GPIO ## port ## _PIN1_SPEED                                 \
+        | __GPIO ## port ## _PIN2_SPEED                                 \
+        | __GPIO ## port ## _PIN3_SPEED                                 \
+        | __GPIO ## port ## _PIN4_SPEED                                 \
+        | __GPIO ## port ## _PIN5_SPEED                                 \
+        | __GPIO ## port ## _PIN6_SPEED                                 \
+        | __GPIO ## port ## _PIN7_SPEED                                 \
+        | __GPIO ## port ## _PIN8_SPEED                                 \
+        | __GPIO ## port ## _PIN9_SPEED                                 \
+        | __GPIO ## port ## _PIN10_SPEED                                \
+        | __GPIO ## port ## _PIN11_SPEED                                \
+        | __GPIO ## port ## _PIN12_SPEED                                \
+        | __GPIO ## port ## _PIN13_SPEED                                \
+        | __GPIO ## port ## _PIN14_SPEED                                \
+        | __GPIO ## port ## _PIN15_SPEED                                \
+        ),                                                              \
+    D32(GPIO_TypeDef, PUPDR,                                            \
+        0                                                               \
+        | __GPIO ## port ## _PIN0_PUPD                                  \
+        | __GPIO ## port ## _PIN1_PUPD                                  \
+        | __GPIO ## port ## _PIN2_PUPD                                  \
+        | __GPIO ## port ## _PIN3_PUPD                                  \
+        | __GPIO ## port ## _PIN4_PUPD                                  \
+        | __GPIO ## port ## _PIN5_PUPD                                  \
+        | __GPIO ## port ## _PIN6_PUPD                                  \
+        | __GPIO ## port ## _PIN7_PUPD                                  \
+        | __GPIO ## port ## _PIN8_PUPD                                  \
+        | __GPIO ## port ## _PIN9_PUPD                                  \
+        | __GPIO ## port ## _PIN10_PUPD                                 \
+        | __GPIO ## port ## _PIN11_PUPD                                 \
+        | __GPIO ## port ## _PIN12_PUPD                                 \
+        | __GPIO ## port ## _PIN13_PUPD                                 \
+        | __GPIO ## port ## _PIN14_PUPD                                 \
+        | __GPIO ## port ## _PIN15_PUPD                                 \
+        ),                                                              \
+};                                                                      \
+const SystemInitRecordData32NoAddress GPIO ## port ## _INIT_AltFunctRecords[] = { \
+    D32(GPIO_TypeDef, AFR[0],                                           \
+        0                                                               \
+        | __GPIO ## port ## _PIN0_AF                                    \
+        | __GPIO ## port ## _PIN1_AF                                    \
+        | __GPIO ## port ## _PIN2_AF                                    \
+        | __GPIO ## port ## _PIN3_AF                                    \
+        | __GPIO ## port ## _PIN4_AF                                    \
+        | __GPIO ## port ## _PIN5_AF                                    \
+        | __GPIO ## port ## _PIN6_AF                                    \
+        | __GPIO ## port ## _PIN7_AF                                    \
+        ),                                                              \
+    D32(GPIO_TypeDef, AFR[1],                                           \
+        0                                                               \
+        | __GPIO ## port ## _PIN8_AF                                    \
+        | __GPIO ## port ## _PIN9_AF                                    \
+        | __GPIO ## port ## _PIN10_AF                                   \
+        | __GPIO ## port ## _PIN11_AF                                   \
+        | __GPIO ## port ## _PIN12_AF                                   \
+        | __GPIO ## port ## _PIN13_AF                                   \
+        | __GPIO ## port ## _PIN14_AF                                   \
+        | __GPIO ## port ## _PIN15_AF                                   \
+        ),                                                              \
+}
 
 /**
  * A const data structure describing each Arduino-compatible GPIO pin
