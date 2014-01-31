@@ -22,6 +22,7 @@
 
 #include "ellduino_gpio.h"
 #include "ellduino_timer.h"
+#include "ellduino_usart.h"
 
 /*
  * With the current Arduino API, it is not possible to reliably
@@ -51,3 +52,5 @@ const void * __TIM15 = &TIM15_INIT1;
 const void * __TIM16 = &TIM16_INIT1;
 const void * __TIM17 = &TIM17_INIT1;
 
+const void * __USART1 = &USART1_INIT;
+const void * __USART2 = &USART2_INIT;
