@@ -37,11 +37,11 @@
  * code, but that is even worse since it would generate runtime code.
  */
 
-const void * __GPIOA = &GPIOA_INIT;
-const void * __GPIOB = &GPIOB_INIT;
-const void * __GPIOC = &GPIOC_INIT;
-const void * __GPIOD = &GPIOD_INIT;
-const void * __GPIOF = &GPIOF_INIT;
+const void * __GPIOA = &GPIOA_INIT1;
+const void * __GPIOB = &GPIOB_INIT1;
+const void * __GPIOC = &GPIOC_INIT1;
+const void * __GPIOD = &GPIOD_INIT1;
+const void * __GPIOF = &GPIOF_INIT1;
 
 const void * __TIM1 = &TIM1_INIT1;
 const void * __TIM2 = &TIM2_INIT1;

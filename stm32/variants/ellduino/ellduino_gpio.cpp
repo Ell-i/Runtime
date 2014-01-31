@@ -24,6 +24,16 @@
 #include <ellduino_gpio.h>
 
 /*
+ * Boot-time definitions for the STM32F0 series MCU GPIO registers.
+ */
+
+DEFINE_GPIO_INIT_RECORD(A);
+DEFINE_GPIO_INIT_RECORD(B);
+DEFINE_GPIO_INIT_RECORD(C);
+DEFINE_GPIO_INIT_RECORD(D);
+DEFINE_GPIO_INIT_RECORD(F);
+
+/*
  * Boot-time definitions for the STM32F0 series MCU ports.
  *
  * These macros here generate SystemInitRecord structures to the
@@ -32,9 +42,9 @@
  * peripheral ports accordingly.
  */
 
-DEFINE_GPIO_PORT(A);
-DEFINE_GPIO_PORT(B);
-DEFINE_GPIO_PORT(C);
-DEFINE_GPIO_PORT(D);
-DEFINE_GPIO_PORT(F);
+DEFINE_GPIO_PORT(A, GPIOA_INIT_DefaultRecords, GPIOA_INIT_AltFunctRecords);
+DEFINE_GPIO_PORT(B, GPIOB_INIT_DefaultRecords, GPIOB_INIT_AltFunctRecords);
+DEFINE_GPIO_PORT(C, GPIOC_INIT_DefaultRecords, GPIOC_INIT_AltFunctRecords);
+DEFINE_GPIO_PORT(D, GPIOD_INIT_DefaultRecords, GPIOD_INIT_AltFunctRecords);
+DEFINE_GPIO_PORT(F, GPIOF_INIT_DefaultRecords, GPIOF_INIT_AltFunctRecords);
 

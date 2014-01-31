@@ -124,3 +124,19 @@
 #define GPIO_AFRx_AFRx7_AF5            ((uint32_t)0x50000000)
 #define GPIO_AFRx_AFRx7_AF6            ((uint32_t)0x60000000)
 #define GPIO_AFRx_AFRx7_AF7            ((uint32_t)0x70000000)
+ 
+#define GPIO_MODER_MODER0_INPUT        ((uint32_t)0x00000000)
+#define GPIO_MODER_MODER0_OUTPUT       ((uint32_t)0x00000001)
+#define GPIO_MODER_MODER0_ALTERNATE    ((uint32_t)0x00000002)
+#define GPIO_MODER_MODER0_ANALOG       ((uint32_t)0x00000003)
+
+#define GPIO_OTYPER_OT_0_PUSH_PULL     ((uint32_t)0x00000000)
+#define GPIO_OTYPER_OT_0_OPEN_DRAIN    ((uint32_t)0x00000001)
+
+#define GPIO_OSPEEDR_OSPEEDR0_LOW      ((uint32_t)0x00000000)
+#define GPIO_OSPEEDR_OSPEEDR0_MED      ((uint32_t)0x00000001)
+#define GPIO_OSPEEDR_OSPEEDR0_HIGH     ((uint32_t)0x00000003)
+
+#define GPIO_PUPDR_PUPDR0_NO_PULL      ((uint32_t)0x00000000)
+#define GPIO_PUPDR_PUPDR0_PULL_UP      ((uint32_t)0x00000001)
+#define GPIO_PUPDR_PUPDR0_PULL_DOWN    ((uint32_t)0x00000002)
