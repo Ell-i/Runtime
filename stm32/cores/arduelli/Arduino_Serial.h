@@ -37,25 +37,16 @@ public:
     void write(uint8_t) const;
 };
 
-#define DEFINE_SERIAL(usart_number, gpio_letter, tx_pin, af) \
-    ({ DEFINE_USART_STRUCT(usart_number, gpio_letter, tx_pin, af) })
-
+#define DEFINE_SERIAL(usart_number, tx_letter, tx_pin, tx_af, rx_letter, rx_pin, rx_af) \
+    ({ DEFINE_USART_STRUCT(usart_number, tx_letter, tx_pin, tx_af, rx_letter, rx_pin, rx_af) })
 
 constexpr Serial::Serial(const USART &usart)
     : usart_(usart) {}
 
 inline void Serial::begin(uint32_t baudrate) const {
     /* Place the GPIO pins into the right alternative function */
-    register uint32_t afr = *usart_.gpio_afr_;
-    afr &= usart_.gpio_afr_mask_;
-    afr |= usart_.gpio_afr_ones_;
-    *usart_.gpio_afr_ = afr;
-
-    /* Place the GPIO pins into the right input/output mode */
-    register uint32_t moder = *usart_.gpio_moder_;
-    moder &= usart_.gpio_moder_mask_;
-    moder |= usart_.gpio_moder_ones_;
-    *usart_.gpio_moder_ = moder;
+    PinFunctionActivate(&usart_.usart_tx_function_);
+    PinFunctionActivate(&usart_.usart_rx_function_);
 
     /* Set the baud rate -- use 16 bit oversampling */
     usart_.usart_->BRR = SystemCoreClock / baudrate;

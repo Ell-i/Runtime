@@ -29,6 +29,7 @@
 # include <stm32f0xx.h>
 # include <stm32f0xx_extra.h>
 # include <system_init.h>
+# include <arduelli_pin_functions.h>
 
 /***************************
  *
@@ -41,8 +42,8 @@
  *
  * Note that the actual record is placed at the SYSTEM_INIT_SECTION
  * linker section, causing the boot-time initialisation code called from main() to
- * initialise the usart.  If the usart is not used, the record won't be
- * placed at the .init.default section, and the usart won't be enabled.
+ * initialise the usart.  If the USART is not used, the record shouldn't be
+ * placed at the .init.default section, and the usart wouldn't be enabled.
  */
 
 /**
@@ -55,7 +56,7 @@
 /**
  * Defines an USART init record and makes it visible through the
  * @see SYSTEM_INIT_SECTION.
- * @param port The usart as a single numbr
+ * @param port The usart as a single number
  *
  * See the corresponding definitions in <variant>_usart.c
  *
@@ -103,24 +104,16 @@ struct USART {
 # else
     USART_TypeDef *const          usart_; /* Pointer to the USART registers */
 # endif
-    volatile uint32_t *const      gpio_afr_;       // GPIO AFR for setting the pin alternate function
-    const uint32_t                gpio_afr_mask_;  // Bits to clear in the GPIO AFR
-    const uint32_t                gpio_afr_ones_;  // Bits to set in the GPIO AFR
-    volatile uint32_t *const      gpio_moder_;
-    const uint32_t                gpio_moder_mask_;
-    const uint32_t                gpio_moder_ones_;
+    const struct PinFunction      usart_tx_function_;
+    const struct PinFunction      usart_rx_function_;
 };
 
 // XXX assumes tx pin is first and rx pin immediately after
-#define DEFINE_USART_STRUCT(usart_number, gpio_letter, tx_pin, af)      \
-    {                                                                   \
-    IF(usart_)           USART ## usart_number,                         \
-    IF(gpio_afr_)        &GPIO ## gpio_letter->AFR[tx_pin / 8],         \
-    IF(gpio_afr_mask_)   (GPIO_AFRL_AFRL0 | GPIO_AFRL_AFRL1) << ((tx_pin % 8) * 4), \
-    IF(gpio_afr_ones_)   (af              | af << 4        ) << ((tx_pin % 8) * 4), \
-    IF(gpio_moder_)      &GPIO ## gpio_letter->MODER,                   \
-    IF(gpio_moder_mask_) (GPIO_MODER_MODER0  | GPIO_MODER_MODER1  ) << (tx_pin * 2), \
-    IF(gpio_moder_ones_) (GPIO_MODER_MODER0_1| GPIO_MODER_MODER1_1) << (tx_pin * 2), \
+#define DEFINE_USART_STRUCT(usart_number, tx_port, tx_pin, tx_af, rx_port, rx_pin, rx_af) \
+    {                                                                       \
+        IF(usart_)             USART ## usart_number,                       \
+        IF(usart_tx_function_) DEFINE_PIN_FUNCTION(tx_port, tx_pin, tx_af), \
+        IF(usart_rx_function_) DEFINE_PIN_FUNCTION(rx_port, rx_pin, rx_af)  \
     }
 
 #endif//_ARDUELLI_USART_H_
