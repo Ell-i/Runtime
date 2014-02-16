@@ -67,7 +67,7 @@
  */
 
 #define DEFINE_USART_DEVICE(usart, apbus, init_records)                 \
-    const SystemInitRecordOnesOnly                                      \
+    const SystemInitRecordAddrAndOnes                                   \
       USART ## usart ## _RCC_INIT_DefaultRecords[] = {                  \
         {                                                               \
             IF(init_r_address) &RCC->APB ## apbus ## ENR,               \
@@ -78,19 +78,19 @@
       USART ## usart ## _RCC_INIT                                       \
        __attribute__((section(SYSTEM_INIT_SECTION(RCC, USART ## usart))))\
         = {                                                             \
-        IF(init_record_type)   ONES_ONLY,                               \
+        IF(init_record_type)   ADDR_AND_ONES,                           \
         IF(init_record_number) COUNT_OF(USART ## usart ##_RCC_INIT_DefaultRecords), \
         { IF(init_record_offset) 0 },                                   \
-        { IF(init_records_ones_only) USART ## usart ## _RCC_INIT_DefaultRecords, }, \
+        { IF(init_records_addr_and_ones) USART ## usart ## _RCC_INIT_DefaultRecords, }, \
     };                                                                  \
     const SystemInitRecordArray                                         \
       USART ## usart ## _INIT                                           \
        __attribute__((section(SYSTEM_INIT_SECTION(1, USART ## usart)))) \
         = {                                                             \
-        IF(init_record_type)   DATA32_NO_ADDRESS,                       \
+        IF(init_record_type)   DATA32_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records),                  \
         { IF(init_record_address32) &USART ## usart->CR1 },             \
-        { IF(init_records_data32_no_address) init_records, },           \
+        { IF(init_records_data32_only) init_records, },                 \
     }
 
 /**

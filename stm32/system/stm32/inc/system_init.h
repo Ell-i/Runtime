@@ -78,7 +78,7 @@
  */
 
 /**
- * The SystemInitRecordOnesOnly describes a set of one-bits that need
+ * The SystemInitRecordAddrAndOnes describes a set of one-bits that need
  * to be set to a peripheral register.  As most peripheral registers
  * on STM Cortex-M MCUs are initialised to all-zeros, in practise this
  * can also be used to just write an initialisation value to most
@@ -88,10 +88,10 @@
 typedef struct {
     volatile uint32_t *const init_r_address; /* Address of register to initialize. */
     const uint32_t           init_r_ones;    /* Bitmask of the bits to set to ones. */
-} SystemInitRecordOnesOnly;
+} SystemInitRecordAddrAndOnes;
 
 /**
- * The SystemInitRecordOnesAndZeroes gives both bits to zero and
+ * The SystemInitRecordAddrOnesAndZeroes gives both bits to zero and
  * bits to set one.  It is useful in the case where some of the
  * bits need to be initialised as zero while their reset-time value is
  * either unspecified, unknown, or one.
@@ -100,26 +100,32 @@ typedef struct {
     volatile uint32_t *const init_r_address; /* Address of resister to initialize. */
     const uint32_t           init_r_zeroes;  /* Bits to set to zero. */
     const uint32_t           init_r_ones;    /* Bits to set to ones. */
-} SystemInitRecordOnesAndZeroes;
+} SystemInitRecordAddrOnesAndZeroes;
 
 /**
- * The SystemInitRecordData16WithOffset XXX
+ * The SystemInitRecordData16Only XXX document
  */
 typedef struct {
     const uint16_t           init_data16;
-} SystemInitRecordData16NoAddress;
+} SystemInitRecordData16Only;
 
 /**
- * The SystemInitRecordData16WithOffset XXX
+ * The SystemInitRecordData32Only XXX document
  */
 typedef struct {
     const uint32_t           init_data32;
-} SystemInitRecordData32NoAddress;
+} SystemInitRecordData32Only;
 
 /**
- * The SystemInitRecordMaskAndWait XXX
+ * The SystemInitRecordRegisterOffset XXX document
  */
+typedef struct {
+    const uint8_t            init_offset;
+} SystemInitRecordRegisterOffset;
 
+/**
+ * The SystemInitRecordMaskAndWait XXX TBD later
+ */
 typedef struct {
     // XXX TBD
 } SystemInitRecordMaskAndWait;
@@ -135,10 +141,11 @@ typedef struct {
  */
 
 enum system_init_r_type {
-    ONES_ONLY = 0,
-    ONES_AND_ZEROES = 1,
-    DATA16_NO_ADDRESS = 2,
-    DATA32_NO_ADDRESS = 3,
+    ADDR_AND_ONES = 0,
+    ADDR_ONES_AND_ZEROES = 1,
+    DATA16_ONLY = 2,
+    DATA16_WITH_OFFSETS = 3,
+    DATA32_ONLY = 4,
     SYSTEM_INIT_TYPE_NUMBER
 };
 
@@ -166,14 +173,18 @@ typedef struct {
     const union {
         const int32_t               init_record_offset;  // Offset to be added to the addresses
                                                          // in the SystemInitRecords
-        volatile uint16_t *const    init_record_address16; // Base register address for 16_no_address
+        volatile uint16_t *const    init_record_address16; // Base register address for 16_only
+                                                           // or 16_with_offset
         volatile uint32_t *const    init_record_address32; // Base register address for 32_no_address
     };
     const union {
-        const SystemInitRecordOnesOnly *        init_records_ones_only;
-        const SystemInitRecordOnesAndZeroes *   init_records_ones_and_zeroes;
-        const SystemInitRecordData16NoAddress * init_records_data16_no_address;
-        const SystemInitRecordData32NoAddress * init_records_data32_no_address;
+        const SystemInitRecordAddrAndOnes *        init_records_addr_and_ones;
+        const SystemInitRecordAddrOnesAndZeroes *  init_records_addr_ones_and_zeroes;
+        const SystemInitRecordData16Only *         init_records_data16_only;
+        const SystemInitRecordData32Only *         init_records_data32_only;
+    };
+    const union {
+        const SystemInitRecordRegisterOffset *     init_records_register_offsets;
     };
 } SystemInitRecordArray;
 
@@ -191,10 +202,11 @@ typedef struct {
 extern "C" {
 # endif
 
-extern void SystemInitOnesOnly(       const SystemInitRecordArray *records);
-extern void SystemInitOnesAndZeroes(  const SystemInitRecordArray *records);
-extern void SystemInitData16NoAddress(const SystemInitRecordArray *records);
-extern void SystemInitData32NoAddress(const SystemInitRecordArray *records);
+extern void SystemInitAddrAndOnes(      const SystemInitRecordArray *records);
+extern void SystemInitAddrOnesAndZeroes(const SystemInitRecordArray *records);
+extern void SystemInitData16Only(       const SystemInitRecordArray *records);
+extern void SystemInitData16WithOffset( const SystemInitRecordArray *records);
+extern void SystemInitData32Only(       const SystemInitRecordArray *records);
 
 extern void SystemInitPeripherals(void);
 

@@ -66,7 +66,7 @@
  */
 
 #define DEFINE_TIMER(apbus, timer, init_records1, init_records2)        \
-    const SystemInitRecordOnesOnly                                      \
+    const SystemInitRecordAddrAndOnes                                   \
       TIM ## timer ## _RCC_INIT_DefaultRecords[] = {                    \
         {                                                               \
             IF(init_r_address) &RCC->APB ## apbus ## ENR,               \
@@ -77,28 +77,28 @@
       TIM ## timer ## _INIT2                                            \
        __attribute__((section(SYSTEM_INIT_SECTION(2, TIM ## timer))))   \
         = {                                                             \
-        IF(init_record_type)   DATA16_NO_ADDRESS,                       \
+        IF(init_record_type)   DATA16_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records2),                 \
         { IF(init_record_address16) &TIM ## timer->CR1 },               \
-        { IF(init_records_data16_no_address) init_records2, },          \
+        { IF(init_records_data16_only) init_records2, },                \
     };                                                                  \
     const SystemInitRecordArray                                         \
       TIM ## timer ## _INIT1                                            \
        __attribute__((section(SYSTEM_INIT_SECTION(1, TIM ## timer))))   \
         = {                                                             \
-        IF(init_record_type)   DATA16_NO_ADDRESS,                       \
+        IF(init_record_type)   DATA16_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records1),                 \
         { IF(init_record_address16) &TIM ## timer->CR1 },               \
-        { IF(init_records_data16_no_address) init_records1, },          \
+        { IF(init_records_data16_only) init_records1, },                \
     };                                                                  \
     const SystemInitRecordArray                                         \
       TIM ## timer ## _RCC_INIT                                         \
        __attribute__((section(SYSTEM_INIT_SECTION(RCC, TIM ## timer)))) \
         = {                                                             \
-        IF(init_record_type)   ONES_ONLY,                               \
+        IF(init_record_type)   ADDR_AND_ONES,                           \
         IF(init_record_number) COUNT_OF(TIM ## timer ##_RCC_INIT_DefaultRecords), \
         { IF(init_record_offset) 0 },                                   \
-        { IF(init_records_ones_only) TIM ## timer ## _RCC_INIT_DefaultRecords, }, \
+        { IF(init_records_addr_and_ones) TIM ## timer ## _RCC_INIT_DefaultRecords, }, \
     }
 
 /**

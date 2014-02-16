@@ -83,7 +83,7 @@
  */
 
 #define DEFINE_GPIO_PORT(port, init_records1, init_records2)            \
-    const SystemInitRecordOnesOnly                                      \
+    const SystemInitRecordAddrAndOnes                                   \
     GPIO ## port ## _RCC_INIT_DefaultRecords[] = {                      \
         {                                                               \
             IF(init_r_address) &RCC->AHBENR,                            \
@@ -94,28 +94,28 @@
       GPIO ## port ## _RCC_INIT                                         \
         __attribute__((section(SYSTEM_INIT_SECTION(RCC, GPIO ## port))))\
         = {                                                             \
-        IF(init_record_type)   ONES_ONLY,                               \
+        IF(init_record_type)   ADDR_AND_ONES,                           \
         IF(init_record_number) COUNT_OF(GPIO ## port ## _RCC_INIT_DefaultRecords), \
         { IF(init_record_offset) 0 },                                   \
-        { IF(init_records_ones_only) GPIO ## port ## _RCC_INIT_DefaultRecords, }, \
+        { IF(init_records_addr_and_ones) GPIO ## port ## _RCC_INIT_DefaultRecords, }, \
     };                                                                  \
     const SystemInitRecordArray                                         \
       GPIO ## port ## _INIT1                                            \
        __attribute__((section(SYSTEM_INIT_SECTION(1, GPIO ## port))))   \
         = {                                                             \
-        IF(init_record_type)   DATA32_NO_ADDRESS,                       \
+        IF(init_record_type)   DATA32_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records1),                 \
         { IF(init_record_address32) &GPIO ## port->MODER },             \
-        { IF(init_records_data32_no_address) init_records1, },          \
+        { IF(init_records_data32_only) init_records1, },                \
     };                                                                  \
     const SystemInitRecordArray                                         \
       GPIO ## port ## _INIT2                                            \
        __attribute__((section(SYSTEM_INIT_SECTION(2, GPIO ## port))))   \
         = {                                                             \
-        IF(init_record_type)   DATA32_NO_ADDRESS,                       \
+        IF(init_record_type)   DATA32_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records2),                 \
         { IF(init_record_address32) &GPIO ## port->AFR[0] },            \
-        { IF(init_records_data32_no_address) init_records2, },          \
+        { IF(init_records_data32_only) init_records2, },                \
     }
 
 
@@ -133,7 +133,7 @@
 
 
 #define DEFINE_GPIO_INIT_RECORD(port)                                   \
-const SystemInitRecordData32NoAddress GPIO ## port ## _INIT_DefaultRecords[] = { \
+const SystemInitRecordData32Only GPIO ## port ## _INIT_DefaultRecords[] = { \
     D32(GPIO_TypeDef, MODER,                                            \
         0                                                               \
         | __GPIO ## port ## _PIN0_MODE                                  \
@@ -211,7 +211,7 @@ const SystemInitRecordData32NoAddress GPIO ## port ## _INIT_DefaultRecords[] = {
         | __GPIO ## port ## _PIN15_PUPD                                 \
         ),                                                              \
 };                                                                      \
-const SystemInitRecordData32NoAddress GPIO ## port ## _INIT_AltFunctRecords[] = { \
+const SystemInitRecordData32Only GPIO ## port ## _INIT_AltFunctRecords[] = { \
     D32(GPIO_TypeDef, AFR[0],                                           \
         0                                                               \
         | __GPIO ## port ## _PIN0_AF                                    \

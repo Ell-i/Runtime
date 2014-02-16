@@ -36,7 +36,7 @@
 # define D16(p, r, v) [offsetof(p, r)/sizeof(uint32_t)] = { v }
 #endif
 
-const SystemInitRecordData16NoAddress TIM_INIT_DefaultRecords[] = {
+const SystemInitRecordData16Only TIM_INIT_DefaultRecords[] = {
     D16(TIM_TypeDef, CR1, 0),      /* Disable the counter */
     D16(TIM_TypeDef, CR2, 0),      /* Default value */
     D16(TIM_TypeDef, SMCR, 0),     /* Default value */
@@ -101,7 +101,7 @@ const SystemInitRecordData16NoAddress TIM_INIT_DefaultRecords[] = {
 };
 
 
-const SystemInitRecordData16NoAddress TIM_INIT_EnableRecords[] = {
+const SystemInitRecordData16Only TIM_INIT_EnableRecords[] = {
     D16(TIM_TypeDef, CR1,
         0
         | ! TIM_CR1_CKD         /* 00 = Clock divide by 1 */

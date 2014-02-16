@@ -36,7 +36,7 @@
 # define D32(p, r, v) [offsetof(p, r)/sizeof(uint32_t)] = { v }
 #endif
 
-const SystemInitRecordData32NoAddress USART_INIT_DefaultRecords[] = {
+const SystemInitRecordData32Only USART_INIT_DefaultRecords[] = {
     D32(USART_TypeDef, CR1,
         0
         | ! USART_CR1_EOBIE    /* 0: No smartcard end of block interrupts */
