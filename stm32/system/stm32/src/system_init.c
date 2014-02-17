@@ -73,8 +73,8 @@ void SystemInitData32Only(const SystemInitRecordArray *ra) {
 
     register volatile preg32_t *a = ra->init_record_address32;
     for (int i = 0; i < ra->init_record_number; i++) {
-        *a = r->init_data32;   // Write 32 bits
-        a++;                   // Advance by 32 bits
+        *a = (r++)->init_data32;   // Write 32 bits
+        a++;                       // Advance by 32 bits
     }
 }
 
