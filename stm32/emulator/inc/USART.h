@@ -32,11 +32,14 @@ public:
     DEFINE_REGISTER(32, USART, CR1,      0);
     DEFINE_REGISTER(32, USART, CR2,      0);
     DEFINE_REGISTER(32, USART, CR3,      0);
-    DEFINE_REGISTER(32, USART, BRR,      0);
-    DEFINE_REGISTER(32, USART, TDR,      0);
-    DEFINE_REGISTER(32, USART, ISR,      USART_ISR_TXE);
-    DEFINE_REGISTER(32, USART, GTPR,     0);
+    DEFINE_REGISTER(16, USART, BRR,      0);
+    DEFINE_REGISTER(16, USART, GTPR,     0);
     DEFINE_REGISTER(32, USART, RTOR,     0);
+    DEFINE_REGISTER(16, USART, RQR,      0);
+    DEFINE_REGISTER(32, USART, ISR,      USART_ISR_TXE);
+    DEFINE_REGISTER(32, USART, ICR,      0);
+    DEFINE_REGISTER(16, USART, RDR,      0);
+    DEFINE_REGISTER(16, USART, TDR,      0);
 protected:
     UniversalSynchronousAsynchronousReceiverTransmitter() {}
 public:
