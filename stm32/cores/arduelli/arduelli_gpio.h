@@ -26,8 +26,6 @@
 #ifndef _ARDUELLI_GPIO_H_
 # define _ARDUELLI_GPIO_H_
 
-# include <stm32f0xx.h>
-# include <stm32f0xx_extra.h>
 # include <system_init.h>
 
 /***************************

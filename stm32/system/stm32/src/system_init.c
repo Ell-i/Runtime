@@ -21,11 +21,8 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2013-2014
  */
 
+#include <stm32f0xx.h>
 #include <system_init.h>
-
-#ifdef EMULATOR
-#include <Register.h>
-#endif
 
 void SystemInitAddrAndOnes(const SystemInitRecordArray *ra) {
     const SystemInitRecordAddrAndOnes *r = ra->init_records_addr_and_ones;

@@ -24,6 +24,9 @@
 #ifndef _SYSTEM_INIT_H_
 # define _SYSTEM_INIT_H_
 
+# include <stm32f0xx.h>
+# include <stm32f0xx_extra.h>
+
 /**
  * System initialisation interface.
  *
