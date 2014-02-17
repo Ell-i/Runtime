@@ -19,6 +19,20 @@
 
 #include <Register.h>
 
+uint32_t Register::operator = (uint32_t arg) volatile {
+    return *(const_cast<Register*>(this)) = arg;
+}
+
+uint32_t Register::operator = (uint32_t arg) {
+    std::cout
+        << std::setbase(16)
+        << (periph_) << ':'
+        << (name_)   << ':'
+        << (value_)  << "=" << arg << '\n';
+    value_ = arg;
+    return value_;
+}
+
 uint32_t Register::operator |= (uint32_t arg) {
     // XXX move setbase to a better location
     std::cout << std::setbase(16) << periph_
@@ -32,13 +46,7 @@ uint32_t Register::operator &= (uint32_t arg) {
     return value_ &= arg;
 }
 
-uint32_t Register16::operator &  (uint32_t arg) {
-    std::cout << periph_ << ':'
-              << name_ << ':' << value_ << '&' << arg << '\n';
-    return value_ & arg;
-}
-
-uint32_t Register32::operator &  (uint32_t arg) {
+uint32_t Register::operator &  (uint32_t arg) {
     std::cout << periph_ << ':'
               << name_ << ':' << value_ << '&' << arg << '\n';
     return value_ & arg;

@@ -28,7 +28,7 @@ void SystemInitAddrAndOnes(const SystemInitRecordArray *ra) {
     const SystemInitRecordAddrAndOnes *r = ra->init_records_addr_and_ones;
 
     for (int i = 0; i < ra->init_record_number; i++) {
-        register volatile uint32_t *const a = r->init_r_address + ra->init_record_offset;
+        register volatile preg32_t *const a = r->init_r_address + ra->init_record_offset;
         register uint32_t d = *a;
         d |= r->init_r_ones;
         *a = d;
@@ -39,7 +39,7 @@ void SystemInitAddrOnesAndZeroes(const SystemInitRecordArray *ra) {
     const SystemInitRecordAddrOnesAndZeroes *r = ra->init_records_addr_ones_and_zeroes;
 
     for (int i = 0; i < ra->init_record_number; i++) {
-        register volatile uint32_t *const a = r->init_r_address + ra->init_record_offset;
+        register volatile preg32_t *const a = r->init_r_address + ra->init_record_offset;
         register uint32_t d = *a;
         d &= ~r->init_r_zeroes; // Clear the bits to set zero
         d |=  r->init_r_ones;   // Set the one bits be set to one
@@ -51,7 +51,7 @@ void SystemInitAddrOnesAndZeroes(const SystemInitRecordArray *ra) {
 void SystemInitData16Only(const SystemInitRecordArray *ra) {
     const SystemInitRecordData16Only *r = ra->init_records_data16_only;
 
-    register volatile uint32_t *a = (volatile uint32_t *)ra->init_record_address16;
+    register volatile preg32_t *a = (volatile preg32_t *)ra->init_record_address16;
     for (int i = 0; i < ra->init_record_number; i++) {
         *a = (r++)->init_data16;   // Write 16 bits zero expanded, advance src pointer
         a++;                       // Advance dst by 32 bits
@@ -62,7 +62,7 @@ void SystemInitData16WithOffsets(const SystemInitRecordArray *ra) {
     const SystemInitRecordData16Only *r     = ra->init_records_data16_only;
     const SystemInitRecordRegisterOffset *o = ra->init_records_register_offsets;
 
-    register volatile uint32_t *a = (volatile uint32_t *)ra->init_record_address16;
+    register volatile preg32_t *a = (volatile preg32_t *)ra->init_record_address16;
     for (int i = 0; i < ra->init_record_number; i++) {
         a[(o++)->init_offset] = (r++)->init_data16;   // Write 16 bits zero expanded to the 32-bit offset
     }
@@ -71,7 +71,7 @@ void SystemInitData16WithOffsets(const SystemInitRecordArray *ra) {
 void SystemInitData32Only(const SystemInitRecordArray *ra) {
     const SystemInitRecordData32Only *r = ra->init_records_data32_only;
 
-    register volatile uint32_t *a = ra->init_record_address32;
+    register volatile preg32_t *a = ra->init_record_address32;
     for (int i = 0; i < ra->init_record_number; i++) {
         *a = r->init_data32;   // Write 32 bits
         a++;                   // Advance by 32 bits

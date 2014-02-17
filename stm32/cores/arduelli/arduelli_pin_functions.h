@@ -33,10 +33,10 @@
  */
 
 struct PinFunction {
-    volatile uint32_t *const      gpio_afr_;       // GPIO AFR for setting the pin alternate function
+    volatile preg32_t *const      gpio_afr_;       // GPIO AFR for setting the pin alternate function
     const uint32_t                gpio_afr_mask_;  // Bits to clear in the GPIO AFR
     const uint32_t                gpio_afr_ones_;  // Bits to set in the GPIO AFR
-    volatile uint32_t *const      gpio_moder_ ;
+    volatile preg32_t *const      gpio_moder_ ;
     const uint32_t                gpio_moder_mask_;
     const uint32_t                gpio_moder_ones_;
 };

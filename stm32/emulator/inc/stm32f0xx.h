@@ -24,6 +24,11 @@
 
 #include "../../system/stm32/inc/stm32f0xx.h"  // XXX FIX PATH
 
+#include <Register.h>
+
+typedef Register preg32_t;
+typedef Register preg16_t;
+
 /*
  * Undefine the main address defines in the real stm32f0xx.h, causing
  * a compile error on all constructs that use them.

@@ -89,7 +89,7 @@
  * a dual function.
  */
 typedef struct {
-    volatile uint32_t *const init_r_address; /* Address of register to initialize. */
+    volatile preg32_t *const init_r_address; /* Address of register to initialize. */
     const uint32_t           init_r_ones;    /* Bitmask of the bits to set to ones. */
 } SystemInitRecordAddrAndOnes;
 
@@ -100,7 +100,7 @@ typedef struct {
  * either unspecified, unknown, or one.
  */
 typedef struct {
-    volatile uint32_t *const init_r_address; /* Address of resister to initialize. */
+    volatile preg32_t *const init_r_address; /* Address of resister to initialize. */
     const uint32_t           init_r_zeroes;  /* Bits to set to zero. */
     const uint32_t           init_r_ones;    /* Bits to set to ones. */
 } SystemInitRecordAddrOnesAndZeroes;
@@ -176,9 +176,9 @@ typedef struct {
     const union {
         const int32_t               init_record_offset;  // Offset to be added to the addresses
                                                          // in the SystemInitRecords
-        volatile uint16_t *const    init_record_address16; // Base register address for 16_only
+        volatile preg16_t *const    init_record_address16; // Base register address for 16_only
                                                            // or 16_with_offset
-        volatile uint32_t *const    init_record_address32; // Base register address for 32_no_address
+        volatile preg32_t *const    init_record_address32; // Base register address for 32_no_address
     };
     const union {
         const SystemInitRecordAddrAndOnes *        init_records_addr_and_ones;

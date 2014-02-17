@@ -22,6 +22,19 @@
  */
 
 /*
+ * Alternative data types for peripheral registers
+ * Used in pointers to peripheral registers, making
+ * it possible to better keep track of them in the emulator
+ *
+ * The emulator defines these in its stm32f0xx.h override.
+ */
+
+#ifndef EMULATOR
+typedef uint32_t preg32_t;
+typedef uint16_t preg16_t;
+#endif
+
+/*
  * Missing STM32F0 Timer definitions
  */
 

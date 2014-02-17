@@ -120,7 +120,7 @@ struct PWM {
 #else
     TIM_TypeDef *const            pwm_timer; /* Pointer to the timer registers */
 #endif
-    volatile uint32_t *const      pwm_ccr;
+    volatile preg32_t *const      pwm_ccr;
 };
 
 /**

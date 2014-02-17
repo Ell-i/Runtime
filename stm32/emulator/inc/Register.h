@@ -30,54 +30,28 @@ protected:
     const std::string periph_;
     const std::string name_;
     uint32_t    value_;
-    Register(std::string periph, std::string name, uint32_t value)
+    uint8_t     size_;
+    Register(std::string periph, std::string name,
+             uint8_t size, uint32_t value)
         : periph_(periph)
         , name_(name)
         , value_(value)
+        , size_(size)
         {};
 
 public:
-    uint32_t  operator =  (uint32_t);
     uint32_t  operator |= (uint32_t);
     uint32_t  operator &= (uint32_t);
-};
-
-class Register32 : public Register {
-protected:
-    Register32(std::string periph, std::string name, uint32_t value)
-        : Register(periph, name, value)
-        {};
-
-public:
+    uint32_t  operator =  (uint32_t);
+    uint32_t  operator =  (uint32_t) volatile;
     uint32_t  operator &  (uint32_t);
-    uint32_t *operator &  () const {
-        // This must be inlined here as a simple const operator, otherwise
-        // the compiler will not be able to evaluate expressions using
-        // it at the compile time, causing problems...
-        return (uint32_t *)&value_;
-    };
-};
-
-class Register16 : public Register {
-protected:
-    Register16(std::string periph, std::string name, uint32_t value)
-        : Register(periph, name, value)
-        {};
-
-public:
-    uint32_t  operator &  (uint32_t);
-    uint16_t *operator &  () const {
-        // This must be inlined here as a simple const operator, otherwise
-        // the compiler will not be able to evaluate expressions using
-        // it at the compile time, causing problems...
-        return (uint16_t *)&value_;
-    };
+    operator uint32_t () volatile { return value_; }
 };
 
 #define DEFINE_REGISTER(size, periph, name, value)            \
-class Class ## name : public Register ## size {               \
+class Class ## name : public Register {                       \
 public:                                                       \
-    Class ## name() : Register ## size (# periph, # name, value) {};   \
+    Class ## name() : Register(# periph, # name, size, value) {}; \
     uint32_t operator=(uint32_t arg) {                        \
         std::cout << periph_ << ":" << name_ << ":" << "="    \
             << arg << '\n';                                   \

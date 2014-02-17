@@ -52,13 +52,13 @@
     static const                                                        \
     SystemInitRecordMaskAndValue GPIO_PIN_MODE_Records[] = {            \
         {                                                               \
-            .init_r_address = (volatile uint32_t *const)(               \
+            .init_r_address = (volatile preg32_t *const)(               \
                 (volatile char *const)GPIOPIN[pin].gpio_port            \
                 + ((char *const)&GPIOA->MODER - (char *const)GPIOA)),   \
             .init_r_mask    = ~(GPIO_MODER_MODER ## pin),               \
             .init_r_value   = GPIO_pin_mode_moder_values[mode],         \
         }, {                                                            \
-            .init_r_address = (volatile uint32_t *const)(               \
+            .init_r_address = (volatile preg32_t *const)(               \
                 (volatile char *const)GPIOPIN[pin].gpio_port            \
                 + ((char *const)&GPIOA->PUPDR - (char *const)GPIOA)),   \
             .init_r_mask    = ~(GPIO_PUPDR_PUPDR ## pin),               \
