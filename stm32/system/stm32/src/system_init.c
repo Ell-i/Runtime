@@ -94,10 +94,10 @@ const SystemInitFunctionType SystemInitFunctions[SYSTEM_INIT_TYPE_NUMBER] = {
 /*
  * Start and end addresses of the peripheral initialisation records.
  */
-extern unsigned int __peripheral_start, __peripheral_end;
+extern const SystemInitRecordArray __peripheral_start, __peripheral_end;
 
 void SystemInitPeripherals(void) {
-#ifdef EMULATOR
+#if defined(EMULATOR) && defined(__APPLE__)
     // XXX FIXME.  Now we simply jump over the void *__peripheral_start, defined
     // in emulator_pre.c.  Instead of this, in Linux we should use a linker script
     // similar to the Cortex-M0 one, and in Mac OS X use the -alias LD option
@@ -106,11 +106,9 @@ void SystemInitPeripherals(void) {
     const SystemInitRecordArray *const peri_start
         = (const SystemInitRecordArray *const)((char *)&__peripheral_start + sizeof(void *const));
 #else
-    const SystemInitRecordArray *const peri_start
-        = (const SystemInitRecordArray *const)&__peripheral_start;
+    const SystemInitRecordArray *const peri_start = &__peripheral_start;
 #endif
-    const SystemInitRecordArray *const peri_end
-        = (const SystemInitRecordArray *const)&__peripheral_end;
+    const SystemInitRecordArray *const peri_end   = &__peripheral_end;
 
     for (register const SystemInitRecordArray *ir = peri_start; ir < peri_end; ir++) {
 #ifdef EMULATOR

@@ -23,9 +23,13 @@
 #ifndef _ELLDUINO_SPICLASS_H_
 #define _ELLDUINO_SPICLASS_H_
 
-#include "Arduino_SPI.h"
+#if 0 // XXX temporary
+
+#include "SPI.h"
 
 static const class SPIClass SPI   DEFINE_SPI(1, A, 15, 0, B,  4, 0, B,  5, 0, B,  3, 0);
 static const class SPIClass SPI_2 DEFINE_SPI(2, B, 12, 0, B, 14, 0, B, 15, 0, B, 12, 0);
+
+#endif
 
 #endif //_ELLDUINO_SPICLASS_H_

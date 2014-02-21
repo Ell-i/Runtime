@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2014 ELL-i co-op.
+ * Copyright (c) 2014 ELL-i co-operative
  *
- * This is part of ELL-i software.
+ * This file is part of ELL-i software.
  *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,4 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if 0 // temporary
-
-#include "ellduino_SPIClass.h"
-
-void setup() {
-    SPI.begin();
-    SPI_2.begin();
-}
-
-void loop() {
-#ifdef EMULATOR
-    _exit(0);
-#endif
-}
-
-#endif
+#include "SPIClass.h"

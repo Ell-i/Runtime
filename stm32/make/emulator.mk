@@ -56,8 +56,11 @@ CXXFLAGS += $(EXTRA_CFLAGS)
 #
 # Arrange segments
 #
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
 PRE_OBJS  := emulator_pre.o
 POST_OBJS := emulator_post.o
+endif
 
 #
 # C++ standard library

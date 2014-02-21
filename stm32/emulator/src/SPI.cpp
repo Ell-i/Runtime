@@ -17,7 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <SPI.h>
+#include <SPIemu.h>
 
 SerialPeripheralInterface SerialPeripheralInterface::SPI1;
 SerialPeripheralInterface SerialPeripheralInterface::SPI2;

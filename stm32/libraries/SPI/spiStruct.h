@@ -23,11 +23,12 @@
  * @brief  Macros and data types for SPIs
  */
 
-#ifndef _ARDUELLI_SPI_H_
-# define _ARDUELLI_SPI_H_
+#ifndef  _SPISTRUCT_H_
+# define _SPISTRUCT_H_
 
 # include <system_init.h>
-# include <arduelli_pin_functions.h>
+# include <arduelli_pin_functions.h> // XXX Replace with non-core specific?
+# include <stdlib.h> // define size_t
 
 /***************************
  *
@@ -97,7 +98,7 @@ struct SPI {
 # else
     SPI_TypeDef *const            spi_; /* Pointer to the SPI registers */
 # endif
-    const struct PinFunction      spi_ss_function_;
+    const struct PinFunction      spi_ss_function_;  // Only used for slave!
     const struct PinFunction      spi_miso_function_;
     const struct PinFunction      spi_mosi_function_;
     const struct PinFunction      spi_clk_function_;
@@ -113,4 +114,102 @@ struct SPI {
         IF(spi_clk_function_)  DEFINE_PIN_FUNCTION(clk_port, clk_pin, clk_af),    \
     }
 
-#endif//_ARDUELLI_SPI_H_
+/****************************************
+ * Inlined SPI functions
+ ****************************************/
+
+# ifdef __cplusplus
+extern "C" {
+# endif
+
+/**
+ * XXX
+ */
+
+extern void spi_master_begin(const struct SPI *const spi);
+extern void spi_master_end  (const struct SPI *const spi);
+
+/**
+ * XXX
+ */
+
+/**
+ * XXX
+ *
+ * We inline this to allow the special case of len == 1 being handled efficiently.
+ * In most other cases the compiler most probably won't inline, as the resulting
+ * function is rather big.  However, LLVM may to do partial application,
+ * inlining some part of the code.
+ */
+
+
+
+size_t inline
+spi_transfer(const struct SPI *const spi, const uint32_t cr1, uint8_t data[], const size_t len) {
+    /* Get a handle for writing and reading 8-bit data */
+    volatile uint8_t *const DR8 = (volatile uint8_t *const)&spi->spi_->DR;
+
+# if 0
+    /* Read any pertaining data from the FIFO and throw it away */
+    int dummy __attribute__((unused));
+    dummy = spi->spi_->DR;
+# endif
+
+    /* Set the bitorder, speed, and mode according to the pin */
+    spi->spi_->CR1 = cr1;
+
+    if (len == 0) return 0;
+
+    if (len == 1) {
+        *DR8 = data[0];           /* Write the only byte */
+    } else {
+        register uint16_t *wp, *rp;
+        wp = rp = (uint16_t *)data;
+
+        /*
+         * Try to keep the SPI busy until the buffer has been transferred.
+         *
+         * We first seed the transmit FIFO with two bytes, then keep
+         * writing two more bytes and reading two bytes, until we come
+         * to the last byte(s).  This should keep the transmit buffer
+         * non-empty all the time.
+         */
+
+        spi->spi_->DR = *wp++; /* Fill the transmit fifo with two bytes */
+
+        for (size_t count = (len / 2) - 1; count > 0; count--) {
+            spi->spi_->DR = *wp++;  /* Write the next two bytes */
+
+            /* Ensure we have at least 2 bytes in the input FIFO */
+            while (spi->spi_->SR & SPI_SR_FRLVL_1)
+                ; /* XXX.  Let other threads run. */
+
+            *rp++ = spi->spi_->DR;  /* Read the previous two bytes */
+        }
+
+        if (len % 1) {
+            *DR8 = data[len-1];     /* Write the last byte, if any */
+        }
+
+        /* Again, ensure we have received at least 2 bytes. */
+        while (spi->spi_->SR & SPI_SR_FRLVL_1)
+            ; /* XXX.  Let other threads run. */
+        *rp++ = spi->spi_->DR;      /* Read the final two bytes */
+    }
+
+    /* Wait until the transmission is done */
+    while (spi->spi_->SR & SPI_SR_BSY)
+        ; /* XXX.  Let other threads run. */
+
+    if (len % 1) {
+        data[len-1] = *DR8;     /* Read the last byte, if any */
+    }
+
+    return len;
+}
+
+# ifdef __cplusplus
+}
+# endif
+
+#endif //_SPISTRUCT_H_

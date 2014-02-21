@@ -21,7 +21,7 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#include <ellduino_spi.h>
+#include "ellduino_spi.h"
 
 /*
  * Boot-time definitions for the STM32F0 series MCU SPI registers.
@@ -91,3 +91,10 @@ const SystemInitRecordRegisterOffset SPI_INIT_DefaultRecordsOffsets[] = {
 
 DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2, SPI_INIT_DefaultRecordsData, SPI_INIT_DefaultRecordsOffsets);
 DEFINE_SPI_DEVICE(/*SPI*/2, /*APB*/1, SPI_INIT_DefaultRecordsData, SPI_INIT_DefaultRecordsOffsets);
+
+/**
+ * XXX
+ */
+
+const void * __SPI1 = &SPI1_INIT;
+const void * __SPI2 = &SPI2_INIT;

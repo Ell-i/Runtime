@@ -1,9 +1,10 @@
 #
-# Copyright (c) 2013 ELL-i co-operative
+# Copyright (c) 2013-2014 ELL-i co-operative
 #
 # Compile and create the system libraries
 #
 
+TOP ?=../
 MAKEDIR ?= $(TOP)make/
 
 #
@@ -23,10 +24,11 @@ SYSTEM_OBJS += \
 	$(VARIANT)_gpio.o \
 	$(VARIANT)_timer.o \
 	$(VARIANT)_usart.o \
-	$(VARIANT)_spi.o \
 
 #
 # Define the system libraries.  Add a new one for each variant.
+# If you update these here, please be sure to make the same
+# change in system_libs_inc.mk, too.
 #
 SYSTEM_LIBS := \
     $(TOP)variants/ellduino/libstm32f0.a \

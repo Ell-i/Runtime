@@ -1,11 +1,10 @@
 #
-# Copyright (c) 2013 ELL-i co-operative
+# Copyright (c) 2013-2014 ELL-i co-operative
 #
 # Compile and link an application
 #
 
 TOP ?=../
-
 MAKEDIR ?= $(TOP)make/
 
 #
@@ -17,7 +16,8 @@ VARIANT ?= ellduino
 # Set up the compilation environment, identical to the Arduino IDE,
 # and include system lib building; we depend on system libraries
 #
-include $(MAKEDIR)system_libs.mk
+include $(MAKEDIR)$(PLATFORM).mk
+include $(MAKEDIR)system_libs_inc.mk
 
 #
 # Define the app name
@@ -36,7 +36,7 @@ APP_OBJS ?= main.o $(APP).o $(VARIANT).o
 # Rules
 #
 
-VPATH += $(TOP)cores/arduelli
+VPATH += $(TOP)cores/arduelli $(TOP)variants/$(VARIANT)
 
 all:  $(APP) $(APP).hex
 
