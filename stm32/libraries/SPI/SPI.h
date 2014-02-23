@@ -18,3 +18,4 @@
  */
 
 #include "SPIClass.h"
+#include <ellduino_spi.h>    // XXX To be placed into the variant.h!

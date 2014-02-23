@@ -23,3 +23,7 @@
  * @brief The Arduino library SPI class for STM32F
  */
 
+#include <SPIClass.h>
+
+Pin2Int7 spimap1, spimap2;
+

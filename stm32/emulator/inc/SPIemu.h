@@ -31,6 +31,8 @@ class SerialPeripheralInterface {
 public:
     DEFINE_REGISTER(16, SPI, CR1,      0);
     DEFINE_REGISTER(16, SPI, CR2,      0);
+    DEFINE_REGISTER(16, SPI, SR,       0);
+    DEFINE_REGISTER(16, SPI, DR,       0);
 protected:
     SerialPeripheralInterface() {}
 public:

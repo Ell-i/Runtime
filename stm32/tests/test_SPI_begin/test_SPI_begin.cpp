@@ -17,9 +17,8 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if 0 // temporary
 
-#include "ellduino_SPIClass.h"
+#include <SPI.h>
 
 void setup() {
     SPI.begin();
@@ -31,5 +30,3 @@ void loop() {
     _exit(0);
 #endif
 }
-
-#endif

@@ -18,6 +18,7 @@ VARIANT ?= ellduino
 #
 include $(MAKEDIR)$(PLATFORM).mk
 include $(MAKEDIR)system_libs_inc.mk
+include $(MAKEDIR)libs_inc.mk
 
 #
 # Define the app name

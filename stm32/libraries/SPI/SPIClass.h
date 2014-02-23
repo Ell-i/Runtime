@@ -20,28 +20,140 @@
 /**
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
  *
- * @brief The Arduino Serial class
+ * @brief The Arduino library SPI class
  */
 
+#ifndef _SPI_CLASS_H_
+#define _SPI_CLASS_H_
+
 #include <stm32f0xx.h>
+#include <spiStruct.h>
 #include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
-#include <ellduino_spi.h>  // XXX To be placed into the variant.h!
 #include <arduelli_thread.h> // XXX TBD -- is this the right file name?
+#include <wiring_digital.h>
+#include <TinyMap.h>
+
+#ifndef BOARD_SPI_DEFAULT_SS
+#define BOARD_SPI_DEFAULT_SS 10 /* XXX */
+#endif
+
+enum SPITransferMode {
+    SPI_CONTINUE,
+    SPI_LAST
+};
+
+enum SPIBitOrder {
+    MSBFIRST = !SPI_CR1_LSBFIRST,
+    LSBFIRST =  SPI_CR1_LSBFIRST,
+};
+
+enum SPIClockDivider {
+    SPI_CLOCK_DIV2   = !SPI_CR1_BR_2 | !SPI_CR1_BR_1 | !SPI_CR1_BR_0,
+    SPI_CLOCK_DIV4   = !SPI_CR1_BR_2 | !SPI_CR1_BR_1 |  SPI_CR1_BR_0,
+    SPI_CLOCK_DIV8   = !SPI_CR1_BR_2 |  SPI_CR1_BR_1 | !SPI_CR1_BR_0,
+    SPI_CLOCK_DIV16  = !SPI_CR1_BR_2 |  SPI_CR1_BR_1 |  SPI_CR1_BR_0,
+    SPI_CLOCK_DIV32  =  SPI_CR1_BR_2 | !SPI_CR1_BR_1 | !SPI_CR1_BR_0,
+    SPI_CLOCK_DIV64  =  SPI_CR1_BR_2 | !SPI_CR1_BR_1 |  SPI_CR1_BR_0,
+    SPI_CLOCK_DIV128 =  SPI_CR1_BR_2 |  SPI_CR1_BR_1 | !SPI_CR1_BR_0,
+    SPI_CLOCK_DIV256 =  SPI_CR1_BR_2 |  SPI_CR1_BR_1 |  SPI_CR1_BR_0,
+};
+
+enum SPIDataMode {
+    SPI_MODE0 = !SPI_CR1_CPHA | !SPI_CR1_CPOL,
+    SPI_MODE1 =  SPI_CR1_CPHA | !SPI_CR1_CPOL,
+    SPI_MODE2 = !SPI_CR1_CPHA |  SPI_CR1_CPOL,
+    SPI_MODE3 =  SPI_CR1_CPHA |  SPI_CR1_CPOL,
+};
+
+
+/**
+ * Type for mapping Arduino PIN numbers to SPI CR1 register values.
+ */
+typedef TinyMap<uint8_t,uint32_t,7> Pin2Int7;
+
+//XXX TODO: Figure out a nice implementation for setClock
 
 class SPIClass {
 public:
-    const SPI spi_;
-    constexpr SPIClass(const SPI &);
-    void begin(uint32_t ss_pin = SPI1_SS_PIN) const;
+    const struct SPI &spi_;
+    constexpr SPIClass(const SPI &spi, Pin2Int7 &ssPinCR1) : spi_(spi), ssPinCR1_(ssPinCR1) {};
+    void begin(const uint8_t ss_pin = BOARD_SPI_DEFAULT_SS) const {
+        digitalWrite(ss_pin, 1); /* Avoid glitch */
+        pinMode(ss_pin, OUTPUT);
+        spi_master_begin(&spi_);
+    };
+
+    void end(const uint8_t ss_pin) const {
+        pinMode(ss_pin, INPUT /* XXX DEFAULT */);
+    };
+
+    void end(void) const {
+        /* XXX Semantic inconsistency with begin(void) */
+        spi_master_end(&spi_);
+    }
+
+    void setBitOrder(const SPIBitOrder bitOrder) const {
+        setBitOrder(BOARD_SPI_DEFAULT_SS, bitOrder);
+    }
+    void setBitOrder(const uint8_t ss_pin, const SPIBitOrder bitOrder) const {
+        ssPinCR1_[ss_pin] &= ~SPI_CR1_LSBFIRST;
+        ssPinCR1_[ss_pin] |=  bitOrder;
+    }
+
+    uint32_t setClockDivider(const SPIClockDivider clockDivider) const {
+        return setClockDivider(BOARD_SPI_DEFAULT_SS, clockDivider);
+    }
+    uint32_t setClockDivider(const uint8_t ss_pin, const SPIClockDivider clockDivider) const {
+        uint32_t oldValue = ssPinCR1_[ss_pin] & SPI_CR1_BR;
+        ssPinCR1_[ss_pin] &= ~SPI_CR1_BR;
+        ssPinCR1_[ss_pin] |= clockDivider;
+        return oldValue;
+    }
+
+    uint32_t setClock(const uint32_t hertz) const {
+        return setClock(BOARD_SPI_DEFAULT_SS, hertz);
+    }
+    uint32_t setClock(const uint8_t ss_pin, const uint32_t hertz) const {
+        const uint32_t wantedDivider = SystemCoreClock / hertz;
+
+        //XXX;
+
+        setClockDivider(ss_pin, SPI_CLOCK_DIV256/*XXX WRONG*/);
+        return SPI_CLOCK_DIV256/*XXX WRONG*/;
+    }
+
+    void setDataMode(SPIDataMode dataMode) const {
+        setDataMode(BOARD_SPI_DEFAULT_SS, dataMode);
+    }
+    void setDataMode(uint8_t ss_pin, SPIDataMode dataMode) const {
+        ssPinCR1_[ss_pin] &= ~(SPI_CR1_CPHA | SPI_CR1_CPOL);
+        ssPinCR1_[ss_pin] |=  dataMode;
+    }
+
+    uint8_t transfer(uint8_t data, SPITransferMode mode = SPI_LAST) const {
+        return transfer(BOARD_SPI_DEFAULT_SS, data, mode);
+    }
+
+    uint8_t transfer(uint8_t ss_pin, uint8_t data, SPITransferMode mode = SPI_LAST) const {
+        return transfer(ss_pin, &data, 1, mode);
+    }
+
+    uint8_t transfer(uint8_t ss_pin, uint8_t data[], uint8_t len,
+                     SPITransferMode mode = SPI_LAST) const {
+        activate_ss(ss_pin);
+
+        const uint32_t cr1 = ssPinCR1_[ss_pin];
+
+        len = spi_transfer(&spi_, cr1, data, len);
+
+        if (mode == SPI_LAST)
+            deactivate_ss(ss_pin);
+        return len;
+    };
+private:
+    Pin2Int7 &ssPinCR1_;
+    static inline void activate_ss(uint8_t ss_pin) { digitalWrite(ss_pin, 0); };
+    static inline void deactivate_ss(uint8_t ss_pin) { digitalWrite(ss_pin, 1); };
 };
 
-#define DEFINE_SPI(spi_number, ss_port, ss_pin, ss_af, miso_port, miso_pin, miso_af, mosi_port, mosi_pin, mosi_af, clk_port, clk_pin, clk_af) \
-    ({ DEFINE_SPI_STRUCT(spi_number, ss_port, ss_pin, ss_af, miso_port, miso_pin, miso_af, mosi_port, mosi_pin, mosi_af, clk_port, clk_pin, clk_af) })
-
-
-constexpr SPIClass::SPIClass(const SPI &spi)
-    : spi_(spi) {}
-
-void SPIClass::begin(uint32_t ss_pin) const {
-    // XXX TBD
-}
+#endif//_SPI_CLASS_H_

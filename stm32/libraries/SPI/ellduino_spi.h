@@ -24,6 +24,7 @@
 # define _ELLDUINO_SPI_H_
 
 # include <SPIClass.h>
+# include <system_init.h>
 
 /**
  * Declarations for externally visible SPI init records.
@@ -34,5 +35,13 @@ SPI_INIT_DEFAULT(1);
 SPI_INIT_DEFAULT(2);
 
 #define BOARD_SPI_DEFAULT_SS 10 /* XXX: Should be D10 but that is not defined yet */
+
+extern Pin2Int7 spimap1, spimap2;
+
+static const struct SPI __SPI1struct = DEFINE_SPI_STRUCT(1, A, 15, 0, B,  4, 0, B,  5, 0, B,  3, 0);
+static const struct SPI __SPI2struct = DEFINE_SPI_STRUCT(2, B, 12, 0, B, 14, 0, B, 15, 0, B, 12, 0);
+
+static const class SPIClass SPI  (__SPI1struct, spimap1);
+static const class SPIClass SPI_2(__SPI2struct, spimap2);
 
 #endif//_ELLDUINO_SPI_H_

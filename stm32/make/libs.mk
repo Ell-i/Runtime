@@ -19,18 +19,13 @@ VARIANT ?= ellduino
 #
 include $(MAKEDIR)$(PLATFORM).mk
 include $(MAKEDIR)system_libs_inc.mk
-
-#
-# Define include directories XXX THIS IS WRONG!
-#
-CFLAGS    += -Isrc -I$(wildcard arch/*)
-CXXFLAGS  += -Isrc -I$(wildcard arch/*)
+include $(MAKEDIR)libs_inc.mk
 
 #
 # Define app library objects.  Add new objects here.
 #
-CXX_SRC := $(wildcard src/*.cpp arch/*/*.cpp)
-C_SRC   := $(wildcard src/*.c   arch/*/*.c)
+CXX_SRC := $(wildcard *.cpp)
+C_SRC   := $(wildcard *.c  )
 
 LIB_OBJS := $(CXX_SRC:.cpp=.o) $(C_SRC:.c=.o)
 
