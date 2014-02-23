@@ -47,10 +47,10 @@ struct PinFunction {
 #define DEFINE_PIN_FUNCTION(gpio_letter, pin, af)                 \
     {                                                             \
         IF(gpio_afr_)        &GPIO ## gpio_letter->AFR[pin / 8],  \
-        IF(gpio_afr_mask_)   (GPIO_AFRL_AFRL0) << ((pin % 8) * 4),\
+        IF(gpio_afr_mask_)   ~((GPIO_AFRL_AFRL0) << ((pin % 8) * 4)), \
         IF(gpio_afr_ones_)   (af             ) << ((pin % 8) * 4),\
         IF(gpio_moder_)      &GPIO ## gpio_letter->MODER,         \
-        IF(gpio_moder_mask_) (GPIO_MODER_MODER0  ) << (pin * 2),  \
+        IF(gpio_moder_mask_) ~((GPIO_MODER_MODER0  ) << (pin * 2)), \
         IF(gpio_moder_ones_) (GPIO_MODER_MODER0_1) << (pin * 2),  \
     }
 
@@ -61,15 +61,22 @@ struct PinFunction {
  */
 static inline void PinFunctionActivate(const struct PinFunction *const pin) {
     // NB.  Use a pointer so that it is clean C, with plain C++ would use a reference.
-    register volatile uint32_t afr = *(pin->gpio_afr_);
+    register uint32_t afr = *(pin->gpio_afr_);
     afr &= pin->gpio_afr_mask_;
     afr |= pin->gpio_afr_ones_;
     *(pin->gpio_afr_) = afr;
 
     /* Place the GPIO pins into the right input/output mode */
-    register volatile uint32_t moder = *(pin->gpio_moder_);
+    register uint32_t moder = *(pin->gpio_moder_);
     moder &= pin->gpio_moder_mask_;
     moder |= pin->gpio_moder_ones_;
+    *(pin->gpio_moder_) = moder;
+}
+
+static inline void PinFunctionDeactivate(const struct PinFunction *const pin) {
+    /* Place the GPIO pins into the default (input) mode */
+    register uint32_t moder = *(pin->gpio_moder_);
+    moder &= pin->gpio_moder_mask_;
     *(pin->gpio_moder_) = moder;
 }
 

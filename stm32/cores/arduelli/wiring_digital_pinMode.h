@@ -98,33 +98,42 @@ void pinMode(pin_t pin, const enum pin_mode mode) {
     switch (mode) {
     case INPUT:
         /* High impedance: push up/down register bits zero */
-        GPIOPIN[pin].gpio_port->PUPDR &= ~(GPIO_PUPDR_PUPDR0   << pin_shift);
+        GPIOPIN[pin].gpio_port->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << pin_shift);
         break;
-    case INPUT_PULLUP:
+    case INPUT_PULLUP: {
         /* Pull-up: push up/down register bits 01 */
-        GPIOPIN[pin].gpio_port->PUPDR |= ~(GPIO_PUPDR_PUPDR0_0 << pin_shift);
-        GPIOPIN[pin].gpio_port->PUPDR &= ~(GPIO_PUPDR_PUPDR0_1 << pin_shift);
+        register uint32_t pupdr = GPIOPIN[pin].gpio_port->PUPDR;
+        pupdr |=  (GPIO_PUPDR_PUPDR0_0 << pin_shift);
+        pupdr &= ~(GPIO_PUPDR_PUPDR0_1 << pin_shift);
+        GPIOPIN[pin].gpio_port->PUPDR = pupdr;
         break;
-    case INPUT_PULLDOWN:
+    }
+    case INPUT_PULLDOWN: {
         /* Pull-down: push up/down register bits 10 */
-        GPIOPIN[pin].gpio_port->PUPDR &= ~(GPIO_PUPDR_PUPDR0_0 << pin_shift);
-        GPIOPIN[pin].gpio_port->PUPDR |= ~(GPIO_PUPDR_PUPDR0_1 << pin_shift);
+        register uint32_t pupdr = GPIOPIN[pin].gpio_port->PUPDR;
+        pupdr &= ~(GPIO_PUPDR_PUPDR0_0 << pin_shift);
+        pupdr |=  (GPIO_PUPDR_PUPDR0_1 << pin_shift);
+        GPIOPIN[pin].gpio_port->PUPDR = pupdr;
         break;
+    }
     case OUTPUT:
         break;
     }
 
     switch (mode) {
-    case OUTPUT:
+    case OUTPUT: {
         /* Output mode:  mode register bits 01 */
-        GPIOPIN[pin].gpio_port->MODER |=  (GPIO_MODER_MODER0_0 << pin_shift);
-        GPIOPIN[pin].gpio_port->MODER &= ~(GPIO_MODER_MODER0_1 << pin_shift);
+        register uint32_t moder = GPIOPIN[pin].gpio_port->MODER;
+        moder |=  (GPIO_MODER_MODER0_0 << pin_shift);
+        moder &= ~(GPIO_MODER_MODER0_1 << pin_shift);
+        GPIOPIN[pin].gpio_port->MODER = moder;
         break;
+    }
     case INPUT:
     case INPUT_PULLUP:
     case INPUT_PULLDOWN:
         /* Input mode: mode register bits zero */
-        GPIOPIN[pin].gpio_port->MODER &= ~(GPIO_MODER_MODER0   << pin_shift);
+        GPIOPIN[pin].gpio_port->MODER &= ~(GPIO_MODER_MODER0 << pin_shift);
     }
 }
 
