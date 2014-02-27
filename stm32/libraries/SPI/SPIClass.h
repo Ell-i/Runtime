@@ -145,7 +145,7 @@ public:
         }
         
         //XXX There should be a better way than typecasting.
-        wantedDividerEnum =  static_cast<SPIClockDivider>(wantedDivider);
+        wantedDividerEnum =  static_cast<SPIClockDivider>(wantedDivider<<3);
         setClockDivider(ss_pin, wantedDividerEnum);
         return outputHertz;
     }
