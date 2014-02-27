@@ -171,6 +171,7 @@ static const struct GPIO GPIOPIN[] = {
     DEFINE_GPIO_PIN(A, 13),   /* 69 PA13 (CANTX) SWDAT */
     DEFINE_GPIO_PIN(F,  7),   /* 70 PF7  SDA1 */
     DEFINE_GPIO_PIN(F,  6),   /* 71 PF6  SCL1 */
+    DEFINE_GPIO_PIN(B, 12),   /* 40 PB12 SPI2 NSS */
 };
 
 #endif//_ELLDUINO_GPIO_H_

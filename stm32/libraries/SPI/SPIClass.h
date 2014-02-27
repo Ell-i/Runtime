@@ -71,7 +71,7 @@ enum SPIDataMode {
  */
 typedef TinyMap<uint8_t,uint32_t,7> Pin2Int7;
 
-//XXX TODO: Figure out a nice implementation for setClock
+//XXX TODO: Figure out a better implementation for setClock
 
 class SPIClass {
 public:
@@ -81,6 +81,24 @@ public:
         digitalWrite(ss_pin, 1); /* Avoid glitch */
         pinMode(ss_pin, OUTPUT);
         spi_master_begin(&spi_);
+        ssPinCR1_[ss_pin] = 0
+                            | ! SPI_CR1_CPHA       /* Data at first edge */
+                            | ! SPI_CR1_CPOL       /* Clock low when idle */
+                            |   SPI_CR1_MSTR       /* Master mode */
+                            |   SPI_CR1_BR_1       /* Clock divider 8 */
+                            |   SPI_CR1_SPE        /* SPI enabled */
+                            | ! SPI_CR1_LSBFIRST   /* MSB first */
+
+                            |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */
+                            |   SPI_CR1_SSM        /* Software Slave management enabled */
+                            | ! SPI_CR1_RXONLY     /* 0: Full duplex */
+                            | ! SPI_CR1_CRCL       /* 0: N/A (8-bit CRC length) */
+                            | ! SPI_CR1_CRCNEXT    /* 0: Transmit TX buffer, not CERC */
+                            | ! SPI_CR1_CRCEN      /* 0: CRC disabled */
+                            |   SPI_CR1_BIDIOE     /* 1: Output enabled */
+                            | ! SPI_CR1_BIDIMODE   /* 0: 2-Line (uni)directional data */
+                            ;
+
     };
 
     void end(const uint8_t ss_pin) const {
@@ -114,12 +132,22 @@ public:
         return setClock(BOARD_SPI_DEFAULT_SS, hertz);
     }
     uint32_t setClock(const uint8_t ss_pin, const uint32_t hertz) const {
-        const uint32_t wantedDivider = SystemCoreClock / hertz;
-
-        //XXX;
-
-        setClockDivider(ss_pin, SPI_CLOCK_DIV256/*XXX WRONG*/);
-        return SPI_CLOCK_DIV256/*XXX WRONG*/;
+        uint32_t outputHertz = SystemCoreClock>>1;
+        uint8_t wantedDivider = 0;
+        SPIClockDivider wantedDividerEnum;
+        
+        if (hertz<outputHertz)
+        {
+            for (wantedDivider=1; wantedDivider < 7; wantedDivider++){
+                outputHertz>>=1;
+                if (hertz >= outputHertz) break;
+            }
+        }
+        
+        //XXX There should be a better way than typecasting.
+        wantedDividerEnum =  static_cast<SPIClockDivider>(wantedDivider<<3);
+        setClockDivider(ss_pin, wantedDividerEnum);
+        return outputHertz;
     }
 
     void setDataMode(SPIDataMode dataMode) const {

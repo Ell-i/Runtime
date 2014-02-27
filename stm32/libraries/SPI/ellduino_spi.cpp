@@ -61,7 +61,7 @@ static const uint8_t  p ## _ ## r ## _offset =  offsetof(p, r)/sizeof(uint32_t);
         | ! SPI_CR1_LSBFIRST   /* MSB first */
 
         |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */
-        | ! SPI_CR1_SSM        /* Hardware Slave management enabled */
+        |   SPI_CR1_SSM        /* Software Slave management enabled */
         | ! SPI_CR1_RXONLY     /* 0: Full duplex */
         | ! SPI_CR1_CRCL       /* 0: N/A (8-bit CRC length) */
         | ! SPI_CR1_CRCNEXT    /* 0: Transmit TX buffer, not CERC */
