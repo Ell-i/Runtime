@@ -181,7 +181,7 @@ spi_transfer(const struct SPI *const spi, const uint32_t cr1, uint8_t data[], co
             spi->spi_->DR = *wp++;  /* Write the next two bytes */
 
             /* Ensure we have at least 2 bytes in the input FIFO */
-            while (spi->spi_->SR & SPI_SR_FRLVL_1)
+            while (!(spi->spi_->SR & SPI_SR_FRLVL_1))
                 ; /* XXX.  Let other threads run. */
 
             *rp++ = spi->spi_->DR;  /* Read the previous two bytes */
@@ -192,7 +192,7 @@ spi_transfer(const struct SPI *const spi, const uint32_t cr1, uint8_t data[], co
         }
 
         /* Again, ensure we have received at least 2 bytes. */
-        while (spi->spi_->SR & SPI_SR_FRLVL_1)
+        while (!(spi->spi_->SR & SPI_SR_FRLVL_1))
             ; /* XXX.  Let other threads run. */
         *rp++ = spi->spi_->DR;      /* Read the final two bytes */
     }
