@@ -16,7 +16,7 @@
 
 TARGETS = \
     SPI \
-#   Ethernet
+    CoAP \
 
 PLATFORM ?= arduino
 # PLATFORM = emulator
