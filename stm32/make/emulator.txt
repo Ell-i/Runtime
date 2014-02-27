@@ -4,6 +4,7 @@
 # Variables overwritten for the emulator
 #
 
+compiler.cflags.optimise= -g
 compiler.cflags.inline=
 compiler.cflags.target=	-m32 -march=i386
 

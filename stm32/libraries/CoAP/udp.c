@@ -44,8 +44,8 @@ void udp_input(struct udp *const udp_packet) {
     udp_packet->udp_sport = dport;
 
     /* Find upper layer handler, if any */
-    for (const struct udp_socket *socket = udp_sockets; 
-         socket < udp_sockets_end;
+    for (const struct udp_socket *socket = __udp_sockets; 
+         socket < __udp_sockets_end;
          socket++ /* XXX */) {
         if (socket->udp_port == dport) {
             /* XXX Update statistics */

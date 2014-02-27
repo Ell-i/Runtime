@@ -37,13 +37,13 @@ void coap_input(void *enclosing_packet, uint8_t coap_packet_data[], uint16_t coa
     register struct coap_hdr *coap_hdr = &coap_packet->coap_hdr;
     register uint32_t first_word       =  coap_packet->coap_hdr_long;
     register uint8_t *const packet_end = &coap_hdr->coap_vttkl + coap_packet_len;
-    bool is_confirmable = false;
+    uint8_t is_confirmable = 0;
     uint8_t coap_error_code;
 
     // Hopefully the compiler optimises this into a single and & jump XXX check!
     switch (first_word & COAP_VT_MASK << 24) {
     case COAP_VT_CONFIRMABLE:
-        is_confirmable = true;
+        is_confirmable = 1;
         /* Fall through */
     case COAP_VT_NON_CONFIRMABLE:
         break; // Handle the message

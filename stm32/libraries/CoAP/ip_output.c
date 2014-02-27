@@ -54,6 +54,6 @@ void ip_output(struct ip_packet *const ip_packet) {
     /*
      * Pass to lower layer.
      */
-    struct eth *const eth = (struct eth *)(((char *)iph) - sizeof(struct ether_header));
+    struct ether_header *const eth = (struct ether_header *)(((char *)iph) - sizeof(struct ether_header));
     eth_output(eth);
 }

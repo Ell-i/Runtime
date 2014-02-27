@@ -40,11 +40,15 @@ struct udp {
  * XXX
  */
 
-extern const struct udp_socket {
+#ifndef LINKER_ALIGNMENT
+#define LINKER_ALIGNMENT 16
+#endif
+
+struct udp_socket {
     void (*udp_socket_handler)(void *enclosing, uint8_t data[], uint16_t len);
     const uint16_t udp_port;
-    /* XXX Add statistics */
-} udp_sockets[], udp_sockets_end[];
+    /* XXX Add pointer to statistics, in RAM */
+} __attribute__((aligned(LINKER_ALIGNMENT)));
 
 # ifdef __MACH__
 #  define UDP_SOCKET_SECTION(port)  ".text,.socket"
@@ -52,13 +56,24 @@ extern const struct udp_socket {
 #  define UDP_SOCKET_SECTION(port)  ".socket.udp." # port
 # endif
 
-# define DEFINE_UDP_SOCKET(port, handler)               \
-    const struct udp_socket __udp_port ## port          \
-    __attribute__((section(UDP_SOCKET_SECTION(port))))  \
-        = {                                             \
-        IF(udp_socket_handler) handler,                 \
-        IF(udp_port) port,                              \
+# define __EXPAND_SOCKET_NAME(port) __udp_socket ## port
+
+# define DECLARE_UDP_SOCKET(port)                              \
+    extern const struct udp_socket  __EXPAND_SOCKET_NAME(port) \
+    __attribute__((section(UDP_SOCKET_SECTION(port)))) 
+
+# define DEFINE_UDP_SOCKET(port, handler)                  \
+    DECLARE_UDP_SOCKET(port);                              \
+    const struct udp_socket __EXPAND_SOCKET_NAME(port)     \
+        __attribute__((section(UDP_SOCKET_SECTION(port)))) \
+        = {                                                \
+        IF(udp_socket_handler) handler,                    \
+        IF(udp_port) port,                                 \
     }
+
+extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __udp_sockets[];
+extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __udp_sockets_end[];
+
 
 /**
  * XXX

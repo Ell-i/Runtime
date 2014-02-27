@@ -19,3 +19,7 @@
 
 extern void *const __peripheral_end __attribute__((section(".text,.peripheral")));
 void *const __peripheral_end = 0;
+
+#include <udp.h>
+
+const struct udp_socket __udp_sockets_end[0] = {};

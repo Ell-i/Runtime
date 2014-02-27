@@ -60,6 +60,14 @@ SECTIONS
         KEEP (*(SORT(.peripheral.*)))  /* Read-only peripheral initialisation data */
         __peripheral_end = .;
 
+        /*
+         * XXX
+         */
+        . = ALIGN(4);
+        __udp_sockets = .;
+        KEEP (*(.socket.udp.*))       /* Read-only UDP socket data structures */
+        __udp_sockets_end = .;
+
         /* 
          * The following sections are needed to jump from ARM code to Thumb
          * ocde and vice versa.  They are not needed in Cortex-M0, but they

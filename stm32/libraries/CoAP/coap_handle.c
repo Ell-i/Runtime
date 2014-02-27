@@ -23,6 +23,7 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+#include <udp.h>
 #include <coap_int.h>
 #include <stddef.h>
 

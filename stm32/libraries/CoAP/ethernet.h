@@ -38,11 +38,11 @@ struct ether_header {
 /**
  * XXX
  */
-extern void eth_output(struct eth *const eth_packet);
+extern void eth_output(struct ether_header *const eth_packet);
 
 /**
  * XXX
  */
-extern void eth_input(struct eth *const eth_packet);
+extern void eth_input(struct ether_header *const eth_packet);
 
 #endif //_ETHERNET_ETH_H
