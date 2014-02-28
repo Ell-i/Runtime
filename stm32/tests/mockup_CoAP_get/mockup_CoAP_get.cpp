@@ -43,8 +43,8 @@ struct {
     struct coap_payload payload;
 } mockup_packet = {
     .udp = { 
-        .udp_sport = 's',
-        .udp_dport = 'd',
+        .udp_sport = 1234,
+        .udp_dport = 5678,
         .udp_len   = sizeof(struct coap_payload),
         .udp_sum   = 0,
     },
@@ -71,6 +71,9 @@ const uint32_t mockup_coap_packet_len = 4 + 4 + 1 + 5;
 /* Intercept resulting outgoing packet */
 void udp_output(struct udp *mockup_enclosing, uint16_t len) {
     printf("Received output packet\n");
+    printf("UDP sport = %d, dport = %d\n", mockup_packet.udp.udp_sport, mockup_packet.udp.udp_dport);
+    printf("Coap code = %d\n", mockup_packet.payload.coap.coap_hdr.coap_code);
+    printf("Coap reply = %s\n", (char *)&mockup_packet.payload.uri_path_dl);
 }
 
 void setup() {
