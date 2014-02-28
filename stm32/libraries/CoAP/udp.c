@@ -59,17 +59,17 @@ void udp_input(struct udp *const udp_packet) {
  * XXX
  */
 
-void udp_output(struct udp *const udp_packet) {
-    // XXX any checks here?
+void udp_output(struct udp *const udp, uint16_t len) {
+    udp->udp_len = len;
     
     /*
      * Clear the checksum, for now
      */
-    udp_packet->udp_sum = 0;
+    udp->udp_sum = 0;
     /*
      * Pass to lower layer.
      */
-    struct ip *const ip = (struct ip *)(((char *)udp_packet) - sizeof(struct ip));
-    ip_output(ip);
+    struct ip *const ip = (struct ip *)(((char *)udp) - sizeof(struct ip));
+    ip_output(ip, len + sizeof(struct ip));
 }
 

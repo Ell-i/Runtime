@@ -23,14 +23,49 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#include <udp.h>
+#include <CoAP.h>
 #include <coap_int.h>
-#include <stddef.h>
+#include <string.h>
 
 /**
  * XXX
  */
-int coap_handle_request(uint8_t coap_code, struct coap_options *options, uint8_t *payload) {
-    // XXX TBD
-    return 1; // Send reply
+int coap_handle_request(
+    uint8_t coap_code, 
+    const struct coap_options *const options, 
+    const uint8_t *const payload,
+    size_t payload_length,
+    uint8_t *reply_content_buffer, 
+    size_t *reply_content_buffer_length) {
+
+    // XXX Replace the linear search with a binary one; see CoAP.h
+    for (const CoAPURL *coap_url = __coap_urls; 
+         coap_url < __coap_urls_end;
+         coap_url++) {
+        int XXX;
+
+        if (options->uri_path.option_len == coap_url->coap_url_path_length &&
+            0 == memcmp(options->uri_path.option_value, coap_url->coap_url_path, 
+                        options->uri_path.option_len)) {
+
+            switch (coap_code) {
+            case COAP_CODE_GET:
+                // XXX Specify return value semantics in the header, too
+                XXX = coap_url->coap_url_get_callback(payload, payload_length,
+                                                          reply_content_buffer, 
+                                                          reply_content_buffer_length);
+                return COAP_CODE_CONTENT;
+            case COAP_CODE_PUT:
+                // XXX Specify return value semantics in the header, too
+                XXX = coap_url->coap_url_put_callback(payload, payload_length,
+                                                          reply_content_buffer, 
+                                                          reply_content_buffer_length);
+                return COAP_CODE_CHANGED;
+            }
+            *reply_content_buffer_length = 0;
+            return COAP_CODE_NOT_IMPLEMENTED;
+        }
+    }
+    *reply_content_buffer_length = 0;
+    return COAP_CODE_NOT_FOUND; // Send reply
 }

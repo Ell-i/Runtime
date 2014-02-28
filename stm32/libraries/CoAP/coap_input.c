@@ -23,9 +23,9 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#include <coap_int.h>
-#include <udp.h>
 #include <stddef.h>
+#include <udp.h>
+#include <coap_int.h>
 
 /**
  * XXX
@@ -36,6 +36,8 @@ void coap_input(void *enclosing_packet, uint8_t coap_packet_data[], uint16_t coa
     struct coap *const coap_packet = (struct coap *)coap_packet_data;
     register struct coap_hdr *coap_hdr = &coap_packet->coap_hdr;
     register uint8_t *const packet_end = &coap_hdr->coap_vttkl + coap_packet_len;
+    uint32_t tkl = (coap_hdr->coap_vttkl & COAP_TKL_MASK);
+    uint8_t *content_start = coap_packet->coap_token + tkl;
     uint8_t is_confirmable = 0;
     uint8_t coap_error_code;
 
@@ -50,14 +52,13 @@ void coap_input(void *enclosing_packet, uint8_t coap_packet_data[], uint16_t coa
         return; // Ignore the message
     }
 
-    register uint32_t tkl = (coap_hdr->coap_vttkl & COAP_TKL_MASK);
     if (tkl > COAP_TKL_MAX)
         goto send_reset;
 
     {
         struct coap_options options = COAP_OPTIONS_INITIALISATION;
         uint32_t option_number = 0;
-        uint8_t *option_bytes = coap_packet->coap_token + tkl;
+        uint8_t *option_bytes = content_start;
 
         while (option_bytes < packet_end && option_bytes[0] != COAP_OPTION_PAYLOAD) {
             uint8_t option_byte   = option_bytes[0];
@@ -122,11 +123,18 @@ void coap_input(void *enclosing_packet, uint8_t coap_packet_data[], uint16_t coa
         case COAP_CODE_PUT:
             break; // Handle the message
         }
+#ifndef XXX_LENGTH
+#define XXX_LENGTH 256 /* XXX */
+#endif
         
         /* Handle GET and PUT requests */
-        int reply = coap_handle_request(coap_hdr->coap_code, &options, option_bytes /*payload*/);
-        if (reply)
-            udp_output(udp_packet);
+        size_t reply_content_length = XXX_LENGTH; // Total buffer length
+        int reply = coap_handle_request(coap_hdr->coap_code, &options, 
+                                        option_bytes /*payload*/, packet_end - option_bytes,
+                                        content_start, &reply_content_length);
+        if (reply != COAP_CODE_EMPTY) {
+            udp_output(udp_packet, sizeof(struct coap_hdr) + tkl + reply_content_length);
+        }
         return;
     }
 
@@ -135,7 +143,8 @@ send_error:
 
 send_reset:
     //XXX;
-    udp_output(udp_packet);
+    coap_hdr->coap_code = COAP_CODE_EMPTY;
+    udp_output(udp_packet, sizeof(struct coap_hdr) + tkl);
 }
 
 DEFINE_UDP_SOCKET(UDP_PORT_COAP, coap_input);

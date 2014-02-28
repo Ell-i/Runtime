@@ -66,7 +66,7 @@ struct ip_packet {
 extern "C" {
 # endif
 extern void ip_input( struct ip *const ip);
-extern void ip_output(struct ip *const ip);
+extern void ip_output(struct ip *const ip, uint16_t len);
 # ifdef __cplusplus
 }
 # endif

@@ -32,7 +32,23 @@
  * The pointed packet MUST be a pointer to inside an Ethernet packet,
  * containing valid Ethernet fields.
  */
-void ip_output(struct ip *const iph) {
+void ip_output(struct ip *const iph, uint16_t len) {
+    /*
+     * Verify source address.
+     */
+    if (iph->ip_src != 0/*XXX*/) {
+        return; // Wrong destiation address -- dropped silently
+    }
+
+    /*
+     * Set packet length, TTL, and ID, updating the checksum.  
+     * See RFC1624.
+     *
+     * XXX Check the assembly.  Using uint16_t may cause problems.
+     */
+    register uint16_t ip_sum_ = ~(iph->ip_sum);
+    ip_sum_ += ~(iph->ip_len) + len;
+    iph->ip_len = len;
 
 #if 0
     /*
@@ -40,16 +56,8 @@ void ip_output(struct ip *const iph) {
      */
     XXX;
 #endif
+    iph->ip_sum = ~ip_sum_;
 
-#if 1
-    /*
-     * Verify source address.
-     */
-    if (iph->ip_src != 0/*XXX*/) {
-        // XXX Reply with ICMP destination unreachable?
-        return; // Wrong destiation address -- dropped silently
-    }
-#endif
     /*
      * Pass to lower layer.
      */

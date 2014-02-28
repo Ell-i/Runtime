@@ -68,6 +68,14 @@ SECTIONS
         KEEP (*(.socket.udp.*))       /* Read-only UDP socket data structures */
         __udp_sockets_end = .;
 
+        /*
+         * XXX
+         */
+        . = ALIGN(4);
+        __coap_urls = .;
+        KEEP (*(.coap.url*))       /* Read-only UDP socket data structures */
+        __coap_urls_end = .;
+
         /* 
          * The following sections are needed to jump from ARM code to Thumb
          * ocde and vice versa.  They are not needed in Cortex-M0, but they

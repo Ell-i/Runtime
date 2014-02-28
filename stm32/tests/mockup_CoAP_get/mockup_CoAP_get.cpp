@@ -23,6 +23,7 @@
 
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 #include <coap_int.h>
 #include <udp.h>
 
@@ -68,7 +69,7 @@ uint8_t *const mockup_coap_packet     = &mockup_packet.payload.first_byte;
 const uint32_t mockup_coap_packet_len = 4 + 4 + 1 + 5;
 
 /* Intercept resulting outgoing packet */
-void udp_output(struct udp *mockup_enclosing) {
+void udp_output(struct udp *mockup_enclosing, uint16_t len) {
     printf("Received output packet\n");
 }
 
@@ -83,3 +84,19 @@ void loop() {
     _exit(0);
 #endif
 }
+
+#include <CoAP.h>
+
+#define HELLO_WORLD "Hello, World!"
+
+int test_get_callback(
+    const uint8_t *input_buffer, size_t input_length,
+    uint8_t *output_buffer, size_t *output_buffer_length) {
+    *output_buffer++ = COAP_OPTION_PAYLOAD;
+    memcpy(output_buffer, HELLO_WORLD, sizeof(HELLO_WORLD));
+    *output_buffer_length = sizeof(HELLO_WORLD); // Excludes NUL
+    return 0; // XXX semantics not fixed yet
+}
+
+
+DEFINE_COAP_URL(test, "/test", test_get_callback, NULL);

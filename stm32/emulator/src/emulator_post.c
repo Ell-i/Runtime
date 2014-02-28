@@ -23,3 +23,7 @@ void *const __peripheral_end = 0;
 #include <udp.h>
 
 const struct udp_socket __udp_sockets_end[0] = {};
+
+#include <CoAP.h>
+
+const CoAPURL __coap_urls_end[0] __attribute__((section(COAP_URL_SECTION(zzzzzz)))) = {};

@@ -26,24 +26,46 @@
 # define _ETHERNET_COAP_API_H
 
 # include <stdint.h>
+# include <stddef.h> // Define size_t
+
+# include "coap_option.h" // XXX fix path if not in -I directories?  This is a public API.
+
+// Define the semantics for the return value
+typedef int (*coap_callback)(
+    const uint8_t *input_buffer, size_t input_length,
+    uint8_t *output_buffer, size_t *output_buffer_length);
+
+// XXX MOVE!
+#ifndef LINKER_ALIGNMENT 
+#define LINKER_ALIGNMENT 16 
+#endif
 
 typedef struct {
-    const uint8_t coap_content_format;
-    const uint8_t coap_content_template[]; /* NUL terminated */
-} CoAPContentTemplate;
+    const coap_callback              coap_url_get_callback;
+    const coap_callback              coap_url_put_callback;
+    const char *                     coap_url_path;
+    const uint8_t                    coap_url_path_length;
+} __attribute__((aligned(LINKER_ALIGNMENT))) CoAPURL;
 
-typedef struct {
-    const uint8_t *coap_url_path;
-    //XXX;
-} CoAPGetURL;
+# ifdef __MACH__
+#  define COAP_URL_SECTION(name) ".text,.coapurl"
+# else
+#  define COAP_URL_SECTION(name) ".coap.url." # name
+# endif
 
-# define DEFINE_COAP_FORMAT_TEMPLATE(format, template) \
-    {                                                  \
-        IF(coap_content_format) format,                \
-        IF(coap_content_template) template,            \
-    }                                                  \
 
-# define DEFINE_COAP_GET_URL(path, callback, content_format_template_pairs) \
-    XXX
+# define DEFINE_COAP_URL(name, path, get_callback, put_callback) \
+    extern const CoAPURL __coap_url ## name                      \
+    __attribute__((section(COAP_URL_SECTION(name))));            \
+    const CoAPURL __coap_url ## name                             \
+    = {                                                          \
+        IF(coap_url_get_callback) get_callback,                  \
+        IF(coap_url_put_callback) put_callback,                  \
+        IF(coap_url_path) path,                                  \
+        IF(coap_url_path_length) sizeof(path),                   \
+    }                                                            \
+
+extern const CoAPURL __coap_urls[];
+extern const CoAPURL __coap_urls_end[];
 
 #endif //_ETHERNET_COAP_API_H

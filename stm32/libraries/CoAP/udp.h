@@ -40,8 +40,9 @@ struct udp {
  * XXX
  */
 
-#ifndef LINKER_ALIGNMENT
-#define LINKER_ALIGNMENT 16
+// XXX MOVE!
+#ifndef LINKER_ALIGNMENT 
+#define LINKER_ALIGNMENT 16 
 #endif
 
 struct udp_socket {
@@ -78,20 +79,8 @@ extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __
 # ifdef __cplusplus
 extern "C" {
 # endif
-
-/**
- * XXX
- *
- * The pointed packet MUST be a pointer to inside an Ethernet packet,
- * containing valid IP and Ethernet frames.
- */
-extern void udp_output(struct udp *const udp_packet);
-
-/**
- * XXX
- */
 extern void udp_input(struct udp *const udp_packet);
-
+extern void udp_output(struct udp *const udp_packet, uint16_t len);
 # ifdef __cplusplus
 }
 # endif
