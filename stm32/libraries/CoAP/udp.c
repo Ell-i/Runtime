@@ -69,7 +69,7 @@ void udp_output(struct udp *const udp_packet) {
     /*
      * Pass to lower layer.
      */
-    struct ip_packet *const ip_packet = (struct ip_packet *)(((char *)udp_packet) - sizeof(struct ip));
-    ip_output(ip_packet);
+    struct ip *const ip = (struct ip *)(((char *)udp_packet) - sizeof(struct ip));
+    ip_output(ip);
 }
 

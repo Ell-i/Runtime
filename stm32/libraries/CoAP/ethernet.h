@@ -26,23 +26,38 @@
 #ifndef  _ETHERNET_ETH_H
 # define _ETHERNET_ETH_H
 
+# include <stdint.h>
 
 # define ETHER_ADDR_LEN 6
 
-struct ether_header {
+struct ether_header_real {
     uint8_t  ether_dhost[ETHER_ADDR_LEN];
     uint8_t  ether_shost[ETHER_ADDR_LEN];
     uint16_t ether_type;
 };
 
-/**
- * XXX
- */
-extern void eth_output(struct ether_header *const eth_packet);
+struct ether_header {
+    union {
+        struct {
+            uint8_t  ether_dhost[ETHER_ADDR_LEN];
+            uint8_t  ether_shost[ETHER_ADDR_LEN];
+            uint16_t ether_type;
+        };
+        uint32_t ether_longs[(ETHER_ADDR_LEN + ETHER_ADDR_LEN)/sizeof(uint32_t)];
+    };
+};
 
-/**
- * XXX
- */
+# define ETHERTYPE_IP      0x0800
+# define ETHERTYPE_ARP     0x0806
+# define ETHERTYPE_IPV6    0x86dd
+
+# ifdef __cplusplus
+extern "C" {
+# endif
+extern void eth_output(struct ether_header *const eth_packet);
 extern void eth_input(struct ether_header *const eth_packet);
+# ifdef __cplusplus
+}
+# endif
 
 #endif //_ETHERNET_ETH_H

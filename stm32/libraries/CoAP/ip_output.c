@@ -32,8 +32,7 @@
  * The pointed packet MUST be a pointer to inside an Ethernet packet,
  * containing valid Ethernet fields.
  */
-void ip_output(struct ip_packet *const ip_packet) {
-    struct ip *const iph = &(ip_packet->ip_iph.iph);
+void ip_output(struct ip *const iph) {
 
 #if 0
     /*

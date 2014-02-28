@@ -75,6 +75,10 @@ extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __
 extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __udp_sockets_end[];
 
 
+# ifdef __cplusplus
+extern "C" {
+# endif
+
 /**
  * XXX
  *
@@ -87,5 +91,9 @@ extern void udp_output(struct udp *const udp_packet);
  * XXX
  */
 extern void udp_input(struct udp *const udp_packet);
+
+# ifdef __cplusplus
+}
+# endif
 
 #endif //_ETHERNET_UDP_H

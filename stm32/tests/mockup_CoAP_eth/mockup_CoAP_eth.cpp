@@ -42,14 +42,20 @@ struct coap_payload {
 } __attribute__((packed));
 
 struct {
+    struct ether_header eth;
     struct ip   ip;
     struct udp  udp;
     struct coap_payload payload;
 } __attribute__((packed)) mockup_packet = {
+    .eth = {
+        .ether_dhost = { 1,   2,  3,  4,  5,  6 }, // XXX TBD
+        .ether_shost = { 10, 11, 12, 13, 14, 15 },
+        .ether_type  = ETHERTYPE_IP,
+    },
     .ip = {
         .ip_vhl    = IP_VHL_DEFAULT,
         .ip_tos    = 0,
-        .ip_len    = 5,
+        .ip_len    = sizeof(ip) + sizeof(udp) + sizeof(coap_payload),
         .ip_id     = 0x4321,
         .ip_off    = 0,
         .ip_ttl    = 1,
@@ -79,16 +85,14 @@ struct {
 };
 
 /* Intercept resulting outgoing packet */
-void eth_output(struct ether_header *mockup_enclosing) {
+void eth_output(struct ether_header *mockup_output) {
     printf("Received output packet\n");
 }
 
 void setup() {
-    printf("Sending input packet\n");
-    printf("sizeof udp = %lu, udp->upd_len = %u\n", 
-           sizeof(mockup_packet.udp), mockup_packet.udp.udp_len);
     /* Mockup an incoming packet */
-    udp_input(&mockup_packet.udp);
+    printf("Sending input packet\n");
+    eth_input(&mockup_packet.eth);
 }
 
 void loop() {

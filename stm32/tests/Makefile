@@ -23,7 +23,7 @@ TARGETS = \
     test_Serial_write_uint8 \
     test_SPI_begin \
     mockup_CoAP_get \
-    mockup_CoAP_udp \
+    mockup_CoAP_eth \
 
 PLATFORM ?= arduino
 # PLATFORM = emulator

@@ -67,13 +67,12 @@ static const struct ip_packet ip_header_data = {
  * XXX
  */
     
-void ip_input(struct ip_packet *const ip_packet) {
-    struct ip *const iph = &(ip_packet->ip_iph.iph);
+void ip_input(struct ip *const iph) {
 
     /*
      * Verify the packet format.
      */
-    register uint32_t *const iphpl = ip_packet->ip_iph.iph_longs;        // A pointer to the header
+    register uint32_t *const iphpl = (uint32_t *)iph;
     register const uint32_t *const iphml = ip_header_mask.ip_iph.iph_longs; // Header mask
     register const uint32_t *const iphdl = ip_header_data.ip_iph.iph_longs; // Header matching data
 
@@ -102,7 +101,8 @@ void ip_input(struct ip_packet *const ip_packet) {
     /*
      * Pass to the upper layer
      */
-    switch (ip_packet->ip_iph.iph.ip_p) {
+    struct ip_packet *const ip_packet = (struct ip_packet *)iph;
+    switch (iph->ip_p) {
     case IPPROTO_UDP:
         udp_input(&ip_packet->ip_udp);
         return;

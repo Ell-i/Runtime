@@ -23,18 +23,12 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifndef  _ETHERNET_ICMP_H
-# define _ETHERNET_ICMP_H
-
-# include <system_init.h>
-
-struct icmp {
-    uint8_t  icmp_data[0];
-};
+# include <arp.h>
 
 /**
  * XXX
  */
-extern void icmp_input(struct icmp *const icmp_packet);
+void arp_input(struct arp *const arp_packet) {
+    // XXX
+}
 
-#endif //_ETHERNET_ICMP_H

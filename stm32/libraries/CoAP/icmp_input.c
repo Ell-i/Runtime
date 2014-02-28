@@ -18,57 +18,17 @@
  */
 
 /**
- * Minimal standalone IPv4
+ * Minimal standalone ICMP
  *
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifndef  _ETHERNET_IP_H
-# define _ETHERNET_IP_H
-
-# include <udp.h>
 # include <icmp.h>
 
-# define IPPROTO_ICMP  1
-# define IPPROTO_UDP  17
-
-struct ip {
-    uint8_t  ip_vhl;
-    uint8_t  ip_tos;
-    uint16_t ip_len;
-    uint16_t ip_id;
-    uint16_t ip_off;
-    uint8_t  ip_ttl;
-    uint8_t  ip_p;
-    uint16_t ip_sum;
-    uint32_t ip_src;
-    uint32_t ip_dst;
-};
-
-union iph {
-    struct ip iph;
-    uint8_t   iph_bytes[0];
-    uint32_t  iph_longs[0];
-};
-
-struct ip_packet {
-    union iph ip_iph;
-    union {
-        struct udp   ip_udp;
-        struct icmp  ip_icmp;
-    };
-};
-
-#define IP_VHL_DEFAULT 0x45 /* IPv4, 4*4 = 20 bytes */
-
-
-# ifdef __cplusplus
-extern "C" {
-# endif
-extern void ip_input( struct ip *const ip);
-extern void ip_output(struct ip *const ip);
-# ifdef __cplusplus
+/**
+ * XXX
+ */
+void icmp_input(struct icmp *const icmp_packet) {
+    // XXX
 }
-# endif
 
-#endif//_ETHERNET_IP_H
