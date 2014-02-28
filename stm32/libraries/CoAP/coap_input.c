@@ -35,13 +35,11 @@ void coap_input(void *enclosing_packet, uint8_t coap_packet_data[], uint16_t coa
     struct udp *const udp_packet = (struct udp *)enclosing_packet;
     struct coap *const coap_packet = (struct coap *)coap_packet_data;
     register struct coap_hdr *coap_hdr = &coap_packet->coap_hdr;
-    register uint32_t first_word       =  coap_packet->coap_hdr_long;
     register uint8_t *const packet_end = &coap_hdr->coap_vttkl + coap_packet_len;
     uint8_t is_confirmable = 0;
     uint8_t coap_error_code;
 
-    // Hopefully the compiler optimises this into a single and & jump XXX check!
-    switch (first_word & COAP_VT_MASK << 24) {
+    switch (coap_hdr->coap_vttkl & COAP_VT_MASK) {
     case COAP_VT_CONFIRMABLE:
         is_confirmable = 1;
         /* Fall through */
@@ -63,14 +61,14 @@ void coap_input(void *enclosing_packet, uint8_t coap_packet_data[], uint16_t coa
 
         while (option_bytes < packet_end && option_bytes[0] != COAP_OPTION_PAYLOAD) {
             uint8_t option_byte   = option_bytes[0];
-            int32_t option_delta  = coap_option_dl_value(option_byte, &option_bytes);
-            int32_t option_length = coap_option_dl_value(option_byte, &option_bytes);
+            int32_t option_delta  = coap_option_dl_value(option_byte >> 4,  &option_bytes);
+            int32_t option_length = coap_option_dl_value(option_byte & 0xF, &option_bytes);
             
             if (option_delta < 0 || option_length < 0) {
                 goto send_reset; // Message format error
             }
 
-            uint8_t *option_value  = option_bytes;
+            uint8_t *option_value  = ++option_bytes;
             option_bytes  += option_length;
             option_number += option_delta;
             

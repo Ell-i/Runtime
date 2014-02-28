@@ -34,20 +34,30 @@ DECLARE_UDP_SOCKET(UDP_PORT_COAP);
 const void * __UDP_SOCKET_COAP = &__udp_socket5683;
 
 struct coap_payload {
-    union {
-        struct coap coap; 
-        uint8_t first_byte;
-    };
+    struct coap coap; 
     uint32_t    token;
 #define URI_PATH_LEN 6
     uint8_t     uri_path_dl;
     char        uri_path[URI_PATH_LEN];
-};
+} __attribute__((packed));
 
 struct {
+    struct ip   ip;
     struct udp  udp;
     struct coap_payload payload;
-} mockup_packet = {
+} __attribute__((packed)) mockup_packet = {
+    .ip = {
+        .ip_vhl    = IP_VHL_DEFAULT,
+        .ip_tos    = 0,
+        .ip_len    = 5,
+        .ip_id     = 0x4321,
+        .ip_off    = 0,
+        .ip_ttl    = 1,
+        .ip_p      = IPPROTO_UDP,
+        .ip_sum    = 0,  // XXX TBD
+        .ip_src    = 0,
+        .ip_dst    = 0,  // XXX TBD
+    },
     .udp = { 
         .udp_sport = 's',
         .udp_dport = UDP_PORT_COAP,
@@ -55,13 +65,11 @@ struct {
         .udp_sum   = 0,
     },
     .payload = {
-        {
-            .coap = {
-                .coap_hdr = {
-                    .coap_vttkl = COAP_VT_CONFIRMABLE | 4, // 4-byte token
-                    .coap_code  = COAP_CODE_GET,
-                    .coap_id    = 0,
-                },
+        .coap = {
+            .coap_hdr = {
+                .coap_vttkl = COAP_VT_CONFIRMABLE | 4, // 4-byte token
+                .coap_code  = COAP_CODE_GET,
+                .coap_id    = 0,
             },
         },
         1234,
@@ -77,6 +85,8 @@ void eth_output(struct ether_header *mockup_enclosing) {
 
 void setup() {
     printf("Sending input packet\n");
+    printf("sizeof udp = %lu, udp->upd_len = %u\n", 
+           sizeof(mockup_packet.udp), mockup_packet.udp.udp_len);
     /* Mockup an incoming packet */
     udp_input(&mockup_packet.udp);
 }

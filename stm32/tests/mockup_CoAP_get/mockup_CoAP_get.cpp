@@ -65,7 +65,7 @@ struct {
 
 void    *const mockup_enclosing       = &mockup_packet.udp;
 uint8_t *const mockup_coap_packet     = &mockup_packet.payload.first_byte;
-const uint32_t mockup_coap_packet_len = sizeof(mockup_packet);
+const uint32_t mockup_coap_packet_len = 4 + 4 + 1 + 5;
 
 /* Intercept resulting outgoing packet */
 void udp_output(struct udp *mockup_enclosing) {
