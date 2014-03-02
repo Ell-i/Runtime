@@ -71,12 +71,13 @@ compiler.ldflags.common=    --gc-sections --cref --check-sections --entry=Reset_
 compiler.ldflags.warnings=  --warn-common --warn-unresolved-symbols
 compiler.ldflags.ldscript=  "-T{build.variant.path}/{build.ldscript}"
 compiler.ldflags.map=       "-Map={build.path}/{build.project_name}.map"
+compiler.ldflags.paths=     "-L{build.path}" "-L{build.variant.path}" 
 
-compiler.cmd.ld.flags=      {compiler.ldflags.common} {compiler.ldflags.warnings} {compiler.ldflags.ldscript} {compiler.ldflags.map}
+compiler.cmd.ld.flags=      {compiler.ldflags.common} {compiler.ldflags.warnings} {compiler.ldflags.ldscript} {compiler.ldflags.map} {compiler.ldflags.paths}
 
 compiler.cmd.ld.out=        -o "{build.path}/{build.project_name}.elf"
 compiler.cmd.ld.objs=       {object_files} "{build.path}/{archive_file}"
-compiler.cmd.ld.libs=       "-L{build.path}" "-L{build.variant.path}" "{build.variant_system_libs}"
+compiler.cmd.ld.libs=       {build.variant_system_libs}
 
 compiler.cmd.elf2hex=       {compiler.prefix}objcopy
 compiler.cmd.elf2hex.flags= -O ihex

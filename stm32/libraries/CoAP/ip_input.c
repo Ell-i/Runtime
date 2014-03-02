@@ -23,7 +23,17 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+#ifdef EMULATOR
+#include <stdio.h>
+#define error(...) fprintf(stderr, __VA_ARGS__)
+#else
+#define error(...)
+#endif
+
 #include <ip.h>
+
+
+struct in_addr ip_local_address = { .s_bytes = { 10, 0, 0, 2 } };
 
 static const struct ip_packet ip_header_mask = { 
     .ip_iph = { 
@@ -40,8 +50,8 @@ static const struct ip_packet ip_header_mask = {
             .ip_p   = 0,  // ignored
             .ip_sum = 0,  // ignored
             /* Fourth and fifth 32-bit words */
-            .ip_src = 0,  // ignored
-            .ip_dst = 0,  // not matched
+            .ip_src = { { 0 } },  // ignored
+            .ip_dst = { { 0 } },  // not matched
         }
     }
 };
@@ -57,8 +67,8 @@ static const struct ip_packet ip_header_data = {
             .ip_ttl = 0,  // ignored
             .ip_p   = 0,  // ignored
             .ip_sum = 0,  // ignored
-            .ip_src = 0,  // ignored
-            .ip_dst = 0,  // not matched
+            .ip_src = { { 0 } },  // ignored
+            .ip_dst = { { 0 } },  // not matched
         }
     }
 };
@@ -67,36 +77,59 @@ static const struct ip_packet ip_header_data = {
  * XXX
  */
     
+# ifndef offsetof
+#  define offsetof(st, m) ((uint32_t)(&((st *)0)->m))
+# endif
+
 void ip_input(struct ip *const iph) {
 
     /*
      * Verify the packet format.
      */
-    register uint32_t *const iphpl = (uint32_t *)iph;
-    register const uint32_t *const iphml = ip_header_mask.ip_iph.iph_longs; // Header mask
-    register const uint32_t *const iphdl = ip_header_data.ip_iph.iph_longs; // Header matching data
+    register const uint16_t *const iphps = (uint16_t *)iph;
+    register const uint16_t *const iphms = ip_header_mask.ip_iph.iph_shorts; // Header mask
+    register const uint16_t *const iphds = ip_header_data.ip_iph.iph_shorts; // Header match
 
-    if (   ((iphpl[0] & iphml[0]) != iphdl[0]) 
-        || ((iphpl[1] & iphml[1]) != iphdl[1])) {
-        return; // Malformatted -- dropped silently
+    // VHL & TOS
+    const uint32_t vhl_o2 = offsetof(struct ip,ip_vhl)/2;
+    if ((iphps[vhl_o2] & iphms[vhl_o2]) != iphds[vhl_o2]) {
+        error("Dropping malformatted packet vhl. %04x & %04x != %04x\n",
+              iphps[vhl_o2], iphms[vhl_o2], iphds[vhl_o2]);
+        return; 
     }
 
-    /*
-     * Verify destination address.
-     */
-    register uint32_t dst = iph->ip_dst;
-    if (dst != 0/*XXX*/) {
+    // Length and ID ignored
+
+    // Offset must be zero
+    const uint32_t off_o2 = offsetof(struct ip,ip_off)/2;
+    if ((iphps[off_o2] & iphms[off_o2]) != iphds[off_o2]) {
+        error("Dropping non-zero offset. %04x & %04x != %04x\n",
+              iphps[off_o2], iphms[off_o2], iphds[off_o2]);
+        return; // Non-zero offset
+    }
+
+    // Check TTL
+    //XXX;
+
+    // Verify checksum
+    //XXX;
+
+    // Verify destination address.
+    register in_addr_t dst = iph->ip_dst.s_addr;
+    if (dst != ip_local_address.s_addr) {
         // XXX Reply with ICMP destination unreachable?
+        error("Dropping packet with wrong destination address.\n");
         return; // Wrong destiation address -- dropped silently
     }
+
     /*
      * Swap source and destination address for return packet.
      *
      * If the upper layers need the src/dst information, they 
      * must be written with this swapping in mind.
      */
-    iph->ip_dst = iph->ip_src;
-    iph->ip_src = dst;
+    iph->ip_dst        = iph->ip_src;
+    iph->ip_src.s_addr = dst;
 
     /*
      * Pass to the upper layer
@@ -111,6 +144,7 @@ void ip_input(struct ip *const iph) {
         return;
     default:
         // XXX Reply with a suitable ICMP?
+        error("Dropping packet with unknown protocol %d.\n", iph->ip_p);
         return; // Unknown protocol -- dropped silently
     }
 }

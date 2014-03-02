@@ -23,22 +23,23 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+#ifdef EMULATOR
+#include <stdio.h>
+#define error(...) fprintf(stderr, __VA_ARGS__)
+#else
+#define error(...)
+#endif
+
 #include <ethernet.h>
 #include <arp.h>
 #include <ip.h>
+#include <util.h>
 
 /**
  * XXX
  */
 
 void eth_input(struct ether_header *const ether) {
-    struct ether_packet {
-        struct ether_header ether_header;
-        union {
-            struct ip  ether_ip;
-            struct arp ether_arp;
-        };
-    } *const ether_packet = (struct ether_packet *)ether;
 
 #if 0
     /*
@@ -66,13 +67,14 @@ void eth_input(struct ether_header *const ether) {
      * Pass to the upper layer
      */
     switch (ether->ether_type) {
-    case ETHERTYPE_IP:
-        ip_input(&ether_packet->ether_ip);
+    case CONSTEXPR_NTOHS(ETHERTYPE_IP):
+        ip_input ((struct ip *) ((char *)ether + ETHER_HEADER_LEN));
         return;
-    case IPPROTO_ICMP:
-        arp_input(&ether_packet->ether_arp);
+    case CONSTEXPR_NTOHS(IPPROTO_ICMP):
+        arp_input((struct arp *)((char *)ether + ETHER_HEADER_LEN));
         return;
     default:
+        error("Unknown protocol %d.\n", ether->ether_type);
         return; // Unknown protocol -- dropped silently
     }
 }

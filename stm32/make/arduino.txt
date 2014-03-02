@@ -24,6 +24,6 @@ build.f_cpu=48000000L
 build.core=arduelli
 build.board=STM32F051_ELLDUINO
 build.variant=ellduino
-build.variant_system_libs=-lstm32f0
+build.variant_system_libs=$(TOP)variants/ellduino/libstm32f0.a
 
 build.ldscript=ld/flash.ld

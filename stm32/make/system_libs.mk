@@ -4,7 +4,7 @@
 # Compile and create the system libraries
 #
 
-TOP ?=../
+TOP ?= ../
 MAKEDIR ?= $(TOP)make/
 
 #

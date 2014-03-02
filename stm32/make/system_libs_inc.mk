@@ -20,9 +20,9 @@ SYSTEM_LIBS := \
 all:  $(SYSTEM_LIBS)
 
 clean::
-	make -C $(TOP)build -f $(TOP)make/system_libs.mk VARIANT=$(VARIANT) clean
+	make -C $(TOP)build -f ../make/system_libs.mk PLATFORM=$(PLATFORM) VARIANT=$(VARIANT) clean
 
 $(SYSTEM_LIBS):
-	make -C $(TOP)build -f $(TOP)make/system_libs.mk VARIANT=$(VARIANT) all
+	make -C $(TOP)build -f ../make/system_libs.mk PLATFORM=$(PLATFORM) VARIANT=$(VARIANT) all
 
 

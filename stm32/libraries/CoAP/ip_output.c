@@ -36,7 +36,7 @@ void ip_output(struct ip *const iph, uint16_t len) {
     /*
      * Verify source address.
      */
-    if (iph->ip_src != 0/*XXX*/) {
+    if (iph->ip_src.s_addr != ip_local_address.s_addr) {
         return; // Wrong destiation address -- dropped silently
     }
 
@@ -61,6 +61,7 @@ void ip_output(struct ip *const iph, uint16_t len) {
     /*
      * Pass to lower layer.
      */
-    struct ether_header *const eth = (struct ether_header *)(((char *)iph) - sizeof(struct ether_header));
+    struct ether_header *const eth = 
+        (struct ether_header *)(((char *)iph) - ETHER_HEADER_LEN);
     eth_output(eth);
 }

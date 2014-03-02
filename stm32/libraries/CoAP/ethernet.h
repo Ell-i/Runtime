@@ -34,7 +34,7 @@ struct ether_header_real {
     uint8_t  ether_dhost[ETHER_ADDR_LEN];
     uint8_t  ether_shost[ETHER_ADDR_LEN];
     uint16_t ether_type;
-};
+} __attribute__((packed));
 
 struct ether_header {
     union {
@@ -42,10 +42,12 @@ struct ether_header {
             uint8_t  ether_dhost[ETHER_ADDR_LEN];
             uint8_t  ether_shost[ETHER_ADDR_LEN];
             uint16_t ether_type;
-        };
+        } __attribute__((packed));
         uint32_t ether_longs[(ETHER_ADDR_LEN + ETHER_ADDR_LEN)/sizeof(uint32_t)];
     };
-};
+} __attribute__((packed));
+
+# define ETHER_HEADER_LEN  (2 * ETHER_ADDR_LEN + sizeof(uint16_t))
 
 # define ETHERTYPE_IP      0x0800
 # define ETHERTYPE_ARP     0x0806

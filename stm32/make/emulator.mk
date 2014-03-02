@@ -70,7 +70,7 @@ endif
 # C++ standard library
 #
 
-LIBS += -lstdc++
+EMULATOR_LIBS += -lstdc++
 
 #
 # Additional system objects

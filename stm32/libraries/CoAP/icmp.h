@@ -29,8 +29,16 @@
 # include <system_init.h>
 
 struct icmp {
+    uint8_t  icmp_type;
+    uint8_t  icmp_code;
+    uint16_t icmp_sum;
+    uint16_t icmp_id;
+    uint16_t icmp_seqno;
     uint8_t  icmp_data[0];
 };
+
+# define ICMP_TYPE_ECHO_REPLY  0
+# define ICMP_TYPE_ECHO        8
 
 /**
  * XXX

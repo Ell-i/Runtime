@@ -23,12 +23,33 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+# include <ip.h>
 # include <icmp.h>
+
+// XXX Move elsewhere?  ip.h
+static inline void chksum_update(uint16_t *const chksump, uint16_t oldvalue, uint16_t newvalue) {
+    register uint16_t sum_; // 1's complement of the sum
+    sum_     = ~(*chksump); // Fetch old sum and complement.
+    sum_    += ~oldvalue + newvalue;
+    *chksump = ~sum_;       // Complement and store new sum.
+    
+}
 
 /**
  * XXX
  */
-void icmp_input(struct icmp *const icmp_packet) {
-    // XXX
+void icmp_input(struct icmp *const icmp) {
+    switch (icmp->icmp_type) {
+    case ICMP_TYPE_ECHO:
+        icmp->icmp_type = ICMP_TYPE_ECHO_REPLY;
+        // Fix checksum 
+        chksum_update(&icmp->icmp_sum, ICMP_TYPE_ECHO, ICMP_TYPE_ECHO_REPLY);
+        break;
+    default:
+        // Drop silently
+        return;
+    }
+    struct ip *const iph = (struct ip *)((char *)icmp - sizeof(struct ip));
+    ip_output(iph, iph->ip_len);
 }
 

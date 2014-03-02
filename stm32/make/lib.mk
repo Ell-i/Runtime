@@ -4,14 +4,14 @@
 # Compile and link a library
 #
 
-TOP ?=../
-
+TOP     ?= ../
 MAKEDIR ?= $(TOP)make/
 
 #
 # Define the variant to build for
 #
-VARIANT ?= ellduino
+PLATFORM ?= arduino
+VARIANT  ?= ellduino
 
 #
 # Set up the compilation environment, identical to the Arduino IDE,
@@ -20,14 +20,6 @@ VARIANT ?= ellduino
 include $(MAKEDIR)$(PLATFORM).mk
 include $(MAKEDIR)system_libs_inc.mk
 include $(MAKEDIR)libs_inc.mk
-
-#
-# Define app library objects.  Add new objects here.
-#
-CXX_SRC := $(wildcard *.cpp)
-C_SRC   := $(wildcard *.c  )
-
-LIB_OBJS := $(CXX_SRC:.cpp=.o) $(C_SRC:.c=.o)
 
 #
 # Rules

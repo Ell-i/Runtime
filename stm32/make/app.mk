@@ -51,7 +51,7 @@ clean::
 	rm -f make.map
 
 $(APP):	$(APP_OBJS) $(SYSTEM_LIBS) $(PRE_OBJS) $(POST_OBJS)
-	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS)
+	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS) $(EMULATOR_LIBS)
 
 #
 # Define rules for producing .hex files

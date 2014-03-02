@@ -18,23 +18,27 @@
  */
 
 /**
- * Minimal standalone ARP
- *
+ * ARM CMSIS optimised hton{s,l} and ntoh{s,l}
+ * 
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifndef  _ETHERNET_ARP_H
-# define _ETHERNET_ARP_H
+#ifndef _ETHERNET_ARCH_UTIL_STM32_H_
+#define _ETHERNET_ARCH_UTIL_STM32_H_
 
-# include <system_init.h>
+#include <stm32f0xx.h>
 
-struct arp {
-    uint8_t  arp_data[0];
-} __attribute__((aligned(2)));
+/* Compile time */
+#define CONSTEXPR_NTOHS(s) ((((s) >> 8) & 0xff) | (((s) << 8) & 0xff00))
 
-/**
- * XXX
- */
-extern void arp_input(struct arp *const arp);
+#ifndef EMULATOR
 
-#endif //_ETHERNET_ARP_H
+/* Runtime */
+static inline int htons(uint16_t s) { return __REV16(s); };
+static inline int ntohs(uint16_t s) { return __REV16(s); };
+static inline int htonl(uint32_t l) { return __REV(l);   };
+static inline int ntohl(uint32_t l) { return __REV(l);   };
+
+#endif
+
+#endif//_ETHERNET_ARCH_UTIL_STM32_H_

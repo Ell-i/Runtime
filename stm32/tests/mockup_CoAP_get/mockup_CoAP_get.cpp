@@ -24,38 +24,55 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <coap_int.h>
 #include <udp.h>
+#include <ip.h>
+#include <ethernet.h>
 
 struct coap_payload {
-    union {
-        struct coap coap; 
-        uint8_t first_byte;
-    };
+    struct coap coap; 
     uint32_t    token;
 #define URI_PATH_LEN 6
     uint8_t     uri_path_dl;
     char        uri_path[URI_PATH_LEN];
-};
+} __attribute__((packed));
 
 struct {
+    struct ether_header eth;
+    struct ip   ip;
     struct udp  udp;
     struct coap_payload payload;
-} mockup_packet = {
+} __attribute__((packed)) mockup_packet = {
+    .eth = {
+        .ether_dhost = { 1,   2,  3,  4,  5,  6 }, // XXX TBD
+        .ether_shost = { 10, 11, 12, 13, 14, 15 },
+        .ether_type  = ETHERTYPE_IP,
+    },
+    .ip = {
+        .ip_vhl    = IP_VHL_DEFAULT,
+        .ip_tos    = 0,
+        .ip_len    = sizeof(ip) + sizeof(udp) + sizeof(coap_payload),
+        .ip_id     = 0x4321,
+        .ip_off    = 0,
+        .ip_ttl    = 1,
+        .ip_p      = IPPROTO_UDP,
+        .ip_sum    = 0,  // XXX TBD
+        .ip_src    = { .s_bytes = { 10, 0, 0, 1 } },
+        .ip_dst    = { .s_bytes = { 10, 0, 0, 2 } },
+    },
     .udp = { 
-        .udp_sport = 1234,
-        .udp_dport = 5678,
+        .udp_sport = 's',
+        .udp_dport = UDP_PORT_COAP,
         .udp_len   = sizeof(struct coap_payload),
         .udp_sum   = 0,
     },
     .payload = {
-        {
-            .coap = {
-                .coap_hdr = {
-                    .coap_vttkl = COAP_VT_CONFIRMABLE | 4, // 4-byte token
-                    .coap_code  = COAP_CODE_GET,
-                    .coap_id    = 0,
-                },
+        .coap = {
+            .coap_hdr = {
+                .coap_vttkl = COAP_VT_CONFIRMABLE | 4, // 4-byte token
+                .coap_code  = COAP_CODE_GET,
+                .coap_id    = 0,
             },
         },
         1234,
@@ -65,7 +82,7 @@ struct {
 };
 
 void    *const mockup_enclosing       = &mockup_packet.udp;
-uint8_t *const mockup_coap_packet     = &mockup_packet.payload.first_byte;
+uint8_t *const mockup_coap_packet     = &mockup_packet.payload.coap.coap_hdr.coap_vttkl;
 const uint32_t mockup_coap_packet_len = 4 + 4 + 1 + 5;
 
 /* Intercept resulting outgoing packet */

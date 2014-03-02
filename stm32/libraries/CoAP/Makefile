@@ -1,34 +1,35 @@
 #
 # Copyright (c) 2014 ELL-i co-operative
 #
-# Compile and assemble the Arduino Ethernet library
+# Compile and assemble the Arduino CoAP library
 #
 
-TOP ?=../../
+TOP ?= ../../
 
 MAKEDIR ?= $(TOP)make/
 
 #
 # Define the variant to build for
 #
-VARIANT ?= ellduino
+PLATFORM ?= arduino
+VARIANT  ?= ellduino
 
 #
 # Define the library name
 #
 
-LIB ?= Ethernet
+LIB ?= CoAP
 
 #
 # Define app library objects.  Add new objects here.
 #
 
-LIB_OBJS := Dhcp.o Dns.o Ethernet.o EthernetUdp.o # EthernetClient.o EthernetServer.o 
-LIB_OBJS := Socket.o 
-LIB_OBJS := XXX Add enc28j60 objects here
+LIB_OBJS := eth_input.o arp_input.o
+LIB_OBJS += ip_input.o ip_output.o icmp_input.o
+LIB_OBJS += udp.o coap_input.o coap_handle.o
 
 #
 # Set up the compilation environment, identical to the Arduino IDE,
 # for Arduino lib building.
 #
-include $(MAKEDIR)arduino_lib.mk
+include $(MAKEDIR)lib.mk

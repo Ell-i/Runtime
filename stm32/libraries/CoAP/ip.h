@@ -32,24 +32,37 @@
 # define IPPROTO_ICMP  1
 # define IPPROTO_UDP  17
 
-struct ip {
-    uint8_t  ip_vhl;
-    uint8_t  ip_tos;
-    uint16_t ip_len;
-    uint16_t ip_id;
-    uint16_t ip_off;
-    uint8_t  ip_ttl;
-    uint8_t  ip_p;
-    uint16_t ip_sum;
-    uint32_t ip_src;
-    uint32_t ip_dst;
+typedef uint32_t in_addr_t;
+
+struct in_addr {
+    union {
+        in_addr_t s_addr;
+        uint8_t   s_bytes[sizeof(in_addr_t)];
+    };
 };
+
+
+extern struct in_addr ip_local_address;
+
+struct ip {
+    uint8_t        ip_vhl;
+    uint8_t        ip_tos;
+    uint16_t       ip_len;
+    uint16_t       ip_id;
+    uint16_t       ip_off;
+    uint8_t        ip_ttl;
+    uint8_t        ip_p;
+    uint16_t       ip_sum;
+    struct in_addr ip_src;
+    struct in_addr ip_dst;
+} __attribute__((packed,aligned(2)));
 
 union iph {
     struct ip iph;
     uint8_t   iph_bytes[0];
-    uint32_t  iph_longs[0];
-};
+    uint16_t  iph_shorts[0];
+    // Cannot have longs as must be aligned with 2.
+} __attribute__((packed,aligned(2)));
 
 struct ip_packet {
     union iph ip_iph;

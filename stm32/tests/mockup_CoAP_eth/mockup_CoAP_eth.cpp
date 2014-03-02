@@ -22,11 +22,18 @@
 #endif
 
 #include <unistd.h>
-#include <stdio.h>
+
 #include <coap_int.h>
 #include <udp.h>
 #include <ip.h>
 #include <ethernet.h>
+
+#include <string.h>
+#include <pcap/pcap.h>
+#include <stdio.h>
+#include <err.h>
+#include <sysexits.h>
+#include <errno.h>
 
 /// XXX Attempt to fix linking
 DECLARE_UDP_SOCKET(UDP_PORT_COAP);
@@ -41,62 +48,85 @@ struct coap_payload {
     char        uri_path[URI_PATH_LEN];
 } __attribute__((packed));
 
-struct {
-    struct ether_header eth;
-    struct ip   ip;
-    struct udp  udp;
-    struct coap_payload payload;
-} __attribute__((packed)) mockup_packet = {
-    .eth = {
-        .ether_dhost = { 1,   2,  3,  4,  5,  6 }, // XXX TBD
-        .ether_shost = { 10, 11, 12, 13, 14, 15 },
-        .ether_type  = ETHERTYPE_IP,
-    },
-    .ip = {
-        .ip_vhl    = IP_VHL_DEFAULT,
-        .ip_tos    = 0,
-        .ip_len    = sizeof(ip) + sizeof(udp) + sizeof(coap_payload),
-        .ip_id     = 0x4321,
-        .ip_off    = 0,
-        .ip_ttl    = 1,
-        .ip_p      = IPPROTO_UDP,
-        .ip_sum    = 0,  // XXX TBD
-        .ip_src    = 0,
-        .ip_dst    = 0,  // XXX TBD
-    },
-    .udp = { 
-        .udp_sport = 's',
-        .udp_dport = UDP_PORT_COAP,
-        .udp_len   = sizeof(struct coap_payload),
-        .udp_sum   = 0,
-    },
-    .payload = {
-        .coap = {
-            .coap_hdr = {
-                .coap_vttkl = COAP_VT_CONFIRMABLE | 4, // 4-byte token
-                .coap_code  = COAP_CODE_GET,
-                .coap_id    = 0,
-            },
-        },
-        1234,
-        COAP_OPTION_URI_PATH << 4 | URI_PATH_LEN,
-        "/test",
-    },
-};
+void dump_packet(const u_char *p) {
+    fprintf(stderr,
+            "eth: dst=%02x:%02x:%02x:%02x:%02x:%02x "
+            "src=%02x:%02x:%02x:%02x:%02x:%02x len=%02x:%02x\n",
+            p[ 0], p[ 1], p[ 2], p[ 3], p[ 4], p[ 5], 
+            p[ 6], p[ 7], p[ 8], p[ 9], p[10], p[11], 
+            p[12], p[13]);
+    fprintf(stderr,
+            "ip:  vhl=%02x tos=%02x "
+            "len=%02x%02x id=%02x%02x "
+            "off=%02x%02x ttl=%02x p=%02x sum=%02x%02x "
+            "src=%d.%d.%d.%d dst=%d.%d.%d.%d\n",
+            p[14], p[15], 
+            p[16], p[17], p[18], p[19],
+            p[20], p[21], p[22], p[23], p[24], p[25],
+            p[26], p[27], p[28], p[29],
+            p[30], p[31], p[32], p[33]);
+}
+
+extern "C" { int emulated_main(void); };
+
+int emulated_main(void) {
+    return 0;
+}
+
+#undef main
+
+char errbuf[PCAP_ERRBUF_SIZE];
+pcap_t *pcap;
+char *input_file;
+char *progname;
+char buffer[2048 /*XXX*/];
+pcap_dumper_t *dumper;
+
+int main(int ac, char **av) {
+    progname = av[0];
+    input_file = av[1];
+    const u_char *pkt_data;
+    struct ether_header *const ether_header = (struct ether_header *)buffer;
+    struct pcap_pkthdr *pkt_header;
+
+    if (ac < 2) {
+        fprintf(stderr, "%s: Exiting.  Usage: %s pcap-file | tcpdump -r -\n", 
+                progname, progname);
+        return EX_USAGE;
+    }
+
+    pcap = pcap_open_offline(input_file, errbuf);
+    if (NULL == pcap) {
+        err(EX_NOINPUT, "Exiting.  Failed to open file '%s'", input_file);
+    }
+
+    dumper = pcap_dump_fopen(pcap, stdout);
+    if (NULL == dumper) {
+        err(EX_OSERR,   "Exiting.  Failed to open output for packet dumping.");
+    }
+
+    while (pcap_next_ex(pcap, &pkt_header, &pkt_data) >= 0) {
+        fprintf(stderr, "%s: Sending a packet of %d bytes.\n", progname, pkt_header->len);
+        /* Copy data to a modifyable buffer */
+        dump_packet(pkt_data);
+        memcpy(buffer, pkt_data, pkt_header->len);
+        eth_input(ether_header);
+    }
+
+    pcap_close(pcap);
+
+    return 0;
+}
 
 /* Intercept resulting outgoing packet */
 void eth_output(struct ether_header *mockup_output) {
-    printf("Received output packet\n");
+    fprintf(stderr, "Received output packet\n");
+    dump_packet((const u_char *)mockup_output);
+
+    const struct ip *ip = (struct ip *)((char *)mockup_output + sizeof(ether_header));
+    struct pcap_pkthdr pkthdr;
+    gettimeofday(&pkthdr.ts, NULL);
+    pkthdr.caplen = pkthdr.len = sizeof(struct ether_header) + ip->ip_len;
+    pcap_dump((u_char *)dumper, &pkthdr, (const u_char *)mockup_output);
 }
 
-void setup() {
-    /* Mockup an incoming packet */
-    printf("Sending input packet\n");
-    eth_input(&mockup_packet.eth);
-}
-
-void loop() {
-#ifdef EMULATOR
-    _exit(0);
-#endif
-}
