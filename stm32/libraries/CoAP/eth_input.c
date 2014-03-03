@@ -56,21 +56,24 @@ void eth_input(struct ether_header *const ether) {
      */
     // XXX Check that the following produces optimal code.  Revise if not.
     //     Write in assembler if needed.
-    register uint32_t word0 = ether->ether_longs[0];
-    register uint32_t word1 = ether->ether_longs[1];
-    register uint32_t word2 = ether->ether_longs[2];
-    ether->ether_longs[0] = (word1 << 16) | ((word2 >> 16) & 0xFFFF);
-    ether->ether_longs[1] = (word2 << 16) | ((word0 >> 16) & 0xFFFF);
-    ether->ether_longs[2] = (word0 << 16) | ((word1 >> 16) & 0xFFFF);
+    register uint16_t d0 = ether->ether_addrs[0];
+    register uint16_t d1 = ether->ether_addrs[1];
+    register uint16_t d2 = ether->ether_addrs[2];
+    ether->ether_addrs[0] = ether->ether_addrs[3];
+    ether->ether_addrs[1] = ether->ether_addrs[4];
+    ether->ether_addrs[2] = ether->ether_addrs[5];
+    ether->ether_addrs[3] = d0;
+    ether->ether_addrs[4] = d1;
+    ether->ether_addrs[5] = d2;
 
     /*
      * Pass to the upper layer
      */
     switch (ether->ether_type) {
-    case CONSTEXPR_NTOHS(ETHERTYPE_IP):
+    case CONSTEXPR_HTONS(ETHERTYPE_IP):
         ip_input ((struct ip *) ((char *)ether + ETHER_HEADER_LEN));
         return;
-    case CONSTEXPR_NTOHS(IPPROTO_ICMP):
+    case CONSTEXPR_HTONS(IPPROTO_ICMP):
         arp_input((struct arp *)((char *)ether + ETHER_HEADER_LEN));
         return;
     default:

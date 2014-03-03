@@ -46,6 +46,8 @@ void ip_output(struct ip *const iph, uint16_t len) {
      *
      * XXX Check the assembly.  Using uint16_t may cause problems.
      */
+    len = htons(len);
+
     register uint16_t ip_sum_ = ~(iph->ip_sum);
     ip_sum_ += ~(iph->ip_len) + len;
     iph->ip_len = len;

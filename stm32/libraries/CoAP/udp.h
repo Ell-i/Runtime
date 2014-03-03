@@ -27,6 +27,7 @@
 # define _ETHERNET_UDP_H
 
 # include <system_init.h>
+# include <util.h>
 
 struct udp {
     uint16_t udp_sport;
@@ -69,7 +70,7 @@ struct udp_socket {
         __attribute__((section(UDP_SOCKET_SECTION(port)))) \
         = {                                                \
         IF(udp_socket_handler) handler,                    \
-        IF(udp_port) port,                                 \
+        IF(udp_port) CONSTEXPR_HTONS(port),                \
     }
 
 extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __udp_sockets[];

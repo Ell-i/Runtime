@@ -30,6 +30,13 @@
  * XXX
  */
 
+#ifdef EMULATOR
+#include <stdio.h>
+#define error(...) fprintf(stderr, __VA_ARGS__)
+#else
+#define error(...)
+#endif
+
 void udp_input(struct udp *const udp_packet) {
 #if 0
     /*
@@ -53,6 +60,7 @@ void udp_input(struct udp *const udp_packet) {
             return;
         }
     }
+    error("Packet to unbound UDP socket %d\n", dport);
 }
 
 /**
@@ -60,7 +68,9 @@ void udp_input(struct udp *const udp_packet) {
  */
 
 void udp_output(struct udp *const udp, uint16_t len) {
-    udp->udp_len = len;
+    len += sizeof(struct udp);
+
+    udp->udp_len = htons(len);
     
     /*
      * Clear the checksum, for now

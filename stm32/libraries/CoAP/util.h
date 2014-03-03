@@ -29,7 +29,7 @@
 #include <stm32f0xx.h>
 
 /* Compile time */
-#define CONSTEXPR_NTOHS(s) ((((s) >> 8) & 0xff) | (((s) << 8) & 0xff00))
+#define CONSTEXPR_HTONS(s) ((((s) >> 8) & 0xff) | (((s) << 8) & 0xff00))
 
 #ifndef EMULATOR
 
