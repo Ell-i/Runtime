@@ -56,7 +56,8 @@ void udp_input(struct udp *const udp_packet) {
          socket++ /* XXX */) {
         if (socket->udp_port == dport) {
             /* XXX Update statistics */
-            socket->udp_socket_handler(udp_packet->udp_data, ntohs(udp_packet->udp_len));
+            const uint16_t payload_len = ntohs(udp_packet->udp_len) - sizeof(struct udp);
+            socket->udp_socket_handler(udp_packet->udp_data, payload_len);
             return;
         }
     }

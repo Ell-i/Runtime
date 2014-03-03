@@ -142,6 +142,7 @@ void coap_input(uint8_t coap_data[], uint16_t coap_data_len) {
         int reply = coap_handle_request(coap_hdr->coap_code, &options, 
                                         option_bytes /*payload*/, packet_end - option_bytes,
                                         content_start, &reply_content_length);
+        coap_hdr->coap_code = reply;
         if (reply != COAP_CODE_EMPTY) {
             udp_output(coap, sizeof(struct coap_hdr) + tkl + reply_content_length);
         }
