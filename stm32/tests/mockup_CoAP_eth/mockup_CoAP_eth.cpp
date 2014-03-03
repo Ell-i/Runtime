@@ -119,14 +119,31 @@ int main(int ac, char **av) {
 }
 
 /* Intercept resulting outgoing packet */
-void eth_output(struct ether_header *mockup_output) {
+void eth_output(const void *payload, uint16_t payload_len) {
+    struct ether_header *ether = 
+        (struct ether_header *)(((char *)payload) - ETHER_HEADER_LEN);
+        
     fprintf(stderr, "Received output packet\n");
-    dump_packet((const u_char *)mockup_output);
+    dump_packet((const u_char *)ether);
 
-    const struct ip *ip = (struct ip *)((char *)mockup_output + sizeof(ether_header));
     struct pcap_pkthdr pkthdr;
     gettimeofday(&pkthdr.ts, NULL);
-    pkthdr.caplen = pkthdr.len = sizeof(struct ether_header) + ip->ip_len;
-    pcap_dump((u_char *)dumper, &pkthdr, (const u_char *)mockup_output);
+    pkthdr.caplen = pkthdr.len = sizeof(struct ether_header) + payload_len;
+    pcap_dump((u_char *)dumper, &pkthdr, (const u_char *)ether);
 }
 
+#include <CoAP.h>
+
+#define HELLO_WORLD "Hello, World!"
+
+int test_get_callback(
+    const uint8_t *input_buffer, size_t input_length,
+    uint8_t *output_buffer, size_t *output_buffer_length) {
+    *output_buffer++ = COAP_OPTION_PAYLOAD;
+    memcpy(output_buffer, HELLO_WORLD, sizeof(HELLO_WORLD));
+    *output_buffer_length = sizeof(HELLO_WORLD); // Excludes NUL
+    return 0; // XXX semantics not fixed yet
+}
+
+
+DEFINE_COAP_URL(test, "test", test_get_callback, NULL);

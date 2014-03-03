@@ -47,7 +47,7 @@ struct udp {
 #endif
 
 struct udp_socket {
-    void (*udp_socket_handler)(void *enclosing, uint8_t data[], uint16_t len);
+    void (*udp_socket_handler)(uint8_t data[], uint16_t data_len);
     const uint16_t udp_port;
     /* XXX Add pointer to statistics, in RAM */
 } __attribute__((aligned(LINKER_ALIGNMENT)));
@@ -81,7 +81,7 @@ extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __
 extern "C" {
 # endif
 extern void udp_input(struct udp *const udp_packet);
-extern void udp_output(struct udp *const udp_packet, uint16_t len);
+extern void udp_output(const void * payload, uint16_t payload_len);
 # ifdef __cplusplus
 }
 # endif

@@ -35,6 +35,8 @@
 #include <ip.h>
 #include <util.h>
 
+uint8_t ether_local_address[ETHER_ADDR_LEN] = { 0, 0, 0, 0, 0, 0 }; // XXX better default?
+
 /**
  * XXX
  */
@@ -73,11 +75,11 @@ void eth_input(struct ether_header *const ether) {
     case CONSTEXPR_HTONS(ETHERTYPE_IP):
         ip_input ((struct ip *) ((char *)ether + ETHER_HEADER_LEN));
         return;
-    case CONSTEXPR_HTONS(IPPROTO_ICMP):
+    case CONSTEXPR_HTONS(ETHERTYPE_ARP):
         arp_input((struct arp *)((char *)ether + ETHER_HEADER_LEN));
         return;
     default:
-        error("Unknown protocol %d.\n", ether->ether_type);
+        error("Unknown ethernet protocol %d.\n", ether->ether_type);
         return; // Unknown protocol -- dropped silently
     }
 }

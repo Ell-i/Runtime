@@ -23,6 +23,13 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+#ifdef EMULATOR
+#include <stdio.h>
+#define error(...) fprintf(stderr, __VA_ARGS__)
+#else
+#define error(...)
+#endif
+
 # include <ip.h>
 # include <icmp.h>
 
@@ -39,6 +46,7 @@ static inline void chksum_update(uint16_t *const chksump, uint16_t oldvalue, uin
  * XXX
  */
 void icmp_input(struct icmp *const icmp) {
+    error("ICMP type %d.\n", icmp->icmp_type);
     switch (icmp->icmp_type) {
     case ICMP_TYPE_ECHO:
         icmp->icmp_type = ICMP_TYPE_ECHO_REPLY;
@@ -46,10 +54,10 @@ void icmp_input(struct icmp *const icmp) {
         chksum_update(&icmp->icmp_sum, ICMP_TYPE_ECHO, ICMP_TYPE_ECHO_REPLY);
         break;
     default:
+        error("Unknown ICMP type %d.\n", icmp->icmp_type);
         // Drop silently
         return;
     }
-    struct ip *const iph = (struct ip *)((char *)icmp - sizeof(struct ip));
-    ip_output(iph, iph->ip_len);
+    ip_output(icmp, 0 /* Don't update ip->ip_len */);
 }
 

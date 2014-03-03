@@ -98,7 +98,7 @@ struct coap {
 # ifdef __cplusplus
 extern "C" {
 # endif
-extern void coap_input(void *enclosing_packet, uint8_t data[], uint16_t coap_packet_len);
+extern void coap_input(uint8_t data[], uint16_t coap_data_len);
 extern int  coap_handle_request(uint8_t coap_code, const struct coap_options *options, 
                                 const uint8_t *payload, size_t payload_length,
                                 uint8_t *reply_content, size_t *reply_content_length);

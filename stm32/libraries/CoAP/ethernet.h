@@ -30,6 +30,8 @@
 
 # define ETHER_ADDR_LEN 6
 
+extern uint8_t ether_local_address[ETHER_ADDR_LEN];
+
 struct ether_header_real {
     uint8_t  ether_dhost[ETHER_ADDR_LEN];
     uint8_t  ether_shost[ETHER_ADDR_LEN];
@@ -58,8 +60,8 @@ struct ether_header {
 # ifdef __cplusplus
 extern "C" {
 # endif
-extern void eth_output(struct ether_header *const eth_packet);
 extern void eth_input(struct ether_header *const eth_packet);
+extern void eth_output(const void *payload, uint16_t payload_len);
 # ifdef __cplusplus
 }
 # endif

@@ -50,16 +50,20 @@ int coap_handle_request(
 
             switch (coap_code) {
             case COAP_CODE_GET:
+                if (NULL == coap_url->coap_url_get_callback)
+                    return COAP_CODE_NOT_ALLOWED;
                 // XXX Specify return value semantics in the header, too
                 XXX = coap_url->coap_url_get_callback(payload, payload_length,
-                                                          reply_content_buffer, 
-                                                          reply_content_buffer_length);
+                                                      reply_content_buffer, 
+                                                      reply_content_buffer_length);
                 return COAP_CODE_CONTENT;
             case COAP_CODE_PUT:
+                if (NULL == coap_url->coap_url_put_callback)
+                    return COAP_CODE_NOT_ALLOWED;
                 // XXX Specify return value semantics in the header, too
                 XXX = coap_url->coap_url_put_callback(payload, payload_length,
-                                                          reply_content_buffer, 
-                                                          reply_content_buffer_length);
+                                                      reply_content_buffer, 
+                                                      reply_content_buffer_length);
                 return COAP_CODE_CHANGED;
             }
             *reply_content_buffer_length = 0;

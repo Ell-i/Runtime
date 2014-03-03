@@ -28,9 +28,24 @@
 
 # include <system_init.h>
 
+# include <ip.h>
+
 struct arp {
-    uint8_t  arp_data[0];
-} __attribute__((aligned(2)));
+    uint16_t  arp_hardware_address_space;
+    uint16_t  arp_protocol_address_space;
+    uint8_t   arp_hardware_address_length;
+    uint8_t   arp_protocol_address_length;
+    uint16_t  arp_opcode;
+    uint8_t   arp_src_eth_addr[ETHER_ADDR_LEN];
+    in_addr_t arp_src_ip_addr;
+    uint8_t   arp_dst_eth_addr[ETHER_ADDR_LEN];
+    in_addr_t arp_dst_ip_addr;
+} __attribute__((packed,aligned(2)));
+
+# define ARP_HARDWARE_ETHERNET 1
+
+# define ARP_OPCODE_REQUEST 1
+# define ARP_OPCODE_REPLY   2
 
 /**
  * XXX

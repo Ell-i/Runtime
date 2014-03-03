@@ -23,12 +23,52 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+#ifdef EMULATOR
+#include <stdio.h>
+#define error(...) fprintf(stderr, __VA_ARGS__)
+#else
+#define error(...)
+#endif
+
+# include <ethernet.h>
 # include <arp.h>
+# include <ip.h>
 
 /**
  * XXX
  */
-void arp_input(struct arp *const arp_packet) {
-    // XXX
+
+void arp_input(struct arp *const arp) {
+#if 0
+    /**
+     * Verify packet format  XXX revise
+     */
+    if (arp->arp_hardware_address_space != ARP_HARDWARE_ETHERNET ||
+        arp->arp_protocol_address_space != ETHERTYPE_IP)
+        return;
+#endif
+
+    /*
+     * Switch on opcode
+     */
+    switch (arp->arp_opcode) {
+    default:
+        // Ignore replies and all other packets.
+        error("Unknown ARP opcode %d.\n", ntohs(arp->arp_opcode));
+        return;
+    case CONSTEXPR_HTONS(ARP_OPCODE_REQUEST):
+        if (arp->arp_dst_ip_addr != ip_local_address.s_addr) {
+            // Not us
+            return;
+        }
+        // The ethernet src and dst have already been swapped
+        arp->arp_opcode = CONSTEXPR_HTONS(ARP_OPCODE_REPLY);
+        memcpy(arp->arp_dst_eth_addr, arp->arp_src_eth_addr, sizeof(arp->arp_dst_eth_addr));
+        memcpy(arp->arp_src_eth_addr, ether_local_address,   sizeof(arp->arp_src_eth_addr));
+        arp->arp_dst_ip_addr = arp->arp_src_ip_addr;
+        arp->arp_src_ip_addr = ip_local_address.s_addr;
+        eth_output(arp, sizeof(struct arp));
+        return;
+    }
 }
 

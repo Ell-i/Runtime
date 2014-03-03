@@ -39,7 +39,7 @@ struct in_addr {
         in_addr_t s_addr;
         uint8_t   s_bytes[sizeof(in_addr_t)];
     };
-};
+} __attribute__((packed));
 
 
 extern struct in_addr ip_local_address;
@@ -79,7 +79,7 @@ struct ip_packet {
 extern "C" {
 # endif
 extern void ip_input( struct ip *const ip);
-extern void ip_output(struct ip *const ip, uint16_t len);
+extern void ip_output(const void *payload, uint16_t payload_len /* 0: don't change */);
 # ifdef __cplusplus
 }
 # endif

@@ -23,6 +23,13 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+#ifdef EMULATOR
+#include <stdio.h>
+#define error(...) fprintf(stderr, __VA_ARGS__)
+#else
+#define error(...)
+#endif
+
 #include <ip.h>
 #include <ethernet.h>
 
@@ -32,25 +39,40 @@
  * The pointed packet MUST be a pointer to inside an Ethernet packet,
  * containing valid Ethernet fields.
  */
-void ip_output(struct ip *const iph, uint16_t len) {
+void ip_output(const void *payload, uint16_t payload_len) {
+    struct ip *const iph = (struct ip *)((char *)payload - sizeof(struct ip));
+
     /*
      * Verify source address.
      */
     if (iph->ip_src.s_addr != ip_local_address.s_addr) {
+        error("IP dropping wrong source address %d.%d.%d.%d\n",
+              iph->ip_src.s_bytes[0], 
+              iph->ip_src.s_bytes[1], 
+              iph->ip_src.s_bytes[2], 
+              iph->ip_src.s_bytes[3]);
         return; // Wrong destiation address -- dropped silently
     }
 
     /*
+     * Cache one's complement of the current checksum
+     * in preparing for field updates.
+     */
+
+    register uint16_t ip_sum_ = ~(iph->ip_sum);
+    /*
      * Set packet length, TTL, and ID, updating the checksum.  
      * See RFC1624.
      *
-     * XXX Check the assembly.  Using uint16_t may cause problems.
+     * XXX Check the assembly.  Using uint16_t may cause inefficiencies;
      */
-    len = htons(len);
+    if (0 != payload_len) {
+        uint16_t len = payload_len + sizeof(struct ip);
+        len = htons(len);
 
-    register uint16_t ip_sum_ = ~(iph->ip_sum);
-    ip_sum_ += ~(iph->ip_len) + len;
-    iph->ip_len = len;
+        ip_sum_ += ~(iph->ip_len) + len;
+        iph->ip_len = len;
+    }
 
 #if 0
     /*
@@ -58,12 +80,13 @@ void ip_output(struct ip *const iph, uint16_t len) {
      */
     XXX;
 #endif
+    /*
+     * Store the updated checksum.
+     */
     iph->ip_sum = ~ip_sum_;
 
     /*
      * Pass to lower layer.
      */
-    struct ether_header *const eth = 
-        (struct ether_header *)(((char *)iph) - ETHER_HEADER_LEN);
-    eth_output(eth);
+    eth_output(iph, ntohs(iph->ip_len));
 }

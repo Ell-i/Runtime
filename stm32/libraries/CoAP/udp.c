@@ -56,7 +56,7 @@ void udp_input(struct udp *const udp_packet) {
          socket++ /* XXX */) {
         if (socket->udp_port == dport) {
             /* XXX Update statistics */
-            socket->udp_socket_handler(udp_packet, udp_packet->udp_data, udp_packet->udp_len);
+            socket->udp_socket_handler(udp_packet->udp_data, ntohs(udp_packet->udp_len));
             return;
         }
     }
@@ -67,10 +67,11 @@ void udp_input(struct udp *const udp_packet) {
  * XXX
  */
 
-void udp_output(struct udp *const udp, uint16_t len) {
-    len += sizeof(struct udp);
+void udp_output(const void *payload, uint16_t payload_len) {
+    struct udp *const udp = (struct udp *)((const char *)payload - sizeof(struct udp));
+    const int udp_len = payload_len + sizeof(struct udp);
 
-    udp->udp_len = htons(len);
+    udp->udp_len = htons(udp_len);
     
     /*
      * Clear the checksum, for now
@@ -79,7 +80,6 @@ void udp_output(struct udp *const udp, uint16_t len) {
     /*
      * Pass to lower layer.
      */
-    struct ip *const ip = (struct ip *)(((char *)udp) - sizeof(struct ip));
-    ip_output(ip, len + sizeof(struct ip));
+    ip_output(udp, udp_len);
 }
 

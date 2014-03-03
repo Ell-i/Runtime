@@ -119,4 +119,4 @@ int test_get_callback(
 }
 
 
-DEFINE_COAP_URL(test, "/test", test_get_callback, NULL);
+DEFINE_COAP_URL(test, "test", test_get_callback, NULL);
