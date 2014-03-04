@@ -23,19 +23,13 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
+#include <net_debug.h>
 #include <ip.h>
 #include <udp.h>
 
 /**
  * XXX
  */
-
-#ifdef EMULATOR
-#include <stdio.h>
-#define error(...) fprintf(stderr, __VA_ARGS__)
-#else
-#define error(...)
-#endif
 
 void udp_input(struct udp *const udp_packet) {
 #if 0
@@ -61,7 +55,7 @@ void udp_input(struct udp *const udp_packet) {
             return;
         }
     }
-    error("Packet to unbound UDP socket %d\n", dport);
+    net_error("Packet to unbound UDP socket %d\n", dport);
 }
 
 /**

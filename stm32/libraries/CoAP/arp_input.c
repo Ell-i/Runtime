@@ -23,16 +23,10 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifdef EMULATOR
-#include <stdio.h>
-#define error(...) fprintf(stderr, __VA_ARGS__)
-#else
-#define error(...)
-#endif
-
-# include <ethernet.h>
-# include <arp.h>
-# include <ip.h>
+#include <net_debug.h>
+#include <ethernet.h>
+#include <arp.h>
+#include <ip.h>
 
 /**
  * XXX
@@ -54,7 +48,7 @@ void arp_input(struct arp *const arp) {
     switch (arp->arp_opcode) {
     default:
         // Ignore replies and all other packets.
-        error("Unknown ARP opcode %d.\n", ntohs(arp->arp_opcode));
+        net_error("Unknown ARP opcode %d.\n", ntohs(arp->arp_opcode));
         return;
     case CONSTEXPR_HTONS(ARP_OPCODE_REQUEST):
         if (arp->arp_dst_ip_addr != ip_local_address.s_addr) {

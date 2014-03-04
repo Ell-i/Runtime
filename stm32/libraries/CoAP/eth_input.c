@@ -23,13 +23,7 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifdef EMULATOR
-#include <stdio.h>
-#define error(...) fprintf(stderr, __VA_ARGS__)
-#else
-#define error(...)
-#endif
-
+#include <net_debug.h>
 #include <ethernet.h>
 #include <arp.h>
 #include <ip.h>
@@ -79,7 +73,7 @@ void eth_input(struct ether_header *const ether) {
         arp_input((struct arp *)((char *)ether + ETHER_HEADER_LEN));
         return;
     default:
-        error("Unknown ethernet protocol %d.\n", ether->ether_type);
+        net_error("Unknown ethernet protocol %d.\n", ether->ether_type);
         return; // Unknown protocol -- dropped silently
     }
 }

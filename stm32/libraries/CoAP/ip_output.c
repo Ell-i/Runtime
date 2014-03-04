@@ -23,13 +23,7 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifdef EMULATOR
-#include <stdio.h>
-#define error(...) fprintf(stderr, __VA_ARGS__)
-#else
-#define error(...)
-#endif
-
+#include <net_debug.h>
 #include <ip.h>
 #include <ethernet.h>
 
@@ -46,11 +40,11 @@ void ip_output(const void *payload, uint16_t payload_len) {
      * Verify source address.
      */
     if (iph->ip_src.s_addr != ip_local_address.s_addr) {
-        error("IP dropping wrong source address %d.%d.%d.%d\n",
-              iph->ip_src.s_bytes[0], 
-              iph->ip_src.s_bytes[1], 
-              iph->ip_src.s_bytes[2], 
-              iph->ip_src.s_bytes[3]);
+        net_error("IP dropping wrong source address %d.%d.%d.%d\n",
+                  iph->ip_src.s_bytes[0],
+                  iph->ip_src.s_bytes[1],
+                  iph->ip_src.s_bytes[2],
+                  iph->ip_src.s_bytes[3]);
         return; // Wrong destiation address -- dropped silently
     }
 

@@ -23,13 +23,7 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifdef EMULATOR
-#include <stdio.h>
-#define error(...) fprintf(stderr, __VA_ARGS__)
-#else
-#define error(...)
-#endif
-
+#include <net_debug.h>
 #include <ip.h>
 
 
@@ -93,7 +87,7 @@ void ip_input(struct ip *const iph) {
     // VHL & TOS
     const uint32_t vhl_o2 = offsetof(struct ip,ip_vhl)/2;
     if ((iphps[vhl_o2] & iphms[vhl_o2]) != iphds[vhl_o2]) {
-        error("Dropping malformatted packet vhl. %04x & %04x != %04x\n",
+        net_error("Dropping malformatted packet vhl. %04x & %04x != %04x\n",
               iphps[vhl_o2], iphms[vhl_o2], iphds[vhl_o2]);
         return; 
     }
@@ -103,7 +97,7 @@ void ip_input(struct ip *const iph) {
     // Offset must be zero
     const uint32_t off_o2 = offsetof(struct ip,ip_off)/2;
     if ((iphps[off_o2] & iphms[off_o2]) != iphds[off_o2]) {
-        error("Dropping non-zero offset. %04x & %04x != %04x\n",
+        net_error("Dropping non-zero offset. %04x & %04x != %04x\n",
               iphps[off_o2], iphms[off_o2], iphds[off_o2]);
         return; // Non-zero offset
     }
@@ -118,7 +112,7 @@ void ip_input(struct ip *const iph) {
     register in_addr_t dst = iph->ip_dst.s_addr;
     if (dst != ip_local_address.s_addr) {
         // XXX Reply with ICMP destination unreachable?
-        error("Dropping packet with wrong destination address.\n");
+        net_error("Dropping packet with wrong destination address.\n");
         return; // Wrong destiation address -- dropped silently
     }
 
@@ -144,7 +138,7 @@ void ip_input(struct ip *const iph) {
         return;
     default:
         // XXX Reply with a suitable ICMP?
-        error("Dropping packet with unknown protocol %d.\n", iph->ip_p);
+        net_error("Dropping packet with unknown protocol %d.\n", iph->ip_p);
         return; // Unknown protocol -- dropped silently
     }
 }

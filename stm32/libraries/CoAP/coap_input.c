@@ -23,16 +23,8 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifdef EMULATOR
-#include <stdio.h>
-#define error(...) fprintf(stderr, __VA_ARGS__)
-#define debug(...) fprintf(stderr, __VA_ARGS__)
-#else
-#define error(...)
-#define debug(...)
-#endif
-
 #include <stddef.h>
+#include <net_debug.h>
 #include <udp.h>
 #include <coap_int.h>
 
@@ -56,6 +48,7 @@ void coap_input(uint8_t coap_data[], uint16_t coap_data_len) {
     case COAP_VT_NON_CONFIRMABLE:
         break; // Handle the message
     case COAP_VT_ACKNOWLEDGEMENT:
+        net_error("CoAP: Ignoring an acknowledgement.\n");
     case COAP_VT_RESET:
         return; // Ignore the message
     }
@@ -81,7 +74,7 @@ void coap_input(uint8_t coap_data[], uint16_t coap_data_len) {
             option_bytes  += option_length;
             option_number += option_delta;
 
-            debug("CoAP: Found option %d (len=%d).\n", option_number, option_length);
+            net_debug("CoAP: Found option %d (len=%d).\n", option_number, option_length);
             
             switch (option_number) {
             case COAP_OPTION_URI_PATH:
@@ -150,10 +143,11 @@ void coap_input(uint8_t coap_data[], uint16_t coap_data_len) {
     }
 
 send_error:
+    net_debug("CoAP: Sending a reset on error.\n");
     //XXX;
 
 send_reset:
-    //XXX;
+    net_debug("CoAP: Sending a reset.\n");
     coap_hdr->coap_code = COAP_CODE_EMPTY;
     udp_output(coap, sizeof(struct coap_hdr) + tkl);
 }
