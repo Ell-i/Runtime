@@ -66,7 +66,7 @@ typedef Register preg16_t;
 #include <FLASH.h>
 #include <GPIO.h>
 #include <TIM.h>
-#include <USART.H>
+#include <USART.h>
 #include <SPIemu.h>
 
 #endif //_EMULATOR_STM32F0XX_
