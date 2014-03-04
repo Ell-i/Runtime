@@ -5,7 +5,6 @@
 #
 
 VARIABLE_FILES := $(TOP)make/emulator.txt $(TOP)make/arduino.txt $(TOP)platform.txt
-LD_LINKER_FILE := $(TOP)scripts/elf_i386.xc 
 
 EXTRA_CFLAGS += \
         -DEMULATOR \
@@ -28,14 +27,18 @@ define expand
 $(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
 endef
 
+LD_LINKER_FILE := $(SCRIPTDIR)/elf_i386.xc
+
 ifeq ($(shell uname -s),Darwin)
 CC  := clang++ -x c++
 CXX := clang++ -x c++
 LD  := llvm-g++
+LD_SCRIPT :=
 else
 CC  := g++
 CXX := g++
 LD  := g++ -m32 -march=i386
+LD_SCRIPT := -Xlinker -T -Xlinker $(LD_LINKER_FILE)
 endif
 AR  := ar
 ELF2HEX := :
@@ -46,7 +49,7 @@ CFLAGS   := \
 CXXFLAGS := \
   $(subst -std=gnu++0x,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
 
-LDFLAGS  := -m32 -demangle -march=i386 -Xlinker -T -Xlinker $(LD_LINKER_FILE)
+LDFLAGS  := -m32 -demangle -march=i386 $(LD_SCRIPT)
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
 
 $(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
