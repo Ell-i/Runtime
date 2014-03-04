@@ -5,6 +5,7 @@
 #
 
 VARIABLE_FILES := $(TOP)make/emulator.txt $(TOP)make/arduino.txt $(TOP)platform.txt
+LD_LINKER_FILE := $(TOP)scripts/elf_i386.xc 
 
 EXTRA_CFLAGS += \
         -DEMULATOR \
@@ -45,7 +46,7 @@ CFLAGS   := \
 CXXFLAGS := \
   $(subst -std=gnu++0x,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
 
-LDFLAGS  := -m32 -demangle -march=i386 -Xlinker -T -Xlinker ../scripts/elf_i386.xc 
+LDFLAGS  := -m32 -demangle -march=i386 -Xlinker -T -Xlinker $(LD_LINKER_FILE)
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
 
 $(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
