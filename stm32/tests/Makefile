@@ -37,8 +37,20 @@ clean:	$(TARGETS)
 clean:	TARGET=clean
 
 $(TARGETS): %:
-	$(MAKE) -C $* -f `pwd`/../make/app.mk TOP=`pwd`/../ APP=$@ PLATFORM=$(PLATFORM) $(TARGET)
+	@echo $(MAKE) -C $*
+	@if [ -f $*/Makefile ]; then \
+		$(MAKE) -C $* PLATFORM=$(PLATFORM) $(TARGET); \
+	else \
+		$(MAKE) -C $* -f `pwd`/../make/app.mk TOP=`pwd`/../ APP=$@ \
+			PLATFORM=$(PLATFORM) $(TARGET); \
+	fi
 
 tests:	PLATFORM = emulator
 tests:  $(TARGETS)
-	for t in $(TARGETS); do DYLD_BIND_AT_LAUNCH=1 ./$$t/$$t; done
+	@for t in $(TARGETS); do \
+		if [ -f $$t/Makefile ]; then \
+			$(MAKE) -C $$t PLATFORM=$(PLATFORM) tests; \
+		else \
+			DYLD_BIND_AT_LAUNCH=1 ./$$t/$$t; \
+		fi; \
+	done

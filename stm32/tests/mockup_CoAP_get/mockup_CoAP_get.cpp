@@ -86,7 +86,8 @@ uint8_t *const mockup_coap_packet     = &mockup_packet.payload.coap.coap_hdr.coa
 const uint32_t mockup_coap_packet_len = 4 + 4 + 1 + 5;
 
 /* Intercept resulting outgoing packet */
-void udp_output(struct udp *mockup_enclosing, uint16_t len) {
+void udp_output(const void *payload, uint16_t payload_len) {
+    struct udp *mockup_enclosing = (struct udp *)((char *)payload - sizeof(struct udp));
     printf("Received output packet\n");
     printf("UDP sport = %d, dport = %d\n", mockup_packet.udp.udp_sport, mockup_packet.udp.udp_dport);
     printf("Coap code = %d\n", mockup_packet.payload.coap.coap_hdr.coap_code);
@@ -96,7 +97,7 @@ void udp_output(struct udp *mockup_enclosing, uint16_t len) {
 void setup() {
     printf("Sending input packet\n");
     /* Mockup an incoming packet */
-    coap_input(mockup_enclosing, mockup_coap_packet, mockup_coap_packet_len);
+    coap_input(mockup_coap_packet, mockup_coap_packet_len);
 }
 
 void loop() {
