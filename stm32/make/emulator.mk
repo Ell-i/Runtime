@@ -45,7 +45,7 @@ CFLAGS   := \
 CXXFLAGS := \
   $(subst -std=gnu++0x,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
 
-LDFLAGS  := -m32 -demangle
+LDFLAGS  := -m32 -demangle -march=i386 -Xlinker -T -Xlinker ../scripts/elf_i386.xc 
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
 
 $(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
