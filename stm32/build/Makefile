@@ -27,4 +27,6 @@ clean:
 	make PLATFORM=$(PLATFORM) -f ../make/app.mk clean
 
 sketch.cpp: Makefile
-	echo "#include <Arduino.h>\nvoid setup() {}\nvoid loop() {}" > sketch.cpp
+	echo "#include <Arduino.h>" > sketch.cpp
+	echo "void setup() {}"      >> sketch.cpp 
+	echo "void loop() {}"       >> sketch.cpp
