@@ -160,6 +160,14 @@ spi_transfer(const struct SPI *const spi, const uint32_t cr1, uint8_t data[], co
 
     if (len == 0) return 0;
 
+    for(size_t count = 0; count < len; count++) {
+        *DR8 = data[count];    
+        while (!(spi->spi_->SR & SPI_SR_FRLVL))
+            ;
+        data[count] = *DR8;
+    }
+
+# if 0
     if (len == 1) {
         *DR8 = data[0];           /* Write the only byte */
     } else {
@@ -204,6 +212,8 @@ spi_transfer(const struct SPI *const spi, const uint32_t cr1, uint8_t data[], co
     if (len % 1) {
         data[len-1] = *DR8;     /* Read the last byte, if any */
     }
+
+#endif
 
     return len;
 }
