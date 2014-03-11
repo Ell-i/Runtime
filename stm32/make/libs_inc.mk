@@ -8,4 +8,5 @@ CFLAGS    += $(patsubst %,-I%,$(wildcard $(TOP)libraries/*/.))
 CXXFLAGS  += $(patsubst %,-I%,$(wildcard $(TOP)libraries/*/.))
 
 LIBS      += $(wildcard $(TOP)libraries/*/*.a)
+LIBS      += $(TOP)libraries/SPI/ellduino_spi.o
 
