@@ -27,6 +27,8 @@
 # include <stm32f0xx.h>
 # include <stm32f0xx_extra.h>
 
+# include <stddef.h>
+
 /**
  * System initialisation interface.
  *
@@ -212,6 +214,9 @@ extern void SystemInitData16WithOffset( const SystemInitRecordArray *records);
 extern void SystemInitData32Only(       const SystemInitRecordArray *records);
 
 extern void SystemInitPeripherals(void);
+
+extern void *memcpy(void *dst, const void *src, size_t size);
+extern void *memset(void *dst, int c, size_t size);
 
 # ifdef __cplusplus
 }
