@@ -23,24 +23,40 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifndef _ETHERNET_ARCH_ENC28J60_H
-#define _ETHERNET_ARCH_ENC28J60_H
-
 #include <SPI.h>
+#include <ENC28J60Class.h>
 
-class ENC28J60Class {
-public:
-    const SPIClass spi_;
-    const uint8_t pin_; // Arduino board pin
-    constexpr ENC28J60Class(const SPIClass &spi, const uint8_t pin) 
-        : spi_(spi)
-        , pin_(pin)
-    {};
-private:
-    void spiBegin();
-    int  spiCmd(XXX cmd, XXX value, int third_byte);
-    void spiBuffer(XXX cmd, XXX *buffer, uint16_t len, bool read = false);
-    void spiEnd();
+void
+ENC28J60Class::spiBegin(uint32_t hertz) const {
+    spi_.begin(pin_);
+    spi_.setClock(pin_,hertz);
 }
 
-#endif//_ETHERNET_ARCH_ENC28J60_H
+uint8_t
+ENC28J60Class::spiCmd(uint8_t cmd, uint8_t value, bool third_byte) const {
+    uint8_t buffer[4];
+    size_t  len;
+
+    buffer[0] = cmd;
+    buffer[1] = value;
+
+    len = 2;
+    if(third_byte) len = 3;
+
+    spi_.transfer(pin_, buffer, len);
+
+    if(third_byte) return buffer[2];
+    else           return buffer[1];
+}
+
+void
+ENC28J60Class::spiBuffer(uint8_t *buffer, uint16_t len, bool read) const {
+	// XXX This needs to be modified, because the current
+	//     SPI implementation always writes over the buffer
+	spi_.transfer(pin_, buffer, len);
+}
+
+void
+ENC28J60Class::spiEnd(void) const {
+	spi_.end();
+}
