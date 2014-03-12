@@ -31,7 +31,7 @@
 static inline void chksum_update(uint16_t *const chksump, uint16_t oldvalue, uint16_t newvalue) {
     register uint16_t sum_; // 1's complement of the sum
     sum_     = ~(*chksump); // Fetch old sum and complement.
-    sum_    += ~oldvalue + newvalue;
+    sum_    += -oldvalue + newvalue;
     *chksump = ~sum_;       // Complement and store new sum.
     
 }
