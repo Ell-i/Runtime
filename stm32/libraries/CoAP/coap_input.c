@@ -25,8 +25,9 @@
 
 #include <stddef.h>
 #include <net_debug.h>
+#include <CoAP.h>
+#include <coap_internal.h>
 #include <udp.h>
-#include <coap_int.h>
 
 /**
  * XXX

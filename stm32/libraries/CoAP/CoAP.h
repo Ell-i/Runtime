@@ -28,7 +28,8 @@
 # include <stdint.h>
 # include <stddef.h> // Define size_t
 
-# include "coap_option.h" // XXX fix path if not in -I directories?  This is a public API.
+# include "coap_options.h" // XXX fix path if not in -I directories?  This is a public API.
+# include "coap_codes.h"
 
 // Define the semantics for the return value
 typedef int (*coap_callback)(

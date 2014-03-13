@@ -24,7 +24,7 @@
  */
 
 #include <CoAP.h>
-#include <coap_int.h>
+#include <coap_internal.h>
 #include <string.h>
 
 /**

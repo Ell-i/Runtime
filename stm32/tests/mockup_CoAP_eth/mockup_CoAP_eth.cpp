@@ -23,7 +23,7 @@
 
 #include <unistd.h>
 
-#include <coap_int.h>
+#include <coap_internal.h>
 #include <udp.h>
 #include <ip.h>
 #include <ethernet.h>
