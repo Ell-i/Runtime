@@ -42,7 +42,6 @@ int coap_handle_request(
     for (const CoAPURL *coap_url = __coap_urls; 
          coap_url < __coap_urls_end;
          coap_url++) {
-        int XXX;
 
         if (options->uri_path.option_len == coap_url->coap_url_path_length &&
             0 == memcmp(options->uri_path.option_value, coap_url->coap_url_path, 
@@ -52,19 +51,19 @@ int coap_handle_request(
             case COAP_CODE_GET:
                 if (NULL == coap_url->coap_url_get_callback)
                     return COAP_CODE_NOT_ALLOWED;
-                // XXX Specify return value semantics in the header, too
-                XXX = coap_url->coap_url_get_callback(payload, payload_length,
-                                                      reply_content_buffer, 
-                                                      reply_content_buffer_length);
-                return COAP_CODE_CONTENT;
+                return coap_url->coap_url_get_callback(options,
+                                                       payload,
+                                                       payload_length,
+                                                       reply_content_buffer,
+                                                       reply_content_buffer_length);
             case COAP_CODE_PUT:
                 if (NULL == coap_url->coap_url_put_callback)
                     return COAP_CODE_NOT_ALLOWED;
-                // XXX Specify return value semantics in the header, too
-                XXX = coap_url->coap_url_put_callback(payload, payload_length,
-                                                      reply_content_buffer, 
-                                                      reply_content_buffer_length);
-                return COAP_CODE_CHANGED;
+                return coap_url->coap_url_put_callback(options,
+                                                       payload,
+                                                       payload_length,
+                                                       reply_content_buffer,
+                                                       reply_content_buffer_length);
             }
             *reply_content_buffer_length = 0;
             return COAP_CODE_NOT_IMPLEMENTED;

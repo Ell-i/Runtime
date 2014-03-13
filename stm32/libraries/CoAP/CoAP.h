@@ -33,6 +33,7 @@
 
 // Define the semantics for the return value
 typedef int (*coap_callback)(
+    const struct coap_options * input_options,
     const uint8_t *input_buffer, size_t input_length,
     uint8_t *output_buffer, size_t *output_buffer_length);
 
