@@ -41,16 +41,11 @@ struct udp {
  * XXX
  */
 
-// XXX MOVE!
-#ifndef LINKER_ALIGNMENT 
-#define LINKER_ALIGNMENT 16 
-#endif
-
 struct udp_socket {
     void (*udp_socket_handler)(uint8_t data[], uint16_t data_len);
     const uint16_t udp_port;
     /* XXX Add pointer to statistics, in RAM */
-} __attribute__((aligned(LINKER_ALIGNMENT)));
+} __attribute__((aligned(SYSTEM_INIT_ALIGNMENT)));
 
 # ifdef __MACH__
 #  define UDP_SOCKET_SECTION(port)  ".text,.socket"

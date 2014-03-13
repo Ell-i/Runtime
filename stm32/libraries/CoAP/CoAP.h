@@ -36,17 +36,13 @@ typedef int (*coap_callback)(
     const uint8_t *input_buffer, size_t input_length,
     uint8_t *output_buffer, size_t *output_buffer_length);
 
-// XXX MOVE!
-#ifndef LINKER_ALIGNMENT 
-#define LINKER_ALIGNMENT 16 
-#endif
 
 typedef struct {
     const coap_callback              coap_url_get_callback;
     const coap_callback              coap_url_put_callback;
     const char *                     coap_url_path;
     const uint8_t                    coap_url_path_length;
-} __attribute__((aligned(LINKER_ALIGNMENT))) CoAPURL;
+} __attribute__((aligned(SYSTEM_INIT_ALIGNMENT))) CoAPURL;
 
 # ifdef __MACH__
 #  define COAP_URL_SECTION(name) ".text,.coapurl"
