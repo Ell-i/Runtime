@@ -38,7 +38,7 @@ static const struct ip_packet ip_header_mask = {
             .ip_len = 0,  // ignored
             /* Second 32-bit word */
             .ip_id  = 0,  // ignored
-            .ip_off = 0xff1f, // only offset must match
+            .ip_foff = { 0x1f, 0xff }, // only offset must match
             /* Third 32-bit word */
             .ip_ttl = 0,  // ignored
             .ip_p   = 0,  // ignored
@@ -57,7 +57,7 @@ static const struct ip_packet ip_header_data = {
             .ip_tos = 0,  // ignored
             .ip_len = 0,  // ignored
             .ip_id  = 0,  // ignored
-            .ip_off = 0,  // must be zero
+            .ip_off = 0,  // offset must be zero
             .ip_ttl = 0,  // ignored
             .ip_p   = 0,  // ignored
             .ip_sum = 0,  // ignored

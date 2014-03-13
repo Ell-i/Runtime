@@ -34,6 +34,8 @@
 
 typedef uint32_t in_addr_t;
 
+static const in_addr_t IP_ADDRESS_UNSPECIFIED = 0;
+
 struct in_addr {
     union {
         in_addr_t s_addr;
@@ -49,7 +51,10 @@ struct ip {
     uint8_t        ip_tos;
     uint16_t       ip_len;
     uint16_t       ip_id;
-    uint16_t       ip_off;
+    union {
+        uint16_t       ip_off;
+        uint8_t        ip_foff[2];
+    };
     uint8_t        ip_ttl;
     uint8_t        ip_p;
     uint16_t       ip_sum;
