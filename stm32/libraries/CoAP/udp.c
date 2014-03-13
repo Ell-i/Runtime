@@ -78,3 +78,8 @@ void udp_output(const void *payload, uint16_t payload_len) {
     ip_output(udp, udp_len);
 }
 
+void udp_echo(uint8_t udp_payload[], uint16_t udp_payload_len) {
+    udp_output(udp_payload, udp_payload_len);
+}
+
+DEFINE_UDP_SOCKET(UDP_PORT_ECHO, udp_echo);

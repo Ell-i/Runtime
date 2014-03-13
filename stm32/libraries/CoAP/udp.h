@@ -29,6 +29,8 @@
 # include <system_init.h>
 # include <util.h>
 
+# define UDP_PORT_ECHO 7
+
 struct udp {
     uint16_t udp_sport;
     uint16_t udp_dport;
