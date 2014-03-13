@@ -21,7 +21,7 @@ SYSTEM_OBJS += \
 	clock_stm32f0xx.o \
 	system_stm32f0xx.o \
 	system_init.o \
-	system_mem.o \
+	memory.o \
 	$(VARIANT)_gpio.o \
 	$(VARIANT)_timer.o \
 	$(VARIANT)_usart.o \
