@@ -55,11 +55,27 @@ SECTIONS
         /*
          * XXX
          */
-        . = ALIGN(4);
+        . = ALIGN(16);
         __peripheral_start = .;
         KEEP (*(.peripheral.RCC*))      /* Read-only RCC initialisation data */
         KEEP (*(SORT(.peripheral.*)))  /* Read-only peripheral initialisation data */
         __peripheral_end = .;
+
+        /*
+         * XXX
+         */
+        . = ALIGN(16);
+        __udp_sockets = .;
+        KEEP (*(.socket.udp.*))       /* Read-only UDP socket data structures */
+        __udp_sockets_end = .;
+
+        /*
+         * XXX
+         */
+        . = ALIGN(16);
+        __coap_urls = .;
+        KEEP (*(.coap.url*))       /* Read-only UDP socket data structures */
+        __coap_urls_end = .;
 
         /*
          * The following sections are needed to jump from ARM code to Thumb

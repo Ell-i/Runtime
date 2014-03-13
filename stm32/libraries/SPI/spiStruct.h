@@ -73,6 +73,7 @@
         = {                                                             \
         IF(init_record_type)   ADDR_AND_ONES,                           \
         IF(init_record_number) COUNT_OF(SPI ## spi ##_RCC_INIT_DefaultRecords), \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_offset) 0 },                                   \
         { IF(init_records_addr_and_ones) SPI ## spi ## _RCC_INIT_DefaultRecords, }, \
     };                                                                  \
@@ -82,6 +83,7 @@
         = {                                                             \
         IF(init_record_type)   DATA16_WITH_OFFSETS,                     \
         IF(init_record_number) COUNT_OF(init_records_data),             \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_address16) &SPI ## spi->CR1 },                 \
         { IF(init_records_data16_only) init_records_data, },            \
         { IF(init_records_register_offsets) init_records_offsets },     \
