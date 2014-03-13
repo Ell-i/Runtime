@@ -23,24 +23,29 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifndef  _ETHERNET_UDP_H
-# define _ETHERNET_UDP_H
+#ifndef  _UDP_H
+# define _UDP_H
 
 # include <system_init.h>
 # include <util.h>
 
+typedef uint16_t udp_port_t;
+
 # define UDP_PORT_ECHO 7
 
 struct udp {
-    uint16_t udp_sport;
-    uint16_t udp_dport;
-    uint16_t udp_len;
-    uint16_t udp_sum;
-    uint8_t  udp_data[0];
+    udp_port_t udp_sport;
+    udp_port_t udp_dport;
+    uint16_t   udp_len;
+    uint16_t   udp_sum;
+    uint8_t    udp_data[0];
 };
 
+
 /**
- * XXX
+ * A compile-time allocated const data structure describing an UDP socket.
+ *
+ * @see DEFINE_UDP_SOCKET
  */
 
 struct udp_socket {
@@ -61,6 +66,13 @@ struct udp_socket {
     extern const struct udp_socket  __EXPAND_SOCKET_NAME(port) \
     __attribute__((section(UDP_SOCKET_SECTION(port)))) 
 
+/**
+ * Defines an UDP socket.
+ *
+ * To define a UDP socket at compile time, use the DEFINE_UDP_SOCKET
+ * macro to XXX.
+ */
+
 # define DEFINE_UDP_SOCKET(port, handler)                  \
     DECLARE_UDP_SOCKET(port);                              \
     const struct udp_socket __EXPAND_SOCKET_NAME(port)     \
@@ -73,7 +85,6 @@ struct udp_socket {
 extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __udp_sockets[];
 extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __udp_sockets_end[];
 
-
 # ifdef __cplusplus
 extern "C" {
 # endif
@@ -83,4 +94,4 @@ extern void udp_output(const void * payload, uint16_t payload_len);
 }
 # endif
 
-#endif //_ETHERNET_UDP_H
+#endif //_UDP_H
