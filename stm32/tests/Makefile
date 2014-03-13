@@ -22,6 +22,7 @@ TARGETS = \
     test_Serial_begin \
     test_Serial_write_uint8 \
     test_SPI_begin \
+    test_CoAP_no_threads \
     mockup_CoAP_get \
     mockup_CoAP_eth \
 

@@ -18,8 +18,11 @@
  */
 
 
-#include <ENC28J60.h>
+#include <coap_internal.h>
+#include <udp.h>
+#include <ip.h>
 #include <ethernet.h>
+#include <ENC28J60.h>
 
 #define DEBUG_LED 5
 
@@ -32,7 +35,7 @@ void setup() {
     ENC28J60.begin(ether_local_address);
 
     pinMode(DEBUG_LED, OUTPUT);
-
+    digitalWrite(DEBUG_LED, 1);
 }
 
 void loop() {
@@ -55,3 +58,19 @@ void loop() {
     }
 
 }
+
+#include <CoAP.h>
+
+#define HELLO_WORLD "Hello, World!"
+
+int test_get_callback(
+    const uint8_t *input_buffer, size_t input_length,
+    uint8_t *output_buffer, size_t *output_buffer_length) {
+    *output_buffer++ = COAP_OPTION_PAYLOAD;
+    memcpy(output_buffer, HELLO_WORLD, sizeof(HELLO_WORLD));
+    *output_buffer_length = sizeof(HELLO_WORLD); // Excludes NUL
+    return 0; // XXX semantics not fixed yet
+}
+
+
+DEFINE_COAP_URL(test, "test", test_get_callback, NULL);
