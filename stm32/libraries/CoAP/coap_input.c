@@ -29,6 +29,8 @@
 #include <coap_internal.h>
 #include <udp.h>
 
+CoAPClass CoAP;
+
 /**
  * XXX
  */

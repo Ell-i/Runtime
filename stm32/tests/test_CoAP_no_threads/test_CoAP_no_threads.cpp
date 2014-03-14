@@ -17,7 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include <stddef.h>
 #include <coap_internal.h>
 #include <udp.h>
 #include <ip.h>
@@ -64,6 +64,7 @@ void loop() {
 #define HELLO_WORLD "Hello, World!"
 
 int test_get_callback(
+    const struct coap_options *input_options,
     const uint8_t *input_buffer, size_t input_length,
     uint8_t *output_buffer, size_t *output_buffer_length) {
     *output_buffer++ = COAP_OPTION_PAYLOAD;

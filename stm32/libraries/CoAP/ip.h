@@ -43,7 +43,6 @@ struct in_addr {
     };
 } __attribute__((packed));
 
-
 extern struct in_addr ip_local_address;
 
 struct ip {
@@ -78,6 +77,8 @@ struct ip_packet {
 };
 
 #define IP_VHL_DEFAULT 0x45 /* IPv4, 4*4 = 20 bytes */
+
+#define IP_MSS       576    /* Default segment size */
 
 
 # ifdef __cplusplus

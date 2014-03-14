@@ -26,7 +26,10 @@
 # define _ETHERNET_COAP_API_H
 
 # include <stdint.h>
-# include <stddef.h> // Define size_t
+# include <stddef.h>   // Define size_t
+# include <ip.h>       // XXX Define in_addr_t, IP_MSS, to be removed
+# include <ethernet.h> // XXX Define ether_header, to be removed
+# include <ENC28J60.h> // XXX Temporary remove once removing loop()
 
 # include "coap_options.h" // XXX fix path if not in -I directories?  This is a public API.
 # include "coap_codes.h"
@@ -37,6 +40,27 @@ typedef int (*coap_callback)(
     const uint8_t *input_buffer, size_t input_length,
     uint8_t *output_buffer, size_t *output_buffer_length);
 
+typedef struct CoAPClass {
+    uint8_t packet_buffer[IP_MSS + sizeof(ether_header) + 8 /* To get it properly aligned */] __attribute__((aligned(8)));
+# ifdef __cplusplus
+public:
+    void begin(in_addr_t ip_address = IP_ADDRESS_UNSPECIFIED) {
+        ENC28J60.begin(ether_local_address);
+    }
+    void loop(void) {
+        Serial.write('A');
+        if (ENC28J60.availablePackets()) {
+            Serial.write('R');
+            ENC28J60.receivePacket(          packet_buffer + 8);
+            Serial.write('E');
+            eth_input((struct ether_header *)packet_buffer + 8);
+            Serial.write('B');
+        }
+    }
+# endif
+} CoAPClass;
+
+extern CoAPClass CoAP;
 
 typedef struct {
     const coap_callback              coap_url_get_callback;
