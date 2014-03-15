@@ -102,25 +102,14 @@ udp_checksum(
         : "r2", "r3"
         );
 # else
-#  error "Not implemented for non-ARMv6"
+#  error "Not implemented for ARMv7 yet.  Please do."
 # endif
 #else
-    /**
-     * XXX FIXME this implementation fails in some cases,
-     * e.g. src=10.0.1.255 dst=10.0.2.255
-     */
-    checksum += ip->ip_src.s_addr;
-    checksum += ip->ip_dst.s_addr;
-
-    // Add the half words together.  This cannot overflow.
-    {
-        register uint32_t checksum_high = (checksum >> 16) & 0xFFFF;
-        checksum = checksum & 0xFFFF;
-        checksum += checksum_high;
-    }
-
+    checksum += (ip->ip_src.s_addr >> 16) & 0xFFFF;
+    checksum += (ip->ip_src.s_addr) & 0xFFFF;
+    checksum += (ip->ip_dst.s_addr >> 16) & 0xFFFF;
+    checksum += (ip->ip_dst.s_addr) & 0xFFFF;
     checksum += zeroes_protocol;
-
 #endif
     
     /*
