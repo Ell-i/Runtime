@@ -59,19 +59,97 @@ void udp_input(struct udp *const udp_packet) {
 }
 
 /**
+ * Compute the UDP checksum, taking the addresses for the pseudo
+ * header from the IP header.
+ *
+ * @param ip   IP header for the IP addresses in the UDP pseudo header
+ * @param udp  UDP header, followed with the payload
+ * @param len  UDP length, passed in register to save memory access
+ */
+static inline uint16_t
+udp_checksum(
+    const struct ip *const ip, const struct udp *const udp, const size_t len) {
+
+    /*
+     * Phase 1: Compute the pseudo-header checksum, using
+     *          parallel 16-bit words in a 32-bit register.
+     */
+
+    // Initialize pseudo-header from the end, the UDP length
+    register uint32_t checksum = len;
+
+    // Assign a register with the pseudo-header constant value, for
+    // using as a register in the ADC instruction below
+#   if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#    define UDP_ZEROES_PROTOCOL_SHORT ((IPPROTO_UDP << 8) | 0)
+#   else
+#    define UDP_ZEROES_PROTOCOL_SHORT ((0 << 8) | IPPROTO_UDP)
+#   endif
+    register const uint32_t zeroes_protocol = UDP_ZEROES_PROTOCOL_SHORT;
+
+#if defined(__thumb__) && 0//XXX remove zero here once works
+# if defined(__ARM_ARCH_6M__)
+    // Add IP addresses, as 32-bit entities, using ADC
+    register const uint32_t *srcp = &ip->ip_src.s_addr;
+    __asm__ (
+        XXX DOES NOT WORK, CRASHES.  INVESTIGATE.
+        "ldm	%[srcp]!, {r2, r3}\n\t"
+        "add	%[checksum], r2\n\t"
+        "adc	%[checksum], r3\n\t"
+        "adc	%[checksum], %[zeroes_protocol]"
+        : [checksum] "+r" (checksum), [srcp] "+r" (srcp)
+        : [zeroes_protocol] "r" (zeroes_protocol)
+        : "r2", "r3"
+        );
+# else
+#  error "Not implemented for non-ARMv6"
+# endif
+#else
+    /**
+     * XXX FIXME this implementation fails in some cases,
+     * e.g. src=10.0.1.255 dst=10.0.2.255
+     */
+    checksum += ip->ip_src.s_addr;
+    checksum += ip->ip_dst.s_addr;
+
+    // Add the half words together.  This cannot overflow.
+    {
+        register uint32_t checksum_high = (checksum >> 16) & 0xFFFF;
+        checksum = checksum & 0xFFFF;
+        checksum += checksum_high;
+    }
+
+    checksum += zeroes_protocol;
+
+#endif
+    
+    /*
+     * Part 2: Compute the checksum over the UDP header and data.
+     *         ip_checksum() accepts two parallel 16-bit words in its
+     *         first argument.
+     */
+    checksum = ip_checksum(checksum, udp, len);
+    if (checksum == 0)
+        checksum = ~0;
+    return checksum;
+}
+
+/**
  * XXX
  */
 
 void udp_output(const void *payload, uint16_t payload_len) {
     struct udp *const udp = (struct udp *)((const char *)payload - sizeof(struct udp));
+    struct ip  *const  ip = (struct  ip *)((const char *)udp     - sizeof(struct ip));
     const int udp_len = payload_len + sizeof(struct udp);
 
     udp->udp_len = htons(udp_len);
+    udp->udp_sum = 0;
     
     /*
      * Clear the checksum, for now
      */
-    udp->udp_sum = 0;
+    udp->udp_sum = udp_checksum(ip, udp, udp_len);
     /*
      * Pass to lower layer.
      */

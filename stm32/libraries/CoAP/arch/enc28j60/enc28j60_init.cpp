@@ -190,7 +190,7 @@ ENC28J60Class::begin(const uint8_t mac_address[ETH_ADDRESS_LEN]) const {
 
     enc_buf_value_t b[2] = { ENC_SPI_WRITE_MEM, 0 };
 
-    spiBuffer(b, sizeof(b));
+    spiXferBuffer(b, sizeof(b));
     
 }
 

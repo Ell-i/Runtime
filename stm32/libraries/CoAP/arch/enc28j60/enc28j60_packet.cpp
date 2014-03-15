@@ -37,7 +37,7 @@ int
 ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
     
     rx_header.rx_cmd = ENC_SPI_READ_MEM;
-    spiBuffer((unsigned char *)&rx_header,sizeof(enc_rx_packet_header_t));
+    spiXferBuffer((unsigned char *)&rx_header, sizeof(enc_rx_packet_header_t));
 
     register unsigned int plen = rx_header.rx_length;
     register unsigned int next = rx_header.rx_next;
@@ -49,8 +49,8 @@ ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
     /* Assumed buffer has extra space at the
      * beginning for the command
      */
-     *(buffer - 1) = ENC_SPI_READ_MEM;
-    spiBuffer(buffer-1, plen+1);
+    *(buffer - 1) = ENC_SPI_READ_MEM;
+    spiXferBuffer(buffer-1, plen+1);
 
     /*
      * Go to the beginning of the next packet.
@@ -79,7 +79,7 @@ ENC28J60Class::getHeader(enc_rx_packet_header_t *rx_header) const {
     
     rx_header->rx_cmd = ENC_SPI_READ_MEM;
 
-    spiBuffer((unsigned char *)rx_header,sizeof(enc_rx_packet_header_t));
+    spiXferBuffer((unsigned char *)rx_header,sizeof(enc_rx_packet_header_t));
 
     register unsigned int next = rx_header->rx_next;
 
@@ -152,7 +152,7 @@ ENC28J60Class::sendPacket(uint8_t *buffer, size_t len) const {
     enc_reg_set(E_WR_PTR, TX_BUFFER_START + 1);
     
     *(buffer - 1) = ENC_SPI_WRITE_MEM;
-    spiBuffer(buffer-1, len+1, false);
+    spiXferBuffer(buffer-1, len+1, false);
 
     /*
      * Set the packet start and end.

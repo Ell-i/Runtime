@@ -33,7 +33,7 @@ ENC28J60Class::spiBegin(uint32_t hertz) const {
 }
 
 uint8_t
-ENC28J60Class::spiCmd(uint8_t cmd, uint8_t value, bool third_byte) const {
+ENC28J60Class::spiXferCmd(uint8_t cmd, uint8_t value, bool third_byte) const {
     uint8_t buffer[4];
     size_t  len;
 
@@ -50,7 +50,7 @@ ENC28J60Class::spiCmd(uint8_t cmd, uint8_t value, bool third_byte) const {
 }
 
 void
-ENC28J60Class::spiBuffer(uint8_t *buffer, uint16_t len, bool read) const {
+ENC28J60Class::spiXferBuffer(uint8_t *buffer, uint16_t len, bool read) const {
 	// XXX This needs to be modified, because the current
 	//     SPI implementation always writes over the buffer
 	spi_.transfer(pin_, buffer, len);

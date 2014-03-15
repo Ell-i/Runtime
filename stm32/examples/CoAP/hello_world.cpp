@@ -84,6 +84,8 @@ int coap_hello_put_callback(
 
 DEFINE_COAP_URL(hello_world, "hello", coap_hello_get_callback, coap_hello_put_callback);
 
+uint8_t packet_buffer[2048 + 8 /* To get it properly aligned */] __attribute__((aligned(8)));
+
 /*
  * Note that CoAP.loop will eventually go away, once we get CoAP
  * running in its own thread.  But that will take some time.  
@@ -92,11 +94,8 @@ DEFINE_COAP_URL(hello_world, "hello", coap_hello_get_callback, coap_hello_put_ca
 
 void setup() {
     CoAP.begin(); 
-    Serial.begin(57600);
-    Serial.write('S');
 }
 
 void loop() {
-    Serial.write('.');
     CoAP.loop(); // Must be called at least 10 times per second, preferably more often.
 }

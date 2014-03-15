@@ -45,7 +45,7 @@ public:
     int  availablePackets(void) const;
 
     //XXX check real default value
-    int  receivePacket(uint8_t *buffer, size_t maxlen = 2048) const; 
+    int  receivePacket(uint8_t *buffer, size_t len) const; 
     
     void sendPacket(uint8_t *buffer, size_t len) const;
 
@@ -56,8 +56,8 @@ public:
     
 private:
     void    spiBegin(uint32_t hertz = 6000000) const;
-    uint8_t spiCmd(uint8_t cmd, uint8_t value, bool third_byte) const;
-    void    spiBuffer(uint8_t *buffer, uint16_t len, bool read = true) const;
+    uint8_t spiXferCmd(uint8_t cmd, uint8_t value, bool third_byte) const;
+    void    spiXferBuffer(uint8_t *buffer, uint16_t len, bool read = true) const;
     void    spiEnd(void) const;
 
     void    set_bank(int bank) const;   //XXX to prevent casting differnt enums enc_bank_t

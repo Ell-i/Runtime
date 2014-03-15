@@ -32,9 +32,9 @@ vpath %.c   . ./arch/enc28j60 ./arch/stm32
 #
 
 LIB_OBJS := eth_input.o arp_input.o
-LIB_OBJS += ip_input.o ip_output.o icmp_input.o
+LIB_OBJS += ip_input.o ip_output.o icmp_input.o ip_checksum.o
 LIB_OBJS += udp.o coap_input.o coap_handle.o
-LIB_OBJS += ellduino_enc28j60.o enc28j60.o enc28j60_packet.o enc28j60_spi.o
+LIB_OBJS += ellduino_enc28j60.o enc28j60.o enc28j60_packet.o enc28j60_spi.o enc28j60_init.o
 
 #
 # Set up the compilation environment, identical to the Arduino IDE,

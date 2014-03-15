@@ -45,7 +45,7 @@ void loop() {
     while (!(ENC28J60.availablePackets()))
         ;
 
-    ENC28J60.receivePacket(&buffer[8]);
+    ENC28J60.receivePacket(&buffer[8], sizeof(buffer) - 8);
 
     eth_input(ether_header);
 

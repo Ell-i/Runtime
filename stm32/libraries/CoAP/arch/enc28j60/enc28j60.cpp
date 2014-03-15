@@ -6,8 +6,8 @@
 
 #include <ENC28J60Class.h>
 
-#define SPI_XFER_RX(op, reg, xtra)  spiCmd((op) | ((reg) & ENC_REG_MASK), 0, (xtra))
-#define SPI_XFER_TX(op, reg, value) spiCmd((op) | ((reg) & ENC_REG_MASK), (value), 0)
+#define SPI_XFER_RX(op, reg, xtra)  spiXferCmd((op) | ((reg) & ENC_REG_MASK), 0, (xtra))
+#define SPI_XFER_TX(op, reg, value) spiXferCmd((op) | ((reg) & ENC_REG_MASK), (value), 0)
 
 /**
  * Switches to the right register bank

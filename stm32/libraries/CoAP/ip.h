@@ -86,6 +86,7 @@ extern "C" {
 # endif
 extern void ip_input( struct ip *const ip);
 extern void ip_output(const void *payload, uint16_t payload_len /* 0: don't change */);
+extern uint16_t ip_checksum(uint32_t seed, const void *data, size_t data_len);
 # ifdef __cplusplus
 }
 # endif
