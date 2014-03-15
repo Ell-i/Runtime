@@ -64,7 +64,7 @@ void ip_output(const void *payload, uint16_t payload_len) {
         uint16_t len = payload_len + sizeof(struct ip);
         len = htons(len);
 
-        ip_sum_ += ~(iph->ip_len) + len;
+        ip_sum_ += -iph->ip_len + len;
         iph->ip_len = len;
     }
 

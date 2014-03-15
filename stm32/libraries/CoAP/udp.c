@@ -106,9 +106,9 @@ udp_checksum(
 # endif
 #else
     checksum += (ip->ip_src.s_addr >> 16) & 0xFFFF;
-    checksum += (ip->ip_src.s_addr) & 0xFFFF;
+    checksum += (ip->ip_src.s_addr      ) & 0xFFFF;
     checksum += (ip->ip_dst.s_addr >> 16) & 0xFFFF;
-    checksum += (ip->ip_dst.s_addr) & 0xFFFF;
+    checksum += (ip->ip_dst.s_addr      ) & 0xFFFF;
     checksum += zeroes_protocol;
 #endif
     
@@ -138,7 +138,7 @@ void udp_output(const void *payload, uint16_t payload_len) {
     /*
      * Clear the checksum, for now
      */
-    udp->udp_sum = udp_checksum(ip, udp, udp_len);
+    udp->udp_sum = 0; // udp_checksum(ip, udp, udp_len);
     /*
      * Pass to lower layer.
      */

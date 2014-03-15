@@ -94,15 +94,12 @@ uint16_t ip_checksum(register uint32_t checksum, const void *data, size_t len) {
 #  error "Not implemented for ARMv7 yet.  Please do."
 # endif
 #else
-            register uint32_t r2 = ((uint32_t *)dp)[0];
-            register uint32_t r3 = ((uint32_t *)dp)[1];
+            register const uint16_t *hp = (const uint16_t *)dp;
+            checksum += *hp++;
+            checksum += *hp++;
+            checksum += *hp++;
+            checksum += *hp++;
             dp += 2 * sizeof(uint32_t);
-            if (checksum > UINT_MAX - r2)
-                checksum += 1;
-            checksum += r2;
-            if (checksum > UINT_MAX - r3)
-                checksum += 1;
-            checksum += r3;
 #endif
         }
 
@@ -135,8 +132,7 @@ uint16_t ip_checksum(register uint32_t checksum, const void *data, size_t len) {
     // Note that we can add it directly, as byte swapping will do the right thing.
     // In the worst case, we get 4fffx or 5fffx
     if (dp < end) {
-        register uint32_t d = *((uint8_t *)dp);
-        checksum += d;
+        checksum += *dp;
     }
 
     // Add the half words together again, 
