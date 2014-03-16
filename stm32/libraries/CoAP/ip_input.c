@@ -29,41 +29,37 @@
 
 struct in_addr ip_local_address = { .s_bytes = { 10, 0, 0, 2 } };
 
-static const struct ip_packet ip_header_mask = { 
-    .ip_iph = { 
-        .iph = {
-            /* First 32-bit word */
-            .ip_vhl = -1, // must match
-            .ip_tos = 0,  // ignored
-            .ip_len = 0,  // ignored
-            /* Second 32-bit word */
-            .ip_id  = 0,  // ignored
-            .ip_foff = { 0x1f, 0xff }, // only offset must match
-            /* Third 32-bit word */
-            .ip_ttl = 0,  // ignored
-            .ip_p   = 0,  // ignored
-            .ip_sum = 0,  // ignored
-            /* Fourth and fifth 32-bit words */
-            .ip_src = { { 0 } },  // ignored
-            .ip_dst = { { 0 } },  // not matched
-        }
+static const union iph ip_header_mask = { 
+    .iph = {
+        /* First 32-bit word */
+        .ip_vhl = -1, // must match
+        .ip_tos = 0,  // ignored
+        .ip_len = 0,  // ignored
+        /* Second 32-bit word */
+        .ip_id  = 0,  // ignored
+        .ip_foff = { 0x1f, 0xff }, // only offset must match
+        /* Third 32-bit word */
+        .ip_ttl = 0,  // ignored
+        .ip_p   = 0,  // ignored
+        .ip_sum = 0,  // ignored
+        /* Fourth and fifth 32-bit words */
+        .ip_src = { { 0 } },  // ignored
+        .ip_dst = { { 0 } },  // not matched
     }
 };
 
-static const struct ip_packet ip_header_data = {
-    .ip_iph = { 
-        .iph = {
-            .ip_vhl = IP_VHL_DEFAULT,
-            .ip_tos = 0,  // ignored
-            .ip_len = 0,  // ignored
-            .ip_id  = 0,  // ignored
-            .ip_off = 0,  // offset must be zero
-            .ip_ttl = 0,  // ignored
-            .ip_p   = 0,  // ignored
-            .ip_sum = 0,  // ignored
-            .ip_src = { { 0 } },  // ignored
-            .ip_dst = { { 0 } },  // not matched
-        }
+static const union iph ip_header_data = {
+    .iph = {
+        .ip_vhl = IP_VHL_DEFAULT,
+        .ip_tos = 0,  // ignored
+        .ip_len = 0,  // ignored
+        .ip_id  = 0,  // ignored
+        .ip_off = 0,  // offset must be zero
+        .ip_ttl = 0,  // ignored
+        .ip_p   = 0,  // ignored
+        .ip_sum = 0,  // ignored
+        .ip_src = { { 0 } },  // ignored
+        .ip_dst = { { 0 } },  // not matched
     }
 };
 
@@ -81,8 +77,8 @@ void ip_input(struct ip *const iph) {
      * Verify the packet format.
      */
     register const uint16_t *const iphps = (uint16_t *)iph;
-    register const uint16_t *const iphms = ip_header_mask.ip_iph.iph_shorts; // Header mask
-    register const uint16_t *const iphds = ip_header_data.ip_iph.iph_shorts; // Header match
+    register const uint16_t *const iphms = ip_header_mask.iph_shorts;
+    register const uint16_t *const iphds = ip_header_data.iph_shorts;
 
     // VHL & TOS
     const uint32_t vhl_o2 = offsetof(struct ip,ip_vhl)/2;
@@ -94,7 +90,7 @@ void ip_input(struct ip *const iph) {
 
     // Length and ID ignored
 
-    // Offset must be zero
+    // Offset must be zero, ignore flags
     const uint32_t off_o2 = offsetof(struct ip,ip_off)/2;
     if ((iphps[off_o2] & iphms[off_o2]) != iphds[off_o2]) {
         net_error("Dropping non-zero offset. %04x & %04x != %04x\n",
@@ -105,8 +101,12 @@ void ip_input(struct ip *const iph) {
     // Check TTL
     //XXX;
 
-    // Verify checksum
-    //XXX;
+#if 0
+    // Verify checksum, RFC1122 Section 3.2.1.2
+    if (ip_checksum(0, iph, sizeof(struct ip)) != 0)
+        net_error("Dropping bad checksum.\n");
+        return;
+#endif
 
     // Verify destination address.
     register in_addr_t dst = iph->ip_dst.s_addr;
@@ -129,12 +129,13 @@ void ip_input(struct ip *const iph) {
      * Pass to the upper layer
      */
     struct ip_packet *const ip_packet = (struct ip_packet *)iph;
+    const size_t len = ntohs(iph->ip_len) - sizeof(struct ip);
     switch (iph->ip_p) {
     case IPPROTO_UDP:
-        udp_input(&ip_packet->ip_udp);
+        udp_input(&ip_packet->ip_udp, len);
         return;
     case IPPROTO_ICMP:
-        icmp_input(&ip_packet->ip_icmp);
+        icmp_input(&ip_packet->ip_icmp, len);
         return;
     default:
         // XXX Reply with a suitable ICMP?

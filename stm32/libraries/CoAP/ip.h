@@ -59,14 +59,14 @@ struct ip {
     uint16_t       ip_sum;
     struct in_addr ip_src;
     struct in_addr ip_dst;
-} __attribute__((packed,aligned(2)));
+} __attribute__((packed,aligned(4)));
 
 union iph {
     struct ip iph;
     uint8_t   iph_bytes[0];
     uint16_t  iph_shorts[0];
-    // Cannot have longs as must be aligned with 2.
-} __attribute__((packed,aligned(2)));
+    uint32_t  iph_longs[0];
+} __attribute__((packed,aligned(4)));
 
 struct ip_packet {
     union iph ip_iph;
@@ -77,9 +77,11 @@ struct ip_packet {
 };
 
 #define IP_VHL_DEFAULT 0x45 /* IPv4, 4*4 = 20 bytes */
+#define IP_TOS_DEFAULT 0x0  /* XXX define */
+#define IP_OFF_DEFAULT CONSTEXPR_HTONS(0x4000)
+#define IP_TTL_DEFAULT 64    /* Default TTL, from RFC1340 */
 
-#define IP_MSS       576    /* Default segment size */
-
+#define IP_MSS         576    /* Default segment size */
 
 # ifdef __cplusplus
 extern "C" {

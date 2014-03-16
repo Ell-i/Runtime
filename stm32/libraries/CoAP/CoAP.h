@@ -27,6 +27,8 @@
 
 # include <stdint.h>
 # include <stddef.h>   // Define size_t
+# include <assert.h>
+
 # include <ip.h>       // XXX Define in_addr_t, IP_MSS, to be removed
 # include <ethernet.h> // XXX Define ether_header, to be removed
 
@@ -45,21 +47,43 @@ typedef int (*coap_callback)(
     const uint8_t *input_buffer, size_t input_length,
     uint8_t *output_buffer, size_t *output_buffer_length);
 
+/*
+ * Note that we *must* align the IP header (and subsequent headers) at
+ * 4 byte boundary.  However, the Ethernet header is 6+6+2=14 bytes
+ * long.  Consequently, we have to align the Ethernet header at
+ * two-byte boundary.  Bowing slightly to potential future 64-bit
+ * version and IPv6 compatibility, we align the IP header at a 8-byte
+ * boundary, leaving two bytes at the beginning of the buffer
+ */
+#define ALIGNMENT_OFFSET 2
+
 typedef struct CoAPClass {
-    uint8_t packet_buffer[IP_MSS + sizeof(struct ether_header) + 8 /* To get it properly aligned */] __attribute__((aligned(8)));
+    // XXX Move to some other header, buffer.h?
+    // XXX And define properly
+    uint8_t packet_buffer_[
+        ALIGNMENT_OFFSET 
+        + sizeof(struct ether_header) 
+        + IP_MSS]
+    __attribute__((aligned(8)));
+#define PACKET_BUFFER_SIZE    (sizeof(packet_buffer_) - ALIGNMENT_OFFSET)
+#define PACKET_BUFFER_START          (packet_buffer_  + ALIGNMENT_OFFSET)
+#define PACKET_BUFFER_ETHER   ((struct ether_header *)PACKET_BUFFER_START)
+    
 # ifdef __cplusplus
 public:
     void begin(in_addr_t ip_address = IP_ADDRESS_UNSPECIFIED) {
         Serial.begin(57600);
+        Serial.write('A');
+        assert(((uint32_t)PACKET_BUFFER_ETHER) % 4 == 2);
         Serial.write('S');
         ENC28J60.begin(ether_local_address);
     }
     void loop(void) {
         if (ENC28J60.availablePackets()) {
             Serial.write('R');
-            ENC28J60.receivePacket(           packet_buffer + 8, sizeof(packet_buffer) - 8);
+            ENC28J60.receivePacket(PACKET_BUFFER_START, PACKET_BUFFER_SIZE);
             Serial.write('E');
-            eth_input((struct ether_header *)(packet_buffer + 8));
+            eth_input(PACKET_BUFFER_ETHER);
             Serial.write('C');
             Serial.write('\n');
         }

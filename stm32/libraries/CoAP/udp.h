@@ -88,8 +88,8 @@ extern const struct udp_socket __attribute__((section(UDP_SOCKET_SECTION()))) __
 # ifdef __cplusplus
 extern "C" {
 # endif
-extern void udp_input(struct udp *const udp_packet);
-extern void udp_output(const void * payload, uint16_t payload_len);
+extern void udp_input(struct udp *const udp_packet, size_t len);
+extern void udp_output(const void * payload, size_t payload_len);
 # ifdef __cplusplus
 }
 # endif

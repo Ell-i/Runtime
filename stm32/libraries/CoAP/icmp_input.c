@@ -39,7 +39,7 @@ static inline void chksum_update(uint16_t *const chksump, uint16_t oldvalue, uin
 /**
  * XXX
  */
-void icmp_input(struct icmp *const icmp) {
+void icmp_input(struct icmp *const icmp, size_t icmp_len) {
     net_error("ICMP type %d.\n", icmp->icmp_type);
     switch (icmp->icmp_type) {
     case ICMP_TYPE_ECHO:
@@ -52,6 +52,6 @@ void icmp_input(struct icmp *const icmp) {
         // Drop silently
         return;
     }
-    ip_output(icmp, 0 /* Don't update ip->ip_len */);
+    ip_output(icmp, icmp_len);
 }
 

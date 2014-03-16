@@ -43,6 +43,6 @@ struct icmp {
 /**
  * XXX
  */
-extern void icmp_input(struct icmp *const icmp_packet);
+extern void icmp_input(struct icmp *const icmp_packet, size_t len);
 
 #endif //_ETHERNET_ICMP_H

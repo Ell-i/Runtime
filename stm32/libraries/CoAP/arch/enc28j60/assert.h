@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-void abort(void) __attribute__((noreturn));
+static inline void abort(void) __attribute__((noreturn));
 
 #ifdef __cplusplus
 } // extern "C"
@@ -18,7 +18,7 @@ static inline void assert(int a) {
     if (!a) abort();
 }
 
-void abort(void) {
+static inline void abort(void) {
 /*	volatile int i;
     pinMode(5, OUTPUT);
 

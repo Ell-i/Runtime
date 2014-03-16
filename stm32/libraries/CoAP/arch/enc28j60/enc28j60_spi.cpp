@@ -51,12 +51,12 @@ ENC28J60Class::spiXferCmd(uint8_t cmd, uint8_t value, bool third_byte) const {
 
 void
 ENC28J60Class::spiXferBuffer(uint8_t *buffer, uint16_t len, bool read) const {
-	// XXX This needs to be modified, because the current
-	//     SPI implementation always writes over the buffer
-	spi_.transfer(pin_, buffer, len);
+    // XXX This needs to be modified, because the current
+    //     SPI implementation always writes over the buffer
+    spi_.transfer(pin_, buffer, len);
 }
 
 void
 ENC28J60Class::spiEnd(void) const {
-	spi_.end();
+    spi_.end();
 }

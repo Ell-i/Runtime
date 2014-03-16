@@ -31,7 +31,7 @@
  * XXX
  */
 
-void udp_input(struct udp *const udp_packet) {
+void udp_input(struct udp *const udp_packet, size_t len) {
 #if 0
     /*
      * Verify UDP checksum
@@ -127,10 +127,10 @@ udp_checksum(
  * XXX
  */
 
-void udp_output(const void *payload, uint16_t payload_len) {
+void udp_output(const void *payload, size_t payload_len) {
     struct udp *const udp = (struct udp *)((const char *)payload - sizeof(struct udp));
     struct ip  *const  ip = (struct  ip *)((const char *)udp     - sizeof(struct ip));
-    const int udp_len = payload_len + sizeof(struct udp);
+    const uint16_t udp_len = payload_len + sizeof(struct udp);
 
     udp->udp_len = htons(udp_len);
     udp->udp_sum = 0;

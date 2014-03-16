@@ -32,55 +32,36 @@
  *
  * The pointed packet MUST be a pointer to inside an Ethernet packet,
  * containing valid Ethernet fields.
+ *
+ * The payload MUST be aligned at a 4 byte boundary, meaning that
+ * the IP header will also be properly aligned at 4 bytes.
  */
 void ip_output(const void *payload, uint16_t payload_len) {
+    static uint16_t ip_id;
+
     struct ip *const iph = (struct ip *)((char *)payload - sizeof(struct ip));
 
-    /*
-     * Verify source address.
-     */
-    if (iph->ip_src.s_addr != ip_local_address.s_addr) {
-        net_error("IP dropping wrong source address %d.%d.%d.%d\n",
-                  iph->ip_src.s_bytes[0],
-                  iph->ip_src.s_bytes[1],
-                  iph->ip_src.s_bytes[2],
-                  iph->ip_src.s_bytes[3]);
-        return; // Wrong destiation address -- dropped silently
-    }
+    const uint16_t len = payload_len += sizeof(struct ip);
 
-    /*
-     * Cache one's complement of the current checksum
-     * in preparing for field updates.
-     */
-
-    register uint16_t ip_sum_ = ~(iph->ip_sum);
-    /*
-     * Set packet length, TTL, and ID, updating the checksum.  
-     * See RFC1624.
-     *
-     * XXX Check the assembly.  Using uint16_t may cause inefficiencies;
-     */
-    if (0 != payload_len) {
-        uint16_t len = payload_len + sizeof(struct ip);
-        len = htons(len);
-
-        ip_sum_ += -iph->ip_len + len;
-        iph->ip_len = len;
-    }
-
-#if 0
-    /*
-     * Fix TTL and generate a new packet ID, updating the checksum
-     */
-    XXX;
+    // XXX Check that the compiler optimises properly
+    // XXX Check if passing proto in argument would produce better code
+    iph->ip_vhl = IP_VHL_DEFAULT;
+#if 0  // Reply with whatever TOS there was
+    iph->ip_tos = IP_TOS_DEFAULT; 
 #endif
-    /*
-     * Store the updated checksum.
-     */
-    iph->ip_sum = ~ip_sum_;
+    iph->ip_len = htons(len);
+    iph->ip_id  = ip_id++;
+    iph->ip_off = IP_OFF_DEFAULT;    // We don't support fragments
+    iph->ip_ttl = IP_TTL_DEFAULT;    // Always reply with default TTL
+    // Proto MUST be set when calling
+    iph->ip_sum = 0; 
+    iph->ip_src.s_addr = ip_local_address.s_addr;
+    // Dst MUST be set when calling
+
+    iph->ip_sum = ip_checksum(0, iph, sizeof(struct ip));
 
     /*
      * Pass to lower layer.
      */
-    eth_output(iph, ntohs(iph->ip_len));
+    eth_output(iph, len);
 }
