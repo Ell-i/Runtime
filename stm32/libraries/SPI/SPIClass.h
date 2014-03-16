@@ -81,6 +81,7 @@ public:
         digitalWrite(ss_pin, 1); /* Avoid glitch */
         pinMode(ss_pin, OUTPUT);
         spi_master_begin(&spi_);
+        // Sigh.  While this fixes the initialisation, it generates huge tables?
         ssPinCR1_[ss_pin] = 0
                             | ! SPI_CR1_CPHA       /* Data at first edge */
                             | ! SPI_CR1_CPOL       /* Clock low when idle */
@@ -180,6 +181,7 @@ public:
     };
 private:
     Pin2Int7 &ssPinCR1_;
+    // XXX REFACTOR TO THE C-side, i.e. out to spi_master_begin and spi_transfer
     static inline void activate_ss(uint8_t ss_pin) { digitalWrite(ss_pin, 0); };
     static inline void deactivate_ss(uint8_t ss_pin) { digitalWrite(ss_pin, 1); };
 };

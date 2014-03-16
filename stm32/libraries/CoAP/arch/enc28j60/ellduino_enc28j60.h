@@ -23,8 +23,13 @@
 #ifndef _ELLDUINO_ENC28J60_H_
 # define _ELLDUINO_ENC28J60_H_
 
-# include <ENC28J60Class.h>
+# define ENC28J60_SPI __SPI2struct
 
-static const class ENC28J60Class ENC28J60  (SPI_2, 40);
+#include <ENC28J60Class.h>
+
+// XXX
+const uint8_t temp_eth_address[6] = { 0, 0, 0, 0, 0, 0 };
+
+static const ENC28J60Class ENC28J60(40, temp_eth_address);
 
 #endif//_ELLDUINO_ENC28J60_H_

@@ -76,7 +76,8 @@ public:
         Serial.write('A');
         assert(((uint32_t)PACKET_BUFFER_ETHER) % 4 == 2);
         Serial.write('S');
-        ENC28J60.begin(ether_local_address);
+        // XXX ENC28J60.begin(ether_local_address);
+        ENC28J60.begin();
     }
     void loop(void) {
         if (ENC28J60.availablePackets()) {

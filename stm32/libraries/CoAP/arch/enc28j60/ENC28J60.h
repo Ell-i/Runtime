@@ -17,5 +17,5 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ENC28J60Class.h>
+#include <spiStruct.h>
 #include <ellduino_enc28j60.h>    // XXX To be placed into the variant.h!

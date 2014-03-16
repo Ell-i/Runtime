@@ -18,26 +18,27 @@
  */
 
 /**
- * ENC28J60 interface through the Arduino SPI library
- *
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ * @author Ivan Raul <ivan.raul@ell-i.org> 2014
+ *
+ * @brief ENC28J60 ethernet interface
  */
 
-#include <ENC28J60Class.h>
+#include <ENC28J60.h>
 #include <ethernet.h>
  
 static enc_rx_packet_header_t rx_header;
 
 int
 ENC28J60Class::availablePackets(void) const {
-    return enc_reg_get(E_PKT_CNT);
+    return reg_get(E_PKT_CNT);
 }
 
 int
 ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
     
     rx_header.rx_cmd = ENC_SPI_READ_MEM;
-    spiXferBuffer((unsigned char *)&rx_header, sizeof(enc_rx_packet_header_t));
+    spi_transfer((unsigned char *)&rx_header, sizeof(enc_rx_packet_header_t));
 
     register unsigned int plen = rx_header.rx_length;
     register unsigned int next = rx_header.rx_next;
@@ -50,7 +51,7 @@ ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
      * beginning for the command
      */
     *(buffer - 1) = ENC_SPI_READ_MEM;
-    spiXferBuffer(buffer-1, plen+1);
+    spi_transfer(buffer-1, plen+1);
 
     /*
      * Go to the beginning of the next packet.
@@ -59,16 +60,16 @@ ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
      *      rx_header.rx_length, but that would need to be tested, as
      *      it is not clear from the data sheet.
      */
-    enc_reg_set(E_RD_PTR, next);
+    reg_set(E_RD_PTR, next);
 
     /*
      * Free the ENC28J60 buffer memory for the next packets.
      * See Errata #14.
      */
-    enc_reg_set(E_RX_RD_PTR, next == RX_BUFFER_START? RX_BUFFER_END: next-1);
+    reg_set(E_RX_RD_PTR, next == RX_BUFFER_START? RX_BUFFER_END: next-1);
 
     /* Decrement the packet count */
-    enc_reg_bitop(ENC_SPI_SET_BF, E_CON2, E_CON2_PKT_DEC);
+    reg_bitop(ENC_SPI_SET_BF, E_CON2, E_CON2_PKT_DEC);
 
     return plen;
 
@@ -79,23 +80,23 @@ ENC28J60Class::getHeader(enc_rx_packet_header_t *rx_header) const {
     
     rx_header->rx_cmd = ENC_SPI_READ_MEM;
 
-    spiXferBuffer((unsigned char *)rx_header,sizeof(enc_rx_packet_header_t));
+    spi_transfer((unsigned char *)rx_header, sizeof(enc_rx_packet_header_t));
 
     register unsigned int next = rx_header->rx_next;
 
     /*
      * Go to the beginning of the next packet.
      */
-    enc_reg_set(E_RD_PTR, next);
+    reg_set(E_RD_PTR, next);
 
     /*
      * Free the ENC28J60 buffer memory for the next packets.
      * See Errata #14.
      */
-    enc_reg_set(E_RX_RD_PTR, next == RX_BUFFER_START? RX_BUFFER_END: next-1);
+    reg_set(E_RX_RD_PTR, next == RX_BUFFER_START? RX_BUFFER_END: next-1);
 
     /* Decrement the packet count */
-    enc_reg_bitop(ENC_SPI_SET_BF, E_CON2, E_CON2_PKT_DEC);
+    reg_bitop(ENC_SPI_SET_BF, E_CON2, E_CON2_PKT_DEC);
 
 }
 
@@ -106,7 +107,7 @@ ENC28J60Class::sendPacket(uint8_t *buffer, size_t len) const {
      * Wait until the previous packet has been sent.
      */
     // DEBUG_SET_LED0(1);
-    while ((enc_reg_get(E_CON1) & E_CON1_TX_REQUEST)) {
+    while ((reg_get(E_CON1) & E_CON1_TX_REQUEST)) {
         // DEBUG_SET_LED1(1);
         /*
          * Reset the transmit logic if it has been stalled
@@ -122,16 +123,16 @@ ENC28J60Class::sendPacket(uint8_t *buffer, size_t len) const {
          * XXX XXX XXX
          */
 #if 0
-        if ((enc_reg_get(E_INT_REQ) & E_INT_REQ_TX_ERR)) {
+        if ((reg_get(E_INT_REQ) & E_INT_REQ_TX_ERR)) {
 #endif
             // DEBUG_SET_LED2(1);
             /* Reset the transmit logic */
-            enc_reg_bitop(ENC_SPI_SET_BF, E_CON1, E_CON1_TX_RESET);
-            enc_reg_bitop(ENC_SPI_CLR_BF, E_CON1, E_CON1_TX_RESET);
+            reg_bitop(ENC_SPI_SET_BF, E_CON1, E_CON1_TX_RESET);
+            reg_bitop(ENC_SPI_CLR_BF, E_CON1, E_CON1_TX_RESET);
 #if 0
             /* XXX: The example code doesn't do the following
                while the data sheet tells to do so. */
-            enc_reg_bitop(ENC_SPI_CLR_BF, E_INT_REQ, E_INT_REQ_TX_ERR);
+            reg_bitop(ENC_SPI_CLR_BF, E_INT_REQ, E_INT_REQ_TX_ERR);
 #endif
             // DEBUG_SET_LED2(0);
 #if 0
@@ -149,20 +150,21 @@ ENC28J60Class::sendPacket(uint8_t *buffer, size_t len) const {
      *      at TX_BUFFER_START. It was written there at
      *      enc_init().
      */
-    enc_reg_set(E_WR_PTR, TX_BUFFER_START + 1);
+    reg_set(E_WR_PTR, TX_BUFFER_START + 1);
     
     *(buffer - 1) = ENC_SPI_WRITE_MEM;
-    spiXferBuffer(buffer-1, len+1, false);
+    // NOTE: Overwrites the packet!
+    spi_transfer(buffer-1, len+1);
 
     /*
      * Set the packet start and end.
      */
-    enc_reg_set(E_TX_STA, TX_BUFFER_START);
-    enc_reg_set(E_TX_END, TX_BUFFER_START + 1 + len);
+    reg_set(E_TX_STA, TX_BUFFER_START);
+    reg_set(E_TX_END, TX_BUFFER_START + 1 + len);
 
     /*
      * Request transmission.
      */
-    enc_reg_bitop(ENC_SPI_SET_BF, E_CON1, E_CON1_TX_REQUEST);
+    reg_bitop(ENC_SPI_SET_BF, E_CON1, E_CON1_TX_REQUEST);
     // DEBUG_SET_LED0(0);
 }

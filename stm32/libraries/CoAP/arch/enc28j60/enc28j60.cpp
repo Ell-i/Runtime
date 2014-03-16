@@ -1,13 +1,34 @@
 /*
- * Copyright 2012 Pekka Nikander.  See NOTICE for licensing information.
+ * Copyright (c) 2014 ELL-i co-operative
+ *
+ * This file is part of ELL-i software.
+ *
+ * ELL-i software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ELL-i software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ * @author Ivan Raul <ivan.raul@ell-i.org> 2014
+ *
+ * @brief ENC28J60 ethernet interface
  */
 
 #include <assert.h>
+#include <ENC28J60.h>
 
-#include <ENC28J60Class.h>
-
-#define SPI_XFER_RX(op, reg, xtra)  spiXferCmd((op) | ((reg) & ENC_REG_MASK), 0, (xtra))
-#define SPI_XFER_TX(op, reg, value) spiXferCmd((op) | ((reg) & ENC_REG_MASK), (value), 0)
+#define SPI_XFER_RX(op, reg, xtra)  spi_command((op) | ((reg) & ENC_REG_MASK), 0, (xtra))
+#define SPI_XFER_TX(op, reg, value) spi_command((op) | ((reg) & ENC_REG_MASK), (value), 0)
 
 /**
  * Switches to the right register bank
@@ -68,7 +89,7 @@ ENC28J60Class::phy_set(enc_reg_t reg, int value, bool nowait) const {
 }
 
 int
-ENC28J60Class::enc_reg_get(enc_reg_t reg) const {
+ENC28J60Class::reg_get(enc_reg_t reg) const {
     int xfer_3rd_byte = 0;
     int value;
 
@@ -97,7 +118,7 @@ ENC28J60Class::enc_reg_get(enc_reg_t reg) const {
 }
 
 void
-ENC28J60Class::enc_reg_set(enc_reg_t reg, int value) const {
+ENC28J60Class::reg_set(enc_reg_t reg, int value) const {
     switch (reg & ENC_TYPE_MASK) {
     case ENC_BANK2_MREG:
     case ENC_BANK3_MREG:
@@ -121,7 +142,7 @@ ENC28J60Class::enc_reg_set(enc_reg_t reg, int value) const {
 }
 
 void
-ENC28J60Class::enc_reg_bitop(enc_spi_op_t bitop, enc_reg_t reg, int mask) const {
+ENC28J60Class::reg_bitop(enc_spi_op_t bitop, enc_reg_t reg, int mask) const {
     assert(bitop == ENC_SPI_SET_BF || bitop == ENC_SPI_CLR_BF);
 
     switch (reg & ENC_TYPE_MASK) {

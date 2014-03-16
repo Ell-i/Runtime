@@ -24,31 +24,15 @@
  * @brief ENC28J60 ethernet interface
  */
 
-#include <SPI.h>
 #include <ENC28J60.h>
 #include <ethernet.h>
 
-void
-ENC28J60Class::spi_begin() const {
-    digitalWrite(ss_pin_, 1); /* Avoid glitch */
-    pinMode(ss_pin_, OUTPUT);
-    spi_master_begin(&ENC28J60_SPI);
-}
-
-uint8_t
-ENC28J60Class::spi_command(uint8_t cmd, uint8_t value, bool third_byte) const {
-    uint8_t buffer[4];
-    size_t  len;
-
-    buffer[0] = cmd;
-    buffer[1] = value;
-
-    len = 2;
-    if (third_byte) len = 3;
-
-    digitalWrite(ss_pin_, 0);
-    spi_transfer(buffer, len);
-    digitalWrite(ss_pin_, 1);
-
-    return (third_byte)? buffer[2]: buffer[1];
+void eth_output(const void *payload, uint16_t payload_len) {
+   /*
+     * XXX
+     *
+     * This implementation assumes there is free space before the
+     * Ethernet Header start to store the command.
+     */
+    ENC28J60.sendPacket((uint8_t *) payload - ETHER_HEADER_LEN, payload_len + ETHER_HEADER_LEN);
 }
