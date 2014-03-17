@@ -17,5 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SPIClass.h"
+#include <spiStruct.h>
+#include <spiAPI.h>
+#include <SPIClass.h>
 #include <ellduino_spi.h>    // XXX To be placed into the variant.h!

@@ -35,6 +35,7 @@ public:
     const static pin_t ss_pin_ = 40; // Must allow constant propagration!
 
     const uint8_t *const mac_address_;
+
     const static uint32_t spiCR1value = 
         // XXX Check the clock divider!
         0
@@ -89,10 +90,15 @@ private:
 };
 
 inline void
+ENC28J60Class::spi_begin() const {
+    spi_master_begin(&ENC28J60_SPI, ss_pin_);
+}
+
+inline void
 ENC28J60Class::spi_transfer(uint8_t *buffer, uint16_t len) const {
     // XXX This needs to be modified, because the current
     //     SPI implementation always writes over the buffer
-    ::spi_transfer(&ENC28J60_SPI, spiCR1value, buffer, len);
+    ::spi_transfer(&ENC28J60_SPI, ss_pin_, spiCR1value, buffer, len, 1);
 }
 
 #endif//_ETHERNET_ARCH_ENC28J60CLASS_H

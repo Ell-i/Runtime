@@ -28,13 +28,6 @@
 #include <ENC28J60.h>
 #include <ethernet.h>
 
-void
-ENC28J60Class::spi_begin() const {
-    digitalWrite(ss_pin_, 1); /* Avoid glitch */
-    pinMode(ss_pin_, OUTPUT);
-    spi_master_begin(&ENC28J60_SPI);
-}
-
 uint8_t
 ENC28J60Class::spi_command(uint8_t cmd, uint8_t value, bool third_byte) const {
     uint8_t buffer[4];

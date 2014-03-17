@@ -21,6 +21,8 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2013-2014
  */
 
+#include <arduelli_pin_functions.h>
+
 /**
  * Arduino pinMode
  *

@@ -28,8 +28,8 @@
 
 #include <stm32f0xx.h>
 #include <spiStruct.h>
+#include <spiApi.h>
 #include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
-#include <arduelli_thread.h> // XXX TBD -- is this the right file name?
 #include <wiring_digital.h>
 #include <TinyMap.h>
 
@@ -78,9 +78,7 @@ public:
     const struct SPI &spi_;
     constexpr SPIClass(const SPI &spi, Pin2Int7 &ssPinCR1) : spi_(spi), ssPinCR1_(ssPinCR1) {};
     void begin(const uint8_t ss_pin = BOARD_SPI_DEFAULT_SS) const {
-        digitalWrite(ss_pin, 1); /* Avoid glitch */
-        pinMode(ss_pin, OUTPUT);
-        spi_master_begin(&spi_);
+        spi_master_begin(&spi_, ss_pin);
         // Sigh.  While this fixes the initialisation, it generates huge tables?
         ssPinCR1_[ss_pin] = 0
                             | ! SPI_CR1_CPHA       /* Data at first edge */
@@ -102,14 +100,9 @@ public:
 
     };
 
-    void end(const uint8_t ss_pin) const {
-        pinMode(ss_pin, INPUT /* XXX DEFAULT */);
+    void end(const uint8_t ss_pin = BOARD_SPI_DEFAULT_SS) const {
+        spi_master_end(&spi_, ss_pin);
     };
-
-    void end(void) const {
-        /* XXX Semantic inconsistency with begin(void) */
-        spi_master_end(&spi_);
-    }
 
     void setBitOrder(const SPIBitOrder bitOrder) const {
         setBitOrder(BOARD_SPI_DEFAULT_SS, bitOrder);
@@ -169,21 +162,22 @@ public:
 
     uint8_t transfer(uint8_t ss_pin, uint8_t data[], uint8_t len,
                      SPITransferMode mode = SPI_LAST) const {
-        activate_ss(ss_pin);
+        // Lower slave select
+        digitalWrite(ss_pin, 0);
 
         const uint32_t cr1 = ssPinCR1_[ss_pin];
 
-        len = spi_transfer(&spi_, cr1, data, len);
+        len = spi_transfer_raw(&spi_, cr1, data, len, 1);
 
-        if (mode == SPI_LAST)
-            deactivate_ss(ss_pin);
+        if (mode == SPI_LAST) {
+            // Rise slave select
+            digitalWrite(ss_pin, 1);
+        }
+
         return len;
     };
 private:
     Pin2Int7 &ssPinCR1_;
-    // XXX REFACTOR TO THE C-side, i.e. out to spi_master_begin and spi_transfer
-    static inline void activate_ss(uint8_t ss_pin) { digitalWrite(ss_pin, 0); };
-    static inline void deactivate_ss(uint8_t ss_pin) { digitalWrite(ss_pin, 1); };
 };
 
 #endif//_SPI_CLASS_H_

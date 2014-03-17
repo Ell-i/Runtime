@@ -12,6 +12,6 @@ CXXFLAGS  += $(patsubst %,-I%,$(wildcard $(TOP)libraries/CoAP/arch/*/.))
 
 LIBS      += $(wildcard $(TOP)libraries/*/*.a)
 LIBS      += $(wildcard $(TOP)libraries/CoAP/arch/*/*.a)
-LIBS      += $(TOP)libraries/SPI/ellduino_spi.o
+# LIBS      += $(TOP)libraries/SPI/ellduino_spi.o
 
 

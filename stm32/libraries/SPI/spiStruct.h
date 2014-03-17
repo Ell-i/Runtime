@@ -21,6 +21,20 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
  *
  * @brief  Macros and data types for SPIs
+ *
+ * In the Arduelli runtime, an SPI device is represented as a
+ * three-layer structure:
+ *      +--------------+------------------------+
+ *      | SPIClass     | Arduino SPI APIs       |
+ *      +--------------+------------------------+
+ *      | SPI + SS pin | C-level APIs           |
+ *      +--------------+------------------------+
+ *      | struct SPI   | Compile time constants |
+ *      +--------------+------------------------+
+ *
+ * The compile time constants are defined in spiStruct.[ch]
+ * The C-level API is defined in spiAPI.h
+ * The Arduino SPI class is defined in SPIClass.h
  */
 
 #ifndef  _SPISTRUCT_H_
@@ -28,12 +42,9 @@
 
 # include <system_init.h>
 # include <arduelli_pin_functions.h> // XXX Replace with non-core specific?
-# include <stdlib.h> // define size_t
 
 /***************************
- *
- * Static, compile-time-only records for boot-time initialisation
- * of SPIs.
+ * Static, compile-time-only records for boot-time initialisation.
  *
  * For each of the ports, we set the corresponding Enable bit in the
  * RCC AHBENR register.
@@ -90,138 +101,51 @@
     }
 
 /**
- * A minimal struct for an SPI.
+ * A struct describing a single external SPI slave.  Each slave is
+ * associated with a GPIO pin acting as the slave select pin, and the
+ * value of the CR1 register, allowing different slaves to have
+ * different clock speeds and other parameters.
+ *
+ * XXX CHECK IF USED.  REMOVE IF NOT.
  */
+struct SPIslave {
+    pin_t    spi_slave_pin_;
+    uint32_t spi_slave_cr1_;
+};
 
+/**
+ * XXX
+ */
+struct SPIdynamicFields {
+    uint8_t   spi_dyn_outstanding_begin_calls_;
+};
+
+/**
+ * A const struct describing and SPI peripheral and pointers to the 
+ * associated slave devices.
+ */
 struct SPI {
 # ifdef EMULATOR
     SerialPeripheralInterface *const
-                                  spi_; /* Representation of the emulator SPI */
+                                   spi_; /* Representation of the emulator SPI */
 # else
-    SPI_TypeDef *const            spi_; /* Pointer to the SPI registers */
+    SPI_TypeDef *const             spi_; /* Pointer to the SPI registers */
 # endif
-    const struct PinFunction      spi_ss_function_;  // Only used for slave!
-    const struct PinFunction      spi_miso_function_;
-    const struct PinFunction      spi_mosi_function_;
-    const struct PinFunction      spi_clk_function_;
+    const struct PinFunction       spi_ss_function_;  // Only used for slave!
+    const struct PinFunction       spi_miso_function_;
+    const struct PinFunction       spi_mosi_function_;
+    const struct PinFunction       spi_clk_function_;
+    struct SPIdynamicFields *const spi_dynamic_;
 };
 
-// XXX assumes tx pin is first and rx pin immediately after
-#define DEFINE_SPI_STRUCT(spi_number, ss_port, ss_pin, ss_af, miso_port, miso_pin, miso_af, mosi_port, mosi_pin, mosi_af, clk_port, clk_pin, clk_af) \
-    {                                                                             \
-        IF(spi_)               SPI ## spi_number,                                 \
-        IF(spi_ss_function_)   DEFINE_PIN_FUNCTION(ss_port, ss_pin, ss_af),       \
-        IF(spi_miso_function_) DEFINE_PIN_FUNCTION(miso_port, miso_pin, miso_af), \
-        IF(spi_mosi_function_) DEFINE_PIN_FUNCTION(mosi_port, mosi_pin, mosi_af), \
-        IF(spi_clk_function_)  DEFINE_PIN_FUNCTION(clk_port, clk_pin, clk_af),    \
+#define DEFINE_SPI_STRUCT(spi_number, ss_port, ss_pin, ss_af, miso_port, miso_pin, miso_af, mosi_port, mosi_pin, mosi_af, clk_port, clk_pin, clk_af, dynamicFields) \
+    static const struct SPI SPI ## spi_number ## struct = {                        \
+        IF(spi_)                SPI ## spi_number,                                 \
+        IF(spi_ss_function_)    DEFINE_PIN_FUNCTION(ss_port, ss_pin, ss_af),       \
+        IF(spi_miso_function_)  DEFINE_PIN_FUNCTION(miso_port, miso_pin, miso_af), \
+        IF(spi_mosi_function_)  DEFINE_PIN_FUNCTION(mosi_port, mosi_pin, mosi_af), \
+        IF(spi_clk_function_)   DEFINE_PIN_FUNCTION(clk_port, clk_pin, clk_af),    \
+        IF(spi_dynamic_)        dynamicFields,                                     \
     }
-
-/****************************************
- * Inlined SPI functions
- ****************************************/
-
-# ifdef __cplusplus
-extern "C" {
-# endif
-
-/**
- * XXX
- */
-
-extern void spi_master_begin(const struct SPI *const spi);
-extern void spi_master_end  (const struct SPI *const spi);
-
-/**
- * XXX
- */
-
-/**
- * XXX
- *
- * We inline this to allow the special case of len == 1 being handled efficiently.
- * In most other cases the compiler most probably won't inline, as the resulting
- * function is rather big.  However, LLVM may to do partial application,
- * inlining some part of the code.
- */
-
-
-
-size_t inline
-spi_transfer(const struct SPI *const spi, const uint32_t cr1, uint8_t data[], const size_t len) {
-    /* Get a handle for writing and reading 8-bit data */
-    volatile uint8_t *const DR8 = (volatile uint8_t *const)&spi->spi_->DR;
-
-# if 0
-    /* Read any pertaining data from the FIFO and throw it away */
-    int dummy __attribute__((unused));
-    dummy = spi->spi_->DR;
-# endif
-
-    /* Set the bitorder, speed, and mode according to the pin */
-    spi->spi_->CR1 = cr1;
-
-    if (len == 0) return 0;
-
-    for(size_t count = 0; count < len; count++) {
-        *DR8 = data[count];    
-        while (!(spi->spi_->SR & SPI_SR_FRLVL))
-            ;
-        data[count] = *DR8;
-    }
-
-# if 0
-    if (len == 1) {
-        *DR8 = data[0];           /* Write the only byte */
-    } else {
-        register uint16_t *wp, *rp;
-        wp = rp = (uint16_t *)data;
-
-        /*
-         * Try to keep the SPI busy until the buffer has been transferred.
-         *
-         * We first seed the transmit FIFO with two bytes, then keep
-         * writing two more bytes and reading two bytes, until we come
-         * to the last byte(s).  This should keep the transmit buffer
-         * non-empty all the time.
-         */
-
-        spi->spi_->DR = *wp++; /* Fill the transmit fifo with two bytes */
-
-        for (size_t count = (len / 2) - 1; count > 0; count--) {
-            spi->spi_->DR = *wp++;  /* Write the next two bytes */
-
-            /* Ensure we have at least 2 bytes in the input FIFO */
-            while (!(spi->spi_->SR & SPI_SR_FRLVL_1))
-                ; /* XXX.  Let other threads run. */
-
-            *rp++ = spi->spi_->DR;  /* Read the previous two bytes */
-        }
-
-        if (len % 1) {
-            *DR8 = data[len-1];     /* Write the last byte, if any */
-        }
-
-        /* Again, ensure we have received at least 2 bytes. */
-        while (!(spi->spi_->SR & SPI_SR_FRLVL_1))
-            ; /* XXX.  Let other threads run. */
-        *rp++ = spi->spi_->DR;      /* Read the final two bytes */
-    }
-
-    /* Wait until the transmission is done */
-    while (spi->spi_->SR & SPI_SR_BSY)
-        ; /* XXX.  Let other threads run. */
-
-    if (len % 1) {
-        data[len-1] = *DR8;     /* Read the last byte, if any */
-    }
-
-#endif
-
-    return len;
-}
-
-# ifdef __cplusplus
-}
-# endif
 
 #endif //_SPISTRUCT_H_

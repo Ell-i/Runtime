@@ -36,8 +36,20 @@ SPI_INIT_DEFAULT(2);
 
 #define BOARD_SPI_DEFAULT_SS 10 /* XXX: Should be D10 but that is not defined yet */
 
-static const struct SPI __SPI1struct = DEFINE_SPI_STRUCT(1, A, 15, 0, B,  4, 0, B,  5, 0, B,  3, 0);
-static const struct SPI __SPI2struct = DEFINE_SPI_STRUCT(2, B, 12, 0, B, 14, 0, B, 15, 0, B, 13, 0);
+# ifdef __cplusplus
+extern "C" {
+# endif
+
+/* Defined in ellduino_spi.cpp */
+extern struct SPIdynamicFields _SPI1dynamicFields;
+extern struct SPIdynamicFields _SPI2dynamicFields;
+
+# ifdef __cplusplus
+}
+# endif
+
+DEFINE_SPI_STRUCT(1, A, 15, 0, B,  4, 0, B,  5, 0, B,  3, 0, &_SPI1dynamicFields) ;
+DEFINE_SPI_STRUCT(2, B, 12, 0, B, 14, 0, B, 15, 0, B, 13, 0, &_SPI2dynamicFields);
 
 # ifdef __cplusplus
 
@@ -45,8 +57,8 @@ static const struct SPI __SPI2struct = DEFINE_SPI_STRUCT(2, B, 12, 0, B, 14, 0, 
 
 extern Pin2Int7 spimap1, spimap2;
 
-static const class SPIClass SPI  (__SPI1struct, spimap1);
-static const class SPIClass SPI_2(__SPI2struct, spimap2);
+static const class SPIClass SPI  (SPI1struct, spimap1);
+static const class SPIClass SPI_2(SPI2struct, spimap2);
 
 # endif //__cplusplus
 

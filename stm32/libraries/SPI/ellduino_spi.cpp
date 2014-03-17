@@ -92,6 +92,9 @@ const SystemInitRecordRegisterOffset SPI_INIT_DefaultRecordsOffsets[] = {
 DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2, SPI_INIT_DefaultRecordsData, SPI_INIT_DefaultRecordsOffsets);
 DEFINE_SPI_DEVICE(/*SPI*/2, /*APB*/1, SPI_INIT_DefaultRecordsData, SPI_INIT_DefaultRecordsOffsets);
 
+struct SPIdynamicFields _SPI1dynamicFields;
+struct SPIdynamicFields _SPI2dynamicFields;
+
 /**
  * XXX
  */

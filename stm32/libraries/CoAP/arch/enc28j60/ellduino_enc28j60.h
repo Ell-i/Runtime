@@ -23,7 +23,7 @@
 #ifndef _ELLDUINO_ENC28J60_H_
 # define _ELLDUINO_ENC28J60_H_
 
-# define ENC28J60_SPI __SPI2struct
+# define ENC28J60_SPI SPI2struct
 
 #include <ENC28J60Class.h>
 
