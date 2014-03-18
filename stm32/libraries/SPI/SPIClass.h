@@ -28,7 +28,7 @@
 
 #include <stm32f0xx.h>
 #include <spiStruct.h>
-#include <spiApi.h>
+#include <spiAPI.h>
 #include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
 #include <wiring_digital.h>
 #include <TinyMap.h>

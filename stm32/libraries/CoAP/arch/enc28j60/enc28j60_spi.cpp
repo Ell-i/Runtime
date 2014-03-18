@@ -28,20 +28,34 @@
 #include <ENC28J60.h>
 #include <ethernet.h>
 
-uint8_t
-ENC28J60Class::spi_command(uint8_t cmd, uint8_t value, bool third_byte) const {
-    uint8_t buffer[4];
-    size_t  len;
-
-    buffer[0] = cmd;
-    buffer[1] = value;
-
-    len = 2;
-    if (third_byte) len = 3;
-
-    digitalWrite(ss_pin_, 0);
-    spi_transfer(buffer, len);
-    digitalWrite(ss_pin_, 1);
-
-    return (third_byte)? buffer[2]: buffer[1];
+int
+ENC28J60Class::phy_get(enc_reg_t reg) const {
+    set_bank(MII_REG_ADR);
+    /* Write address and start read */
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_REG_ADR, reg & ENC_REG_MASK);
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_CMD, MII_CMD_READ);
+    set_bank(MII_STAT);
+    /* Wait until ready */
+    while (SPI_XFER_RX(ENC_SPI_READ_REG, MII_STAT, 1) & MII_STAT_BUSY)
+        ;
+    set_bank(MII_CMD);
+    /* Clear the read command; XXX is this needed? */
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_CMD, 0);
+    /* Read the value */
+    return (SPI_XFER_RX(ENC_SPI_READ_REG, MII_RD_H, 1) << 8) |
+            SPI_XFER_RX(ENC_SPI_READ_REG, MII_RD_L, 1);
 }
+
+void
+ENC28J60Class::phy_set(enc_reg_t reg, int value, bool nowait) const {
+    set_bank(MII_REG_ADR);
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_REG_ADR, reg & ENC_REG_MASK);
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_WR_L, value);
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_WR_H, value >> 8);
+    if (nowait)
+        return;
+    set_bank(MII_STAT);
+    while (SPI_XFER_RX(ENC_SPI_READ_REG, MII_STAT, 1) & MII_STAT_BUSY)
+        ;
+}
+

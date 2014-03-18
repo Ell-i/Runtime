@@ -120,7 +120,7 @@ ENC28J60Class::sendPacket(uint8_t *buffer, size_t len) const {
          * implementation is bad and may lead to some packets
          * being partial or lost.  Return to here.
          *
-         * XXX XXX XXX
+         * XXX FIXME
          */
 #if 0
         if ((reg_get(E_INT_REQ) & E_INT_REQ_TX_ERR)) {

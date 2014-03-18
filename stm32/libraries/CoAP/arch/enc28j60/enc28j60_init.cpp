@@ -33,7 +33,7 @@
     D8(r ## _H, (v) >> 8)
 
 
-static const struct enc28j60_register_init_static_8bit enc28j60_init[] = {
+const struct enc28j60_register_init_static_8bit ENC28J60Class::enc28j60_init[] = {
 
     /**********************************
      * Bank0: RX and TX buffers, DMA
@@ -185,61 +185,5 @@ static const struct enc28j60_register_init_static_8bit enc28j60_init[] = {
       ),
 };
 
+const size_t ENC28J60Class::enc28j60_init_size = COUNT_OF(ENC28J60Class::enc28j60_init);
 
-void 
-ENC28J60Class::begin() const {
-    const device_register_init_static_8bit_t *p;
-    
-    spi_begin();
-
-    // XXX reset the device
-
-    while ((reg_get(E_STAT) & E_STAT_CLOCK_READY) == 0) {
-        ;
-    }
-
-    // XXX CHECK ORDER!
-    reg_set(MAC_ADR0, mac_address_[5]);
-    reg_set(MAC_ADR1, mac_address_[4]);
-    reg_set(MAC_ADR2, mac_address_[3]);
-    reg_set(MAC_ADR3, mac_address_[2]);
-    reg_set(MAC_ADR4, mac_address_[1]);
-    reg_set(MAC_ADR5, mac_address_[0]);
-
-    for (p = enc28j60_init;
-         p < enc28j60_init + COUNT_OF(enc28j60_init);
-         p++) {
-        reg_set(p->reg, p->value);
-    }
-
-    while (reg_get(PHY_CON1) & PHY_CON1_PRST)
-        ;
-
-    reg_set(PHY_CON2, PHY_CON2_HDLDIS);
-
-    enc_buf_value_t b[2] = { ENC_SPI_WRITE_MEM, 0 };
-
-    spi_transfer(b, sizeof(b));
-    
-}
-
-// XXX For debugging purposes
-bool 
-ENC28J60Class::checkBegin(const uint8_t mac_address[ETH_ADDRESS_LEN]) const {
-    const device_register_init_static_8bit_t *p;
-
-    if(reg_get(MAC_ADR0) != mac_address[5]) return false;
-    if(reg_get(MAC_ADR1) != mac_address[4]) return false;
-    if(reg_get(MAC_ADR2) != mac_address[3]) return false;
-    if(reg_get(MAC_ADR3) != mac_address[2]) return false;
-    if(reg_get(MAC_ADR4) != mac_address[1]) return false;
-    if(reg_get(MAC_ADR5) != mac_address[0]) return false;
-
-    for (p = enc28j60_init + 14;                          //skip buffer pointers
-         p < enc28j60_init + COUNT_OF(enc28j60_init) - 1; //skip ECON1
-         p++) {
-        if (reg_get(p->reg) != p->value) return false;
-    }
-
-    return true;
-}
