@@ -75,6 +75,7 @@ public:
 
     static const struct enc28j60_register_init_static_8bit enc28j60_init[];
     static const size_t enc28j60_init_size;
+    static enc_rx_packet_header_t rx_header;
     
 private:
 
@@ -100,6 +101,7 @@ ENC28J60Class::spi_begin() const {
 }
 
 #include <enc28j60_reg.h>
+#include <enc28j60_packet.h>
 
 inline void
 ENC28J60Class::spi_activate() const {
