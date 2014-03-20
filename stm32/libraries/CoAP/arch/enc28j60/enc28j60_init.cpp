@@ -187,3 +187,4 @@ const struct enc28j60_register_init_static_8bit ENC28J60Class::enc28j60_init[] =
 
 const size_t ENC28J60Class::enc28j60_init_size = COUNT_OF(ENC28J60Class::enc28j60_init);
 
+enc_rx_packet_header_t ENC28J60Class::rx_header;

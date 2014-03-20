@@ -30,9 +30,9 @@
 inline int
 ENC28J60Class::reg_get(enc_reg_t reg) const {
     int xfer_3rd_byte = 0;
-    int value;
+    int value = 0;
 
-    spi_activate();
+    spi_master_activate(ss_pin_);
 
     switch (reg & ENC_TYPE_MASK) {
     case ENC_BANK2_MREG:
@@ -47,24 +47,24 @@ ENC28J60Class::reg_get(enc_reg_t reg) const {
         /* FALLTHROUGH */
     case ENC_BANK_GEN:
         value = SPI_XFER_RX(ENC_SPI_READ_REG, reg, xfer_3rd_byte);
-        if (reg & ENC_TYPE_LONG)
+        if (reg & ENC_TYPE_LONG) {
             value |= SPI_XFER_RX(ENC_SPI_READ_REG, reg+1, xfer_3rd_byte) << 8;
+        }
         break;
     case ENC_BANK_PHY:
         value = phy_get(static_cast<enc_reg_t>(reg & ENC_REG_MASK));
+        break;
     default:
         abort();
     }
 
-    spi_deactivate();
-
+    spi_master_deactivate(ss_pin_);
+    
     return value;
 }
 
-inline void
-ENC28J60Class::reg_set(enc_reg_t reg, int value) const {
-    spi_activate();
-
+inline void 
+ENC28J60Class::reg_set_inner(enc_reg_t reg, int value) const {
     switch (reg & ENC_TYPE_MASK) {
     case ENC_BANK2_MREG:
     case ENC_BANK3_MREG:
@@ -85,13 +85,20 @@ ENC28J60Class::reg_set(enc_reg_t reg, int value) const {
     default:
         abort();
     }
-    spi_deactivate();
+}
+
+inline void
+ENC28J60Class::reg_set(enc_reg_t reg, int value) const {
+    spi_master_activate(ss_pin_);
+    reg_set_inner(reg, value);
+    spi_master_deactivate(ss_pin_);
 }
 
 inline void
 ENC28J60Class::reg_bitop(enc_spi_op_t bitop, enc_reg_t reg, int mask) const {
     //assert(bitop == ENC_SPI_SET_BF || bitop == ENC_SPI_CLR_BF);
-    spi_activate();
+
+    spi_master_activate(ss_pin_);
 
     switch (reg & ENC_TYPE_MASK) {
     case ENC_BANK0:
@@ -111,7 +118,8 @@ ENC28J60Class::reg_bitop(enc_spi_op_t bitop, enc_reg_t reg, int mask) const {
     default:
         abort();
     }
-    spi_deactivate();
+
+    spi_master_deactivate(ss_pin_);
 }
 
 /**
@@ -140,3 +148,35 @@ ENC28J60Class::set_bank(int bank) const {
 
     curr = bank;
 }
+
+inline int
+ENC28J60Class::phy_get(enc_reg_t reg) const {
+    set_bank(MII_REG_ADR);
+    /* Write address and start read */
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_REG_ADR, reg & ENC_REG_MASK);
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_CMD, MII_CMD_READ);
+    set_bank(MII_STAT);
+    /* Wait until ready */
+    while (SPI_XFER_RX(ENC_SPI_READ_REG, MII_STAT, 1) & MII_STAT_BUSY)
+        ;
+    set_bank(MII_CMD);
+    /* Clear the read command; XXX is this needed? */
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_CMD, 0);
+    /* Read the value */
+    return (SPI_XFER_RX(ENC_SPI_READ_REG, MII_RD_H, 1) << 8) |
+            SPI_XFER_RX(ENC_SPI_READ_REG, MII_RD_L, 1);
+}
+
+inline void
+ENC28J60Class::phy_set(enc_reg_t reg, int value, bool nowait) const {
+    set_bank(MII_REG_ADR);
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_REG_ADR, reg & ENC_REG_MASK);
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_WR_L, value);
+    SPI_XFER_TX(ENC_SPI_WRITE_REG, MII_WR_H, value >> 8);
+    if (nowait)
+        return;
+    set_bank(MII_STAT);
+    while (SPI_XFER_RX(ENC_SPI_READ_REG, MII_STAT, 1) & MII_STAT_BUSY)
+        ;
+}
+

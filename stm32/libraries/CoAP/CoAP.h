@@ -38,7 +38,6 @@
 
 # ifdef __cplusplus
 #  include <ENC28J60.h>
-#  include <Arduino.h> // XXX REMOVE
 # endif
 
 // Define the semantics for the return value
@@ -72,21 +71,14 @@ typedef struct CoAPClass {
 # ifdef __cplusplus
 public:
     void begin(in_addr_t ip_address = IP_ADDRESS_UNSPECIFIED) {
-        Serial.begin(57600);
-        Serial.write('A');
         assert(((uint32_t)PACKET_BUFFER_ETHER) % 4 == 2);
-        Serial.write('S');
         // XXX ENC28J60.begin(ether_local_address);
         ENC28J60.begin();
     }
     void loop(void) {
         if (ENC28J60.availablePackets()) {
-            Serial.write('R');
             ENC28J60.receivePacket(PACKET_BUFFER_START, PACKET_BUFFER_SIZE);
-            Serial.write('E');
             eth_input(PACKET_BUFFER_ETHER);
-            Serial.write('C');
-            Serial.write('\n');
         }
     }
 # endif

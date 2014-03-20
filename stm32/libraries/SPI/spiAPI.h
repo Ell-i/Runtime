@@ -74,6 +74,11 @@ static inline void spi_master_begin(const struct SPI *const spi, const pin_t ss_
     }
 }
 
+static inline void spi_master_activate  (const pin_t ss_pin) __attribute__((always_inline));
+static inline void spi_master_activate  (const pin_t ss_pin) { digitalWrite(ss_pin, 0); }
+static inline void spi_master_deactivate(const pin_t ss_pin) __attribute__((always_inline));
+static inline void spi_master_deactivate(const pin_t ss_pin) { digitalWrite(ss_pin, 1); }
+
 /**
  * XXX
  */
@@ -98,6 +103,9 @@ extern size_t spi_transfer_read(
 
 static inline size_t spi_transfer_raw(
     const struct SPI *const spi, const uint32_t cr1, 
+    uint8_t data[], size_t len, uint8_t read) __attribute__((always_inline));
+static inline size_t spi_transfer_raw(
+    const struct SPI *const spi, const uint32_t cr1, 
     uint8_t data[], size_t len, uint8_t read) {
 
     /* Set the bitorder, speed, and mode according to the pin */
@@ -115,6 +123,9 @@ static inline size_t spi_transfer_raw(
  * XXX
  */
 
+static inline size_t spi_transfer(
+    const struct SPI *const spi, const pin_t ss_pin, const uint32_t cr1, 
+    uint8_t data[], size_t len, uint8_t read) __attribute__((always_inline));
 static inline size_t spi_transfer(
     const struct SPI *const spi, const pin_t ss_pin, const uint32_t cr1, 
     uint8_t data[], size_t len, uint8_t read) {

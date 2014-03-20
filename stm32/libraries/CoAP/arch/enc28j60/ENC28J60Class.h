@@ -27,6 +27,7 @@
 #define _ETHERNET_ARCH_ENC28J60CLASS_H
 
 #include <spiStruct.h>
+#include <spiAPI.h>
 #include <ellduino_spi.h>    // XXX To be placed into the variant.h!
 #include <enc28j60-conf.h>
 
@@ -79,39 +80,20 @@ public:
     
 private:
 
-    void    spi_begin() const;
-    void    spi_activate() const;
-    void    spi_deactivate()  const;
     uint8_t spi_command(uint8_t cmd, uint8_t value, bool third_byte) const;
-    void    spi_transfer(uint8_t *buffer, uint16_t len) const;
+    void    spi_transfer_send(uint8_t *buffer, uint16_t len) const __attribute__((always_inline));
+    void    spi_transfer     (uint8_t *buffer, uint16_t len) const __attribute__((always_inline));
 
     void    set_bank(int bank) const;   //XXX to prevent casting differnt enums enc_bank_t
     int     phy_get(enc_reg_t reg) const;
     void    phy_set(enc_reg_t reg, int value, bool nowait) const;
 
-    int     reg_get(enc_reg_t reg) const;
-    void    reg_set(enc_reg_t reg, int value) const;
-    void    reg_bitop(enc_spi_op_t op, enc_reg_t reg, int mask) const;
+    int     reg_get(enc_reg_t reg) const __attribute__((always_inline));
+    void    reg_set(enc_reg_t reg, int value) const __attribute__((always_inline));
+    void    reg_set_inner(enc_reg_t reg, int value) const;
+    void    reg_bitop(enc_spi_op_t op, enc_reg_t reg, int mask) const __attribute__((always_inline));
 
 };
-
-inline void
-ENC28J60Class::spi_begin() const {
-    spi_master_begin(&ENC28J60_SPI, ss_pin_);
-}
-
-#include <enc28j60_reg.h>
-#include <enc28j60_packet.h>
-
-inline void
-ENC28J60Class::spi_activate() const {
-    digitalWrite(ss_pin_, 0);
-}
-
-inline void
-ENC28J60Class::spi_deactivate() const {
-    digitalWrite(ss_pin_, 1);
-}
 
 inline uint8_t
 ENC28J60Class::spi_command(uint8_t cmd, uint8_t value, bool third_byte) const {
@@ -130,68 +112,21 @@ ENC28J60Class::spi_command(uint8_t cmd, uint8_t value, bool third_byte) const {
 }
 
 inline void
+ENC28J60Class::spi_transfer_send(uint8_t *buffer, uint16_t len) const {
+    spi_master_activate(ss_pin_);
+    ::spi_transfer_raw(&ENC28J60_SPI, spiCR1value, buffer, len, 0);
+    spi_master_deactivate(ss_pin_);
+}
+
+inline void
 ENC28J60Class::spi_transfer(uint8_t *buffer, uint16_t len) const {
-    // XXX This needs to be modified, because the current
-    //     SPI implementation always writes over the buffer
-    ::spi_transfer(&ENC28J60_SPI, ss_pin_, spiCR1value, buffer, len, 1);
+    spi_master_activate(ss_pin_);
+    ::spi_transfer_raw(&ENC28J60_SPI, spiCR1value, buffer, len, 1);
+    spi_master_deactivate(ss_pin_);
 }
 
-inline void 
-ENC28J60Class::begin() const {
-    const device_register_init_static_8bit_t *p;
-    
-    spi_begin();
-
-    // XXX reset the device
-
-    while ((reg_get(E_STAT) & E_STAT_CLOCK_READY) == 0) {
-        ;
-    }
-
-    // XXX CHECK ORDER!
-    reg_set(MAC_ADR0, mac_address_[5]);
-    reg_set(MAC_ADR1, mac_address_[4]);
-    reg_set(MAC_ADR2, mac_address_[3]);
-    reg_set(MAC_ADR3, mac_address_[2]);
-    reg_set(MAC_ADR4, mac_address_[1]);
-    reg_set(MAC_ADR5, mac_address_[0]);
-
-    for (p = enc28j60_init;
-         p < enc28j60_init + enc28j60_init_size;
-         p++) {
-        reg_set(p->reg, p->value);
-    }
-
-    while (reg_get(PHY_CON1) & PHY_CON1_PRST)
-        ;
-
-    reg_set(PHY_CON2, PHY_CON2_HDLDIS);
-
-    enc_buf_value_t b[2] = { ENC_SPI_WRITE_MEM, 0 };
-
-    spi_transfer(b, sizeof(b));
-    
-}
-
-// XXX For debugging purposes
-inline bool 
-ENC28J60Class::checkBegin(const uint8_t mac_address[ETH_ADDRESS_LEN]) const {
-    const device_register_init_static_8bit_t *p;
-
-    if(reg_get(MAC_ADR0) != mac_address[5]) return false;
-    if(reg_get(MAC_ADR1) != mac_address[4]) return false;
-    if(reg_get(MAC_ADR2) != mac_address[3]) return false;
-    if(reg_get(MAC_ADR3) != mac_address[2]) return false;
-    if(reg_get(MAC_ADR4) != mac_address[1]) return false;
-    if(reg_get(MAC_ADR5) != mac_address[0]) return false;
-
-    for (p = enc28j60_init + 14;                          //skip buffer pointers
-         p < enc28j60_init + enc28j60_init_size - 1; //skip ECON1
-         p++) {
-        if (reg_get(p->reg) != p->value) return false;
-    }
-
-    return true;
-}
+#include <enc28j60_reg.h>
+#include <enc28j60_init.h>
+#include <enc28j60_packet.h>
 
 #endif//_ETHERNET_ARCH_ENC28J60CLASS_H

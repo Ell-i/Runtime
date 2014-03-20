@@ -26,7 +26,7 @@
 
 #include <ENC28J60.h>
 #include <ethernet.h>
- 
+
 inline int
 ENC28J60Class::availablePackets(void) const {
     return reg_get(E_PKT_CNT);
@@ -34,13 +34,12 @@ ENC28J60Class::availablePackets(void) const {
 
 inline int
 ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
-    
+
     rx_header.rx_cmd = ENC_SPI_READ_MEM;
     spi_transfer((unsigned char *)&rx_header, sizeof(enc_rx_packet_header_t));
 
     register unsigned int plen = rx_header.rx_length;
     register unsigned int next = rx_header.rx_next;
-
 
     if (plen > maxlen)
         plen = maxlen;
@@ -75,7 +74,6 @@ ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
 
 inline void
 ENC28J60Class::getHeader(enc_rx_packet_header_t *rx_header) const {
-    
     rx_header->rx_cmd = ENC_SPI_READ_MEM;
 
     spi_transfer((unsigned char *)rx_header, sizeof(enc_rx_packet_header_t));
@@ -95,7 +93,6 @@ ENC28J60Class::getHeader(enc_rx_packet_header_t *rx_header) const {
 
     /* Decrement the packet count */
     reg_bitop(ENC_SPI_SET_BF, E_CON2, E_CON2_PKT_DEC);
-
 }
 
 
@@ -151,8 +148,7 @@ ENC28J60Class::sendPacket(uint8_t *buffer, size_t len) const {
     reg_set(E_WR_PTR, TX_BUFFER_START + 1);
     
     *(buffer - 1) = ENC_SPI_WRITE_MEM;
-    // NOTE: Overwrites the packet!
-    spi_transfer(buffer-1, len+1);
+    spi_transfer_send(buffer-1, len+1);
 
     /*
      * Set the packet start and end.

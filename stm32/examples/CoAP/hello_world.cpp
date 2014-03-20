@@ -84,8 +84,6 @@ int coap_hello_put_callback(
 
 DEFINE_COAP_URL(hello_world, "hello", coap_hello_get_callback, coap_hello_put_callback);
 
-uint8_t packet_buffer[2048 + 8 /* To get it properly aligned */] __attribute__((aligned(8)));
-
 /*
  * Note that CoAP.loop will eventually go away, once we get CoAP
  * running in its own thread.  But that will take some time.  
