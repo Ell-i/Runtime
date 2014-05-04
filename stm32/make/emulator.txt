@@ -4,7 +4,8 @@
 # Variables overwritten for the emulator
 #
 
-compiler.cflags.optimise= -g
+compiler.cflags.optimise= -g -Wno-deprecated-register
 compiler.cflags.inline=
 compiler.cflags.target=	-m32 -march=i386
+
 

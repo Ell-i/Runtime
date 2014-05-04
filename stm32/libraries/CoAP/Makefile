@@ -24,8 +24,8 @@ LIB ?= CoAP
 # Define source directories
 #
 
-vpath %.cpp . ./arch/enc28j60 ./arch/stm32
-vpath %.c   . ./arch/enc28j60 ./arch/stm32
+vpath %.cpp src src/coap src/enc28j60 src/netinet
+vpath %.c   src src/coap src/enc28j60 src/netinet
 
 #
 # Define app library objects.  Add new objects here.

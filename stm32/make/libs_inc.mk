@@ -4,8 +4,8 @@
 # Define non-core library include paths
 #
 
-CFLAGS    += $(patsubst %,-I%,$(wildcard $(TOP)libraries/*/.))
-CXXFLAGS  += $(patsubst %,-I%,$(wildcard $(TOP)libraries/*/.))
+CFLAGS    += $(patsubst %,-I%,$(wildcard $(TOP)libraries/*/src/.))
+CXXFLAGS  += $(patsubst %,-I%,$(wildcard $(TOP)libraries/*/src/.))
 
 CFLAGS    += $(patsubst %,-I%,$(wildcard $(TOP)libraries/CoAP/arch/*/.))
 CXXFLAGS  += $(patsubst %,-I%,$(wildcard $(TOP)libraries/CoAP/arch/*/.))

@@ -44,10 +44,10 @@ AR  := ar
 ELF2HEX := :
 
 CFLAGS   := \
-  $(subst -std=c99,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cc.flags)))
+  $(subst -std=c99,-std=c++11,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cc.flags)))
 
 CXXFLAGS := \
-  $(subst -std=gnu++0x,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
+  $(subst -std=gnu++0x,-std=c++11,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
 
 LDFLAGS  := -m32 -demangle -march=i386 $(LD_SCRIPT)
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
