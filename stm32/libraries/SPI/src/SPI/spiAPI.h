@@ -56,6 +56,8 @@
 extern "C" {
 # endif
 
+static inline void spi_master_begin(const struct SPI *const spi, const pin_t ss_pin) __attribute__ ((always_inline));
+
 /**
  * Connect an SPI peripheral to the given pins as a master.
  *

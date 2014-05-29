@@ -23,6 +23,8 @@
 
 #include "SPI/ellduino_spi.h"
 
+#include "SPIInitSTM32F0.cppinc"
+
 /*
  * Boot-time definitions for the STM32F0 series MCU SPIs.
  *
@@ -31,8 +33,6 @@
  * code iterates the records from that section, initialising the MCU
  * peripheral ports accordingly.
  */
-
-Pin2Int7 spimap1, spimap2;
 
 DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2, 
                   SPI_INIT_STM32F0_DefaultRecordsData, 

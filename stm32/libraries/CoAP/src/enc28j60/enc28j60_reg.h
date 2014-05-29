@@ -24,8 +24,8 @@
  * @brief ENC28J60 ethernet interface
  */
 
-#ifdef   _ECN28J60_REG_H_
-# define _ECN28J60_REG_H_
+#ifndef  _ENC28J60_REG_H_
+# define _ENC28J60_REG_H_
 
 
 # define SPI_XFER_RX(op, reg, xtra)  spi_command((op) | ((reg) & ENC_REG_MASK), 0, (xtra))
@@ -184,4 +184,4 @@ ENC28J60Class::phy_set(enc_reg_t reg, int value, bool nowait) const {
         ;
 }
 
-#endif //_ECN28J60_REG_H_
+#endif //_ENC28J60_REG_H_

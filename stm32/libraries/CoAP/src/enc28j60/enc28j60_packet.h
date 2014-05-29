@@ -24,7 +24,7 @@
  * @brief ENC28J60 ethernet interface
  */
 
-#ifdef   _ENC28J60_PACKET_H_
+#ifndef  _ENC28J60_PACKET_H_
 # define _ENC28J60_PACKET_H_
 
 # include <enc28j60/ENC28J60.h>

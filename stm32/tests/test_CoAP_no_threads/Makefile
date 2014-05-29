@@ -15,6 +15,12 @@ VARIANT  ?= ellduino
 
 APP := test_CoAP_no_threads
 
-APP_OBJS ?= main.o ../../libraries/CoAP/coap_input.o $(APP).o $(VARIANT).o
+APP_OBJS ?= main.o coap_input.o $(APP).o $(VARIANT).o
 
 include $(TOP)make/app.mk
+
+VPATH  += ../../libraries/CoAP/src/coap
+CXXFLAGS += \
+	-I../../libraries/CoAP/src/netinet \
+	-I../../libraries/CoAP/src/coap \
+	-I../../libraries/CoAP/src/enc28j60 \

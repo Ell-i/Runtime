@@ -26,13 +26,13 @@
 #ifndef  _NET_DEBUG_H
 # define _NET_DEBUG_H
 
-#ifdef EMULATOR
-#include <stdio.h>
-#define net_error(...) fprintf(stderr, __VA_ARGS__)
-#define net_debug(...) fprintf(stderr, __VA_ARGS__)
-#else
-#define net_error(...)
-#define net_debug(...)
-#endif
+# ifdef EMULATOR
+#  include <stdio.h>
+#  define net_error(...) fprintf(stderr, __VA_ARGS__)
+#  define net_debug(...) fprintf(stderr, __VA_ARGS__)
+# else
+#  define net_error(...)
+#  define net_debug(...)
+# endif
 
 #endif //_NET_DEBUG_H

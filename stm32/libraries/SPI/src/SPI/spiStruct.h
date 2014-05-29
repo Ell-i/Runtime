@@ -148,6 +148,7 @@ struct SPI {
         IF(spi_dynamic_)        dynamicFields,                                     \
     }
 
+#if 0
 /**
  * Constant boot-time initialisation structures, defined in SPIInitSTM32F0cpp
  */
@@ -155,5 +156,6 @@ struct SPI {
 extern const SystemInitRecordData16Only     SPI_INIT_STM32F0_DefaultRecordsData[];
 extern const SystemInitRecordRegisterOffset SPI_INIT_STM32F0_DefaultRecordsOffsets[];
 extern const uint8_t                        SPI_INIT_STM32F0_DefaultRecordsCount;
+#endif
 
 #endif //_SPISTRUCT_H_
