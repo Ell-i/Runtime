@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 ELL-i co-operative.
  *
- * This is part of ELL-i software.
+ * This file is part of ELL-i software.
  *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,32 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-extern void *const __peripheral_end __attribute__((section(".text,.peripheral")));
-void *const __peripheral_end = 0;
+/**
+ * Minimal standalone ICMP
+ *
+ * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
 
-#include <assert.h>
-#include <netinet/udp.h>
+#ifndef  _ICMP_H
+# define _ICMP_H
 
-const struct udp_socket __udp_sockets_end[0] = {};
+# include <system_init.h>
 
-#include <CoAP.h>
+struct icmp {
+    uint8_t  icmp_type;
+    uint8_t  icmp_code;
+    uint16_t icmp_sum;
+    uint16_t icmp_id;
+    uint16_t icmp_seqno;
+    uint8_t  icmp_data[0];
+};
 
-const CoAPURL __coap_urls_end[0] __attribute__((section(COAP_URL_SECTION(zzzzzz)))) = {};
+# define ICMP_TYPE_ECHO_REPLY  0
+# define ICMP_TYPE_ECHO        8
+
+/**
+ * XXX
+ */
+extern void icmp_input(struct icmp *const icmp_packet, size_t len);
+
+#endif //_ICMP_H

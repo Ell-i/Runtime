@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2014 ELL-i co-operative.
+ * Copyright (c) 2014 ELL-i co-operative
  *
- * This is part of ELL-i software.
+ * This file is part of ELL-i software.
  *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-extern void *const __peripheral_end __attribute__((section(".text,.peripheral")));
-void *const __peripheral_end = 0;
-
-#include <assert.h>
-#include <netinet/udp.h>
-
-const struct udp_socket __udp_sockets_end[0] = {};
-
-#include <CoAP.h>
-
-const CoAPURL __coap_urls_end[0] __attribute__((section(COAP_URL_SECTION(zzzzzz)))) = {};
+#include <SPI/spiStruct.h>
+#include <SPI/spiApi.h>
+#include <SPI/spiClass.h>
+#include <SPI/ellduino_spi.h>    // XXX To be placed into the variant.h!

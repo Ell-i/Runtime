@@ -1,8 +1,6 @@
 /*
  * Copyright (c) 2014 ELL-i co-operative.
  *
- * This is part of ELL-i software.
- *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,17 +12,24 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
+ * along with ELL-i software.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
-extern void *const __peripheral_end __attribute__((section(".text,.peripheral")));
-void *const __peripheral_end = 0;
+/*
+ * Authors:  Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
 
-#include <assert.h>
-#include <netinet/udp.h>
+#ifndef  _ELLDUINO_ENC28J60_H_
+# define _ELLDUINO_ENC28J60_H_
 
-const struct udp_socket __udp_sockets_end[0] = {};
+# define ENC28J60_SPI SPI2struct
 
-#include <CoAP.h>
+# include <enc28j60/ENC28J60Class.h>
 
-const CoAPURL __coap_urls_end[0] __attribute__((section(COAP_URL_SECTION(zzzzzz)))) = {};
+// XXX
+const uint8_t temp_eth_address[6] = { 0, 0, 0, 0, 0, 0 };
+
+static const ENC28J60Class ENC28J60(40, temp_eth_address);
+
+#endif//_ELLDUINO_ENC28J60_H_

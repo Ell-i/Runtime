@@ -1,3 +1,4 @@
+CLEAN UP ETHERNET HEADER DEFINITION!  See ethernet.h
 
 Refactor the code so that it gets compiled and optimised as a large single object:
 

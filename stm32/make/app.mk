@@ -32,6 +32,14 @@ APP ?= sketch
 
 APP_OBJS ?= main.o $(APP).o $(VARIANT).o
 
+#
+# Libraries to be included
+#
+ifeq ($(PLATFORM) $(shell uname -s),emulator Darwin)
+APP_LIBS := $(LIBS) $(POST_OBJS) $(EMULATOR_LIBS)
+else
+APP_LIBS := --start-group $(LIBS) --end-group $(POST_OBJS) $(EMULATOR_LIBS)
+endif
 
 #
 # Rules
@@ -51,7 +59,7 @@ clean::
 	rm -f make.map
 
 $(APP):	$(APP_OBJS) $(SYSTEM_LIBS) $(PRE_OBJS) $(POST_OBJS)
-	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) --start-group $(LIBS) --end-group $(POST_OBJS) $(EMULATOR_LIBS)
+	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(APP_LIBS)
 
 #
 # Define rules for producing .hex files

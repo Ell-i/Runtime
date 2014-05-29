@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 ELL-i co-operative.
  *
- * This is part of ELL-i software.
+ * This file is part of ELL-i software.
  *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,22 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-extern void *const __peripheral_end __attribute__((section(".text,.peripheral")));
-void *const __peripheral_end = 0;
+/**
+ * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ * @author Ivan Raul <ivan.raul@ell-i.org> 2014
+ *
+ * @brief ENC28J60 ethernet interface
+ */
 
-#include <assert.h>
-#include <netinet/udp.h>
+#include <enc28j60/ENC28J60.h>
+#include <netinet/ethernet.h>
 
-const struct udp_socket __udp_sockets_end[0] = {};
-
-#include <CoAP.h>
-
-const CoAPURL __coap_urls_end[0] __attribute__((section(COAP_URL_SECTION(zzzzzz)))) = {};
+void eth_output(const void *payload, uint16_t payload_len) {
+   /*
+     * XXX
+     *
+     * This implementation assumes there is free space before the
+     * Ethernet Header start to store the command.
+     */
+    ENC28J60.sendPacket((uint8_t *) payload - ETHER_HEADER_LEN, payload_len + ETHER_HEADER_LEN);
+}

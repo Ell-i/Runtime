@@ -17,12 +17,14 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <assert.h>
 #include <stddef.h>
-#include <coap_internal.h>
-#include <udp.h>
-#include <ip.h>
-#include <ethernet.h>
+#include <string.h>
 #include <ENC28J60.h>
+#include <ethernet.h>
+#include <ip.h>
+#include <udp.h>
+#include <coap_internal.h>
 
 #define DEBUG_LED 5
 
@@ -32,7 +34,7 @@ struct ether_header *const ether_header = (struct ether_header *)(buffer+8);
 
 void setup() {
 
-    ENC28J60.begin(ether_local_address);
+    ENC28J60.begin();
 
     pinMode(DEBUG_LED, OUTPUT);
     digitalWrite(DEBUG_LED, 1);
@@ -52,7 +54,7 @@ void loop() {
     if (toggle) {
         digitalWrite(DEBUG_LED, 0);
         toggle = false;   
-    }else{
+    } else {
         digitalWrite(DEBUG_LED, 1);
         toggle = true;   
     }
