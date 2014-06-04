@@ -44,10 +44,10 @@ AR  := ar
 ELF2HEX := :
 
 CFLAGS   := \
-  $(subst -std=c99,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cc.flags)))
+  $(subst -std=c99,-std=c++11,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cc.flags)))
 
 CXXFLAGS := \
-  $(subst -std=gnu++0x,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
+  $(subst -std=gnu++0x,-std=c++11,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
 
 LDFLAGS  := -m32 -demangle -march=i386 $(LD_SCRIPT)
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
@@ -62,8 +62,11 @@ CXXFLAGS += $(EXTRA_CFLAGS)
 #
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-PRE_OBJS  := emulator_pre.o
-POST_OBJS := emulator_post.o
+PRE_OBJS    := emulator_pre.o
+POST_OBJS   := emulator_post.o
+SHAREDFLAGS := -dylib
+else
+SHAREDFLAGS := -shared -Xlinker --export-dynamic
 endif
 
 #
@@ -78,3 +81,9 @@ LIBS += -lstdc++
 
 SYSTEM_OBJS := emulator.o Register.o RCC.o FLASH.o GPIO.o TIM.o USART.o SPI.o
 VPATH += $(TOP)emulator/src
+
+#
+# Emulator shared library
+#
+libemulator.so: $(SYSTEM_LIBS) $(PRE_OBJS) $(POST_OBJS)
+	$(LD) $(LDFLAGS) $(SHAREDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS)
