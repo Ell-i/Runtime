@@ -90,8 +90,13 @@
  *
  * With GCC, generates fair but not optimal code.
  */
-static inline
-void pinMode(pin_t pin, const enum pin_mode mode) {
+/*
+#ifdef __cplusplus
+extern "C"
+#endif
+*/
+extern "C" {
+	void pinMode(pin_t pin, const enum pin_mode mode) {
 
     const uint32_t pin_shift = (GPIOPIN[pin].gpio_pin * 2);
 
@@ -136,5 +141,5 @@ void pinMode(pin_t pin, const enum pin_mode mode) {
         GPIOPIN[pin].gpio_port->MODER &= ~(GPIO_MODER_MODER0 << pin_shift);
     }
 }
-
+}
 #endif

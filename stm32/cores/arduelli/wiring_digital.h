@@ -33,17 +33,19 @@
 
 #include "wiring_digital_pinMode.h"
 
-static inline
-int digitalRead(pin_t pin) {
+extern "C" {
+ int digitalRead(pin_t pin) {
     return GPIOPIN[pin].gpio_port->IDR & GPIOPIN[pin].gpio_mask? 1: 0;
 }
+}
 
-static inline
-void  digitalWrite(pin_t pin, uint32_t val) {
+extern "C" {
+   void  digitalWrite(pin_t pin, uint32_t val) {
     if (val)
         GPIOPIN[pin].gpio_port->BSRR = GPIOPIN[pin].gpio_mask;
     else
         GPIOPIN[pin].gpio_port->BRR  = GPIOPIN[pin].gpio_mask;
+}
 }
 
 #endif//_WIRING_DIGITAL_H_

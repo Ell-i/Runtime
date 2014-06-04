@@ -39,7 +39,7 @@ APP_OBJS ?= main.o $(APP).o $(VARIANT).o
 
 VPATH += $(TOP)cores/arduelli $(TOP)variants/$(VARIANT)
 
-all:  $(APP) $(APP).hex
+all:  $(APP) $(APP).hex libemulator.so
 
 clean::
 	rm -f $(APP)
@@ -61,3 +61,6 @@ $(APP):	$(APP_OBJS) $(SYSTEM_LIBS) $(PRE_OBJS) $(POST_OBJS)
 
 %.hex:	%
 	$(ELF2HEX) $(EHFLAGS) $< $@
+
+libemulator.so: $(SYSTEM_LIBS) $(PRE_OBJS) $(POST_OBJS)
+	$(LD) $(LDFLAGS) $(SHAREDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS)
