@@ -43,12 +43,12 @@ include $(MAKEDIR)libs_inc.mk
 
 VPATH += $(TOP)cores/arduelli
 
-all:  $(LIB).a
+all:  lib$(LIB).a
 
 clean::
-	rm -f $(LIB).a
+	rm -f lib$(LIB).a
 	rm -f $(LIB_OBJS)
 
-$(LIB).a: $(LIB_OBJS)
-	$(AR) cr $(LIB).a $(LIB_OBJS)
+lib$(LIB).a: $(LIB_OBJS)
+	$(AR) cr lib$(LIB).a $(LIB_OBJS)
 
