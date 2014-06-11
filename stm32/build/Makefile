@@ -27,6 +27,12 @@ clean:
 	make PLATFORM=$(PLATFORM) -f ../make/app.mk clean
 
 sketch.cpp: Makefile
+	@if [ -f sketch.cpp ]; then \
+		echo "sketch.cpp already exits.  Not overwriting." >&2; \
+		exit 1; \
+	fi
 	echo "#include <Arduino.h>" > sketch.cpp
-	echo "void setup() {}"      >> sketch.cpp 
-	echo "void loop() {}"       >> sketch.cpp
+	echo "void setup() {"       >> sketch.cpp
+	echo "}"                    >> sketch.cpp
+	echo "void loop() {"        >> sketch.cpp
+	echo "}"                    >> sketch.cpp
