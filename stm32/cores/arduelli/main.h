@@ -26,10 +26,11 @@
  */
 
 #ifdef __cplusplus
-extern "C" { int main(void); }
-#else
-extern int  main(void);
+extern "C" {
 #endif
-
+extern int  main(void);
 extern void setup(void);
 extern void loop(void);
+#ifdef __cplusplus
+}
+#endif
