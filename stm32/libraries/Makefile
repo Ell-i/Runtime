@@ -16,24 +16,36 @@
 #
 #
 
-TARGETS = \
+SUBDIRS = \
     SPI \
     CoAP \
 
 PLATFORM ?= arduino
 # PLATFORM = emulator
 
-.PHONY : $(TARGETS) all clean tests
+.PHONY : $(SUBDIRS) all clean tests
 
-all:	$(TARGETS)
+all:	$(SUBDIRS)
 all:	TARGET=all
 
-clean:	$(TARGETS)
+clean:	$(SUBDIRS)
 clean:	TARGET=clean
 
-$(TARGETS): %:
+tests:	$(SUBDIRS)
+tests:	TARGET=tests
+
+#
+# Call a submake in all subdirectories
+#
+# Set the following variables:
+#   TOP:      Path to the the top-level compile directory, to find the makefiles etc
+#   LIB:      Name for the library to build, corresponding to the subdirectory name
+#   PLATFORM: The platform to build for, currently either arduino or emulator
+
+$(SUBDIRS): %:
 	if [ -f $*/Makefile ]; then \
-		$(MAKE) -C $* PLATFORM=$(PLATFORM) $(TARGET); \
+		$(MAKE) -C $*  TOP=`pwd`/../ LIB=$@ \
+			PLATFORM=$(PLATFORM) $(TARGET); \
 	else \
 		$(MAKE) -C $* -f `pwd`/../make/lib_default.mk TOP=`pwd`/../ LIB=$@ \
 			PLATFORM=$(PLATFORM) $(TARGET); \
