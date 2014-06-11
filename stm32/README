@@ -1,0 +1,51 @@
+This is a very early README; please enhance me!
+
+Organization
+============
+
+Source directories, Arduino IDE compatible:
+
+cores
+libraries
+system
+variants
+
+Building and testing directories, ELL-i specific:
+
+build -- unclear what to do with this in the long term.  Good for now.
+make
+scripts
+tests
+
+Emulator, Ell-i specific:
+
+emulator
+
+Unclear whether is Arduino IDE compatible or not, don't remember now:
+
+examples
+
+Compiling
+=========
+
+Building for Ellduino board, (for now):
+
+make -C libraries
+cd build
+make sketch.cpp
+make
+
+Building for Emulator, you need to set PLATFORM to emulator, there are
+two ways for that:
+
+1. Set environment variable
+
+export PLATFORM=emulator
+make -C ../libraries clean && make -C ../libraries
+make clean
+make
+
+2. Use a command line variable
+
+Use PLATFORM=emulators on all make commands
+
