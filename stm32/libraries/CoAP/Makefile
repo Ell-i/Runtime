@@ -30,7 +30,7 @@ PLATFORM ?= arduino
 VARIANT  ?= ellduino
 
 #
-# Define the library name
+# Define the library name, if not coming from the calling make
 #
 
 LIB ?= CoAP

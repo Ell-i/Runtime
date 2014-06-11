@@ -3,21 +3,40 @@
 #
 # Arduino IDE variable equivalents used in Makefiles
 #
+# The Arduino IDE defines a number of variables in its Java
+# code.  It usually uses those variables itself for compiling
+# the source code into objects and then into binaries, doing
+# in Java pretty much similar things than what make does.
+#
+# In this file, we define the variables that the Arduino IDE
+# Java code usually defines, so that reading the Arduino
+# definitions from makefiles work correctly.
+#
+# So: This file is *not* used by the IDE.  This file is used
+# by the make system to be compatible with the IDE.
+#
 
 # Object files in cores/<core> and variants/<variant>
 
 object_files= {build.variant}.o
 
 runtime.ide.path=../../..
+# XXX TBD: What version number we should really use?
 runtime.ide.version=1.5.4
 
 # XXX TBD: Use the system C/C++ compiler, for now
+# XXX TBD: Add a link to the Wiki page where the compiler stuff is explained
 compiler.path=
 
 build.project_name=make
 build.path=.
 build.variant.path=$(TOP)variants/ellduino
 build.arch=STM32
+
+#
+# The following ones are usually set in $(TOP)boards.txt, separately
+# for each variant.  Here we set them for ellduino.  That is actually
+# wrong, we should expand them here using the build.variant.
 
 build.mcu=cortex-m0
 build.f_cpu=48000000L

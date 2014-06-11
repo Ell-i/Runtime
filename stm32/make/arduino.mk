@@ -21,6 +21,12 @@
 
 VARIABLE_FILES := $(TOP)make/arduino.txt $(TOP)platform.txt
 
+#
+# Add a number of include directories etc to
+# EXTRA_CFLAGS.  These should come out from the ardino.txt
+# file, but alas they do not at the moment.  XXX PLEASE FIX.
+#
+
 EXTRA_CFLAGS += \
 	-D__STM32F051__ \
 	-I$(TOP)cores/arduelli \
@@ -53,6 +59,11 @@ $(eval ARFLAGS  := $(call expand,compiler.cmd.ar.flags))
 $(eval EHFLAGS  := $(call expand,compiler.cmd.elf2hex.flags))
 
 $(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
+
+#
+# EXTRA_CFLAGS may be set in the user makefile, to provide more
+# defines that are needed beyond those supplied by the system
+#
 
 CFLAGS   += $(EXTRA_CFLAGS)
 CXXFLAGS += $(EXTRA_CFLAGS)
