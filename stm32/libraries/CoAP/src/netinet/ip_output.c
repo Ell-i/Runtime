@@ -62,7 +62,7 @@ void ip_output(const void *payload, uint16_t payload_len) {
     iph->ip_sum = ip_checksum(0, iph, sizeof(struct ip));
 
     /*
-     * Pass to lower layer.
+     * Pass to lower layer.  NB. Tail call.
      */
     eth_output(iph, len);
 }
