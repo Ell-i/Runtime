@@ -26,8 +26,6 @@
 #ifndef  _ICMP_H
 # define _ICMP_H
 
-# include <system_init.h>
-
 struct icmp {
     uint8_t  icmp_type;
     uint8_t  icmp_code;
