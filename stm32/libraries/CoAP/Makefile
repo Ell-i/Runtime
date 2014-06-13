@@ -56,3 +56,12 @@ LIB_OBJS += enc28j60_init.o ethernet_output.o
 # for Arduino lib building.
 #
 include $(MAKEDIR)lib.mk
+
+ifeq ($(PLATFORM),emulator)
+arp_input.o ip_input.o coap_input.o coap_handle.o icmp_input.o: CFLAGS := $(subst -std=c++11,-std=c99,$(CFLAGS))
+ifeq ($(shell uname -s),Darwin)
+arp_input.o ip_input.o coap_input.o coap_handle.o icmp_input.o: CC := clang++ -x c
+else
+arp_input.o ip_input.o coap_input.o coap_handle.o icmp_input.o: CC := gcc
+endif
+endif
