@@ -38,7 +38,11 @@ APP_OBJS ?= main.o $(APP).o $(VARIANT).o
 ifeq ($(PLATFORM) $(shell uname -s),emulator Darwin)
 APP_LIBS := $(LIBS) $(POST_OBJS) $(EMULATOR_LIBS)
 else
-APP_LIBS := --start-group $(LIBS) --end-group $(POST_OBJS) $(EMULATOR_LIBS)
+ifeq ($(LD),arm-none-eabi-ld)
+APP_LIBS :=--start-group $(LIBS) --end-group $(POST_OBJS) $(EMULATOR_LIBS)
+else
+APP_LIBS := -Wl,--start-group $(LIBS) -Wl,--end-group $(POST_OBJS) $(EMULATOR_LIBS)
+endif
 endif
 
 #
