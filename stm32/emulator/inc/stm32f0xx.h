@@ -24,11 +24,6 @@
 
 #include "../../system/stm32/inc/stm32f0xx.h"  // XXX FIX PATH
 
-#include <Register.h>
-
-typedef Register preg32_t;
-typedef Register preg16_t;
-
 /*
  * Undefine the main address defines in the real stm32f0xx.h, causing
  * a compile error on all constructs that use them.
@@ -62,11 +57,32 @@ typedef Register preg16_t;
 #undef SPI1
 #undef SPI2
 
-#include <RCC.h>
-#include <FLASH.h>
-#include <GPIO.h>
-#include <TIM.h>
-#include <USART.h>
-#include <SPIemu.h>
+#ifndef __cplusplus
+/*
+ * Definitions when compiling in C mode for the emulator
+ * Please avoid this, use only to circumvent g++ (or clang++) bugs.
+ */
+
+typedef uint32_t preg32_t;
+typedef uint16_t preg16_t;
+
+#else
+/*
+ * The real definitions when compiling for the emulator, in C++ mode.
+ */
+
+# include <Register.h>
+
+typedef Register preg32_t;
+typedef Register preg16_t;
+
+# include <RCC.h>
+# include <FLASH.h>
+# include <GPIO.h>
+# include <TIM.h>
+# include <USART.h>
+# include <SPIemu.h>
+
+#endif
 
 #endif //_EMULATOR_STM32F0XX_

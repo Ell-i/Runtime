@@ -228,8 +228,12 @@ extern void SystemInitData32Only(       const SystemInitRecordArray *records);
 
 extern void SystemInitPeripherals(void);
 
+#  ifndef memcpy
 extern void *memcpy(void *dst, const void *src, size_t size);
+#  endif
+#  ifndef memset
 extern void *memset(void *dst, int c, size_t size);
+#  endif
 
 # ifdef __cplusplus
 }
