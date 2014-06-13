@@ -68,6 +68,7 @@
 #endif
 
 # include <stdint.h>
+# include <string.h>
 
 /*
  * From http://stackoverflow.com/questions/1598773/\
@@ -231,6 +232,13 @@ extern void SystemInitData16WithOffset( const SystemInitRecordArray *records);
 extern void SystemInitData32Only(       const SystemInitRecordArray *records);
 
 extern void SystemInitPeripherals(void);
+
+#  ifndef memcpy
+extern void *memcpy(void *dst, const void *src, size_t size);
+#  endif
+#  ifndef memset
+extern void *memset(void *dst, int c, size_t size);
+#  endif
 
 # ifdef __cplusplus
 }
