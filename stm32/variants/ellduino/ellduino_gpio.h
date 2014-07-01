@@ -20,6 +20,49 @@
  * Authors:  Pekka Nikander <pekka.nikander@ell-i.org>  2013-2014
  */
 
+/* @section Board
+ * @code
+ *                         Ellduino
+ *                  -----              -------
+ *                +-|(o)|--------------| RJ45|---+
+ *                | |   | [P]+PoeVin   | Eth |   |
+ *                | ----- [O]          |     |   |
+ *                |  Aux  [E]-PoeVin   -------   |
+ *                |  Vin                         |
+ *                |                            []| 
+ *                |                            []| 
+ *                |                            []| AREF
+ *                |                            []| GND
+ *             NC |[]                          []| D13
+ *          IOREF |[]                          []| D12
+ *          RESET |[]                          []| D11
+ *            3V3 |[]                          []| D10
+ *             5V |[]                          []|  D9
+ *            GND |[]                          []|  D8
+ *            GND |[]                            | 
+ *            Vin |[]                          []|  D7
+ *                |                            []|  D6
+ *             A0 |[]                          []|  D5
+ *             A1 |[]                          []|  D4
+ *             A2 |[]                          []|  D3
+ *             A3 |[]                          []|  D2
+ *             A4 |[]            ICSP          []|  D1
+ *             A5 |[]           o-o-o*         []|  D0
+ *                |             o-o-o            |
+ *             A8 |[]                          []| D14
+ *             A9 |[]                          []| D15
+ *            A10 |[]                          []| D16
+ *            A11 |[]                          []| D17
+ *            A12 |[]                          []| D18
+ *            A13 |[]   G                      []| D19
+ *            A14 |[]   N                      []| D20
+ *            A15 |[]   D                      []| D21
+ *                 \    ||||||                  /
+ *                  +---||||||-----------------+
+ * @endcode
+ */
+
+
 #ifndef _ELLDUINO_GPIO_H_
 # define _ELLDUINO_GPIO_H_
 
