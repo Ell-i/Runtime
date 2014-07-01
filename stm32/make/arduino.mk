@@ -1,10 +1,31 @@
 #
 # Copyright (c) 2013 Ell-i co-operative
 #
+# This is part of ELL-i software
+#
+# ELL-i software is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ELL-i software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
+#
 # Extract make variables from the Arduino IDE specifications
 #
 
 VARIABLE_FILES := $(TOP)make/arduino.txt $(TOP)platform.txt
+
+#
+# Add a number of include directories etc to
+# EXTRA_CFLAGS.  These should come out from the ardino.txt
+# file, but alas they do not at the moment.  XXX PLEASE FIX.
+#
 
 EXTRA_CFLAGS += \
 	-D__STM32F051__ \
@@ -38,6 +59,11 @@ $(eval ARFLAGS  := $(call expand,compiler.cmd.ar.flags))
 $(eval EHFLAGS  := $(call expand,compiler.cmd.elf2hex.flags))
 
 $(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
+
+#
+# EXTRA_CFLAGS may be set in the user makefile, to provide more
+# defines that are needed beyond those supplied by the system
+#
 
 CFLAGS   += $(EXTRA_CFLAGS)
 CXXFLAGS += $(EXTRA_CFLAGS)

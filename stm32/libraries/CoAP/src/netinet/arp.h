@@ -26,8 +26,6 @@
 #ifndef  _ARP_H
 # define _ARP_H
 
-# include <system_init.h>
-
 # include <netinet/ip.h>
 
 struct arp {

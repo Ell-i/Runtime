@@ -18,29 +18,38 @@
  */
 
 /**
- * Minimal standalone ICMP
+ * The complete packet structure handled by the Ell-i stack.
+ *
+ * XXX Add here more documentation how the Ell-i stack handles
+ * packets.
  *
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifndef  _ICMP_H
-# define _ICMP_H
+#ifndef  _NET_PACKET_H
+# define _NET_PACKET_H
 
-struct icmp {
-    uint8_t  icmp_type;
-    uint8_t  icmp_code;
-    uint16_t icmp_sum;
-    uint16_t icmp_id;
-    uint16_t icmp_seqno;
-    uint8_t  icmp_data[0];
-};
+#include <netinet/ethernet.h>
+#include <netinet/ip.h>
+#include <netinet/arp.h>
+#include <netinet/udp.h>
+#include <netinet/icmp.h>
+// #include <netinet/tcp.h>
 
-# define ICMP_TYPE_ECHO_REPLY  0
-# define ICMP_TYPE_ECHO        8
+struct net_packet {
+    uint16_t                np_padding;  // For aligning the ip header correctly
+    struct ether_header     np_ether;
+    union {
+        struct arp          np_arp;
+        struct {
+            struct ip       np_ip;       // Must be 4 bytes aligned
+            union {
+                struct udp  np_udp;
+                struct icmp np_icmp;
+            };
+        };
+    };
+} __attribute__((packed));
 
-/**
- * XXX
- */
-extern void icmp_input(struct icmp *const icmp_packet, size_t len);
+#endif //_NET_PACKET_H
 
-#endif //_ICMP_H

@@ -26,6 +26,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <limits.h>
+#include <netinet/ip.h>
 
 /**
  * Incrementally computes IP checksum over the data.
