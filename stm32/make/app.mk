@@ -8,9 +8,13 @@ TOP ?=../
 MAKEDIR ?= $(TOP)make/
 
 #
-# Define the variant to build for
+# Check that variant to build for is defined
 #
-VARIANT ?= ellduino
+#VARIANT ?= ellduino
+
+ifeq ($(VARIANT),)
+$(error VARIANT must be defined.)
+endif
 
 #
 # Set up the compilation environment, identical to the Arduino IDE,

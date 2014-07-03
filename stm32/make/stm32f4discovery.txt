@@ -1,0 +1,29 @@
+#
+# Copyright (c) 2014 ELL-i co-operative.
+#
+# Arduino IDE variable equivalents used in Makefiles
+#
+
+# Object files in cores/<core> and variants/<variant>
+
+object_files= {build.variant}.o
+
+runtime.ide.path=../../..
+runtime.ide.version=1.5.4
+
+# XXX TBD: Use the system C/C++ compiler, for now
+compiler.path=
+
+build.project_name=make
+build.path=.
+build.variant.path=$(TOP)variants/stm32f4discovery
+build.arch=STM32
+
+build.mcu=cortex-m4
+build.f_cpu=168000000L
+build.core=arduelli
+build.board=STM32F407_DISCOVERY
+build.variant=stm32f4discovery
+build.variant_system_libs=-lstm32f4
+
+build.ldscript=ld/flash.ld

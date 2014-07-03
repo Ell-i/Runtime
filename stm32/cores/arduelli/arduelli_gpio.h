@@ -34,7 +34,7 @@
  * of GPIO ports.
  *
  * For each of the ports, we set the corresponding Enable bit in the
- * RCC AHBENR register.  Other than that, the factory defaults are
+ * RCC AHBENR/AHB1ENR register.  Other than that, the factory defaults are
  * good enough for us.
  *
  * Note that the actual record is placed at the SYSTEM_INIT_SECTION
@@ -42,6 +42,24 @@
  * initialise the GPIO.  If the GPIO is not used, the record won't be
  * placed at the .init.default section, and the GPIO won't be enabled.
  */
+
+/*
+ * STM has some minor differences in the GPIO register usage between M0 and M4:
+ * - The used AHBENR register depends on the actual MCU type.
+ * - the ODR pin names are different
+ * We define here the registers used for GPIO,
+ * so that we don't need to have separate #ifdefs for that below.
+ */
+#if defined(ELLI_STM32F051_ELLDUINO)
+#define GPIO_AHBENR AHBENR
+#define GPIO_ODR_PREFIX GPIO_ODR_
+#elif defined(ELLI_STM32F407_DISCOVERY)
+#define GPIO_AHBENR AHB1ENR
+#define GPIO_ODR_PREFIX GPIO_ODR_ODR_
+#else
+#error "Unknown board.  Please define."
+#endif
+
 
 /**
  * XXX (later) This code is based on the assumption that the C++ version of 
@@ -84,8 +102,8 @@
     const SystemInitRecordAddrAndOnes                                   \
     GPIO ## port ## _RCC_INIT_DefaultRecords[] = {                      \
         {                                                               \
-            IF(init_r_address) &RCC->AHBENR,                            \
-            IF(init_r_ones)    RCC_AHBENR_GPIO ## port ## EN,           \
+            IF(init_r_address) &RCC->GPIO_AHBENR,                       \
+            IF(init_r_ones)    RCC_ ## GPIO_AHBENR ## _GPIO ## port ## EN, \
         },                                                              \
     };                                                                  \
     const SystemInitRecordArray                                         \
@@ -274,7 +292,7 @@ struct GPIO {
 #define DEFINE_GPIO_PIN(port, pin)         \
 {                                          \
     IF(gpio_port) GPIO ## port,            \
-    IF(gpio_mask) GPIO_ODR_ ## pin,        \
+    IF(gpio_mask) GPIO_ODR_PREFIX ## pin,        \
     IF(gpio_pin)  pin,                     \
 }
 

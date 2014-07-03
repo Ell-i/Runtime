@@ -4,10 +4,16 @@
 # Extract make variables from the Arduino IDE specifications
 #
 
-VARIABLE_FILES := $(TOP)make/arduino.txt $(TOP)platform.txt
+VARIABLE_FILES := $(TOP)make/$(VARIANT).txt $(TOP)platform.txt
+
+define expand
+$(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
+endef
+
+$(eval EXTRA_CFLAGS_FROM_BUILD := $(call exapand,$(VARIANT).build.extra_flags))
 
 EXTRA_CFLAGS += \
-	-D__STM32F051__ \
+	$(EXTRA_CFLAGS_FROM_BUILD) \
 	-I$(TOP)cores/arduelli \
 	-I$(TOP)system/stm32/inc \
 	-I$(TOP)system/stm32/CMSIS/Include \
@@ -20,10 +26,6 @@ EXTRA_CFLAGS += \
 ifeq ($(SCRIPTDIR),)
 SCRIPTDIR=$(TOP)scripts/
 endif
-
-define expand
-$(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
-endef
 
 $(eval CC  	:= $(call expand,compiler.cmd.cc))
 $(eval CXX      := $(call expand,compiler.cmd.cxx))

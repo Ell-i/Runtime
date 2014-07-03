@@ -1,14 +1,20 @@
 #
-# Copyright (c) 2013 Ell-i co-operative
+# Copyright (c) 2013-2014 Ell-i co-operative
 #
 # Define make variables for the Emulator
 #
 
-VARIABLE_FILES := $(TOP)make/emulator.txt $(TOP)make/arduino.txt $(TOP)platform.txt
+VARIABLE_FILES := $(TOP)make/emulator.txt $(TOP)make/$(VARIANT).txt $(TOP)platform.txt
+
+define expand
+$(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
+endef
+
+$(eval EXTRA_CFLAGS_FROM_BUILD := $(call exapand,$(VARIANT).build.extra_flags))
 
 EXTRA_CFLAGS += \
         -DEMULATOR \
-	-D__STM32F051__ \
+	$(EXTRA_CFLAGS_FROM_BUILD) \
 	-Dmain=emulated_main \
 	-I$(TOP)emulator/inc \
 	-I$(TOP)cores/arduelli \
@@ -22,10 +28,6 @@ EXTRA_CFLAGS += \
 ifeq ($(SCRIPTDIR),)
 SCRIPTDIR=$(TOP)scripts/
 endif
-
-define expand
-$(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
-endef
 
 LD_LINKER_FILE := $(SCRIPTDIR)/elf_i386.xc
 
