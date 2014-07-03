@@ -21,7 +21,12 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2013-2014
  */
 
-#include <stm32f0xx.h>
+#ifdef __STM32F051__
+# include <stm32f0xx.h>
+#endif
+#ifdef __STM32F407__
+# include <stm32f4xx.h>
+#endif
 #include <system_init.h>
 
 void SystemInitAddrAndOnes(const SystemInitRecordArray *ra) {

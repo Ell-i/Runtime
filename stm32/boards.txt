@@ -65,3 +65,25 @@ stm32f0discovery.build.variant_system_libs=-lstm32f0
 
 stm32f0discovery.build.ldscript=ld/flash.ld
 stm32f0discovery.build.extra_flags=-D__STM32F051__
+
+##############################################################
+
+stm32f4discovery.name=ST STM32F4 discovery
+stm32f4discovery.vid.0=0483
+stm32f4discovery.pid.0=3748
+
+stm32f4discovery.upload.tool=st-link
+stm32f4discovery.upload.protocol=stm
+stm32f4discovery.upload.maximum_size=65535
+stm32f4discovery.upload.wait_for_upload_port=true
+stm32f4discovery.upload.native_usb=true
+
+stm32f4discovery.build.mcu=cortex-m4
+stm32f4discovery.build.f_cpu=168000000L
+stm32f4discovery.build.board=STM32F407_DISCOVERY
+stm32f4discovery.build.core=arduelli
+stm32f4discovery.build.variant=stm32f4discovery
+stm32f4discovery.build.variant_system_libs=-lstm32f4
+
+stm32f4discovery.build.ldscript=ld/flash.ld
+stm32f4discovery.build.extra_flags=-D__STM32F407__

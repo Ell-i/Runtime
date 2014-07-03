@@ -32,7 +32,8 @@ SYSTEM_OBJS += \
 #
 SYSTEM_LIBS := \
     $(TOP)variants/ellduino/libstm32f0.a \
-    $(TOP)variants/stm32f0discovery/libstm32f0.a
+    $(TOP)variants/stm32f0discovery/libstm32f0.a \
+    $(TOP)variants/stm32f4discovery/libstm32f4.a
 
 #
 # Define source directories
