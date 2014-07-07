@@ -23,9 +23,21 @@
  * @brief The Arduino Serial class
  */
 
-#include <stm32f0xx.h>
-#include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
-#include <ellduino_usart.h>  // XXX To be placed into the variant.h!
+#ifndef _ARDUINO_SERIAL_H_
+#define _ARDUINO_SERIAL_H_
+
+#if defined(ELLI_STM32F051_ELLDUINO)
+# include <stm32f0xx.h>       // XXX To be placed into the variant.h!
+# include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
+# include <ellduino_usart.h>  // XXX To be placed into the variant.h!
+#elif defined(ELLI_STM32F407_DISCOVERY)
+# include <stm32f4xx.h>              // XXX To be placed into the variant.h!
+# include <stm32f4discovery_gpio.h>  // XXX To be placed into the variant.h!
+# include <stm32f4discovery_usart.h> // XXX To be placed into the variant.h!
+#else
+# error "Unknown board.  Please define."
+#endif
+
 #include <arduelli_thread.h> // XXX TBD -- is this the right file name?
 #include <Arduino_Stream.h>
 
@@ -62,3 +74,5 @@ inline void Serial::write(uint8_t c) const {
         yield();
     }
 }
+
+#endif//_ARDUINO_SERIAL_H_

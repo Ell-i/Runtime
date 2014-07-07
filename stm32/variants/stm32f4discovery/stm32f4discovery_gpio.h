@@ -54,8 +54,13 @@ DEFINE_GPIO_PIN_INIT(A,  9, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
 DEFINE_GPIO_PIN_INIT(A, 10, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
 DEFINE_GPIO_PIN_INIT(A, 11, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
 DEFINE_GPIO_PIN_INIT(A, 12, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
+#ifdef FEATURE_SWD
+DEFINE_GPIO_PIN_INIT(A, 13, ALTERNATE, PUSH_PULL, HIGH, PULL_UP, 0);
+DEFINE_GPIO_PIN_INIT(A, 14, ALTERNATE, PUSH_PULL, HIGH, PULL_DOWN, 0);
+#else
 DEFINE_GPIO_PIN_INIT(A, 13, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
 DEFINE_GPIO_PIN_INIT(A, 14, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
+#endif
 DEFINE_GPIO_PIN_INIT(A, 15, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
 
 DEFINE_GPIO_PIN_INIT(B,  0, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
@@ -203,26 +208,27 @@ DEFINE_GPIO_PIN_INIT(I, 11, INPUT, PUSH_PULL, HIGH, NO_PULL, 0);
 
 // TODO  \/ ?? 
 static const struct GPIO GPIOPIN[] = {
-    DEFINE_GPIO_PIN(A, 10),   /*  0 PA10 D0 RX0 */
-    DEFINE_GPIO_PIN(A,  9),   /*  1 PA9  D1 TX0 */
-    DEFINE_GPIO_PIN(A,  8),   /*  2 PA8  D2 */
-    DEFINE_GPIO_PIN(C,  9),   /*  3 PC9  D3 */
-    DEFINE_GPIO_PIN(C,  8),   /*  4 PC8  D4 */
+    DEFINE_GPIO_PIN(C,  1),   /*  0 PA10 D0 RX0 */
+    DEFINE_GPIO_PIN(D,  3),   /*  1 PA9  D1 TX0 */ // TODO, huijattu pistämällä PD13 (oranssi) Arduino 1 pinniksi.
+    DEFINE_GPIO_PIN(A,  1),   /*  2 PA8  D2 */
+    DEFINE_GPIO_PIN(A,  3),   /*  3 PC9  D3 */
+    DEFINE_GPIO_PIN(A,  5),   /*  4 PC8  D4 */
     DEFINE_GPIO_PIN(A,  7),   /*  5 PA7  D5 */
-    DEFINE_GPIO_PIN(A,  3),   /*  6 PA3  D6 */
-    DEFINE_GPIO_PIN(A,  2),   /*  7 PA2  D7 */
-    DEFINE_GPIO_PIN(B, 10),   /*  8 PB10 D8 */
-    DEFINE_GPIO_PIN(B, 11),   /*  9 PB11 D9 */
-    DEFINE_GPIO_PIN(A, 15),   /* 10 PA15 D10 */
-    DEFINE_GPIO_PIN(B,  5),   /* 11 PB5  D11 */
-    DEFINE_GPIO_PIN(B,  4),   /* 12 PB4  D12 */
-    DEFINE_GPIO_PIN(B,  3),   /* 13 PB3  Led B3 Amber "L" */
-    DEFINE_GPIO_PIN(C,  6),   /* 14 PC6  (TX3) */
-    DEFINE_GPIO_PIN(C,  7),   /* 15 PC7  (RX3) */
-    DEFINE_GPIO_PIN(A, 14),   /* 16 A14  (TX2) SWCLK */
-    DEFINE_GPIO_PIN(D,  2),   /* 17 PD2  (RX2) */
-    DEFINE_GPIO_PIN(B,  6),   /* 18 PB6  TX1 */
-    DEFINE_GPIO_PIN(B,  7),   /* 19 PB7  RX1 */
+    DEFINE_GPIO_PIN(C,  5),   /*  6 PA3  D6 */
+    DEFINE_GPIO_PIN(B,  1),   /*  7 PA2  D7 */
+    DEFINE_GPIO_PIN(E,  7),   /*  8 PB10 D8 */
+    DEFINE_GPIO_PIN(E,  9),   /*  9 PB11 D9 */
+    DEFINE_GPIO_PIN(E, 11),   /* 10 PA15 D10 */
+    DEFINE_GPIO_PIN(E, 13),   /* 11 PB5  D11 */
+    DEFINE_GPIO_PIN(E, 15),   /* 12 PB4  D12 */
+    DEFINE_GPIO_PIN(B, 11),   /* 13 PB3  Led B3 Amber "L" */
+    DEFINE_GPIO_PIN(B, 13),   /* 14 PC6  (TX3) */
+    DEFINE_GPIO_PIN(B, 15),   /* 15 PC7  (RX3) */
+    DEFINE_GPIO_PIN(D,  9),   /* 16 A14  (TX2) SWCLK */
+    DEFINE_GPIO_PIN(D, 11),   /* 17 PD2  (RX2) */
+    DEFINE_GPIO_PIN(D, 13),   /* 18 PB6  TX1 */
+    DEFINE_GPIO_PIN(D, 15),   /* 19 PB7  RX1 */
+// <-- DONE | TODO --> 
     DEFINE_GPIO_PIN(B,  9),   /* 20 PB9  SDA */
     DEFINE_GPIO_PIN(B,  8),   /* 21 PB8  SCL */
     DEFINE_GPIO_PIN(C,  0),   /* 54 PC0  A0  */

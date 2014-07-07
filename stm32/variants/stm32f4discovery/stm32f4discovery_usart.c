@@ -36,7 +36,7 @@
 # define D32(p, r, v) [offsetof(p, r)/sizeof(uint32_t)] = { v }
 #endif
 
-// TODO \/
+#if 0 // TODO \/
 const SystemInitRecordData32Only USART_INIT_DefaultRecords[] = {
     D32(USART_TypeDef, CR1,
         0
@@ -130,3 +130,5 @@ DEFINE_USART_DEVICE(/*USART*/3, /*APB*/1, USART_INIT_DefaultRecords);
 // DEFINE_USART_DEVICE(/*USART*/4, /*APB*/1, USART_INIT_DefaultRecords); // UART
 // DEFINE_USART_DEVICE(/*USART*/5, /*APB*/1, USART_INIT_DefaultRecords); // UART
 DEFINE_USART_DEVICE(/*USART*/6, /*APB*/2, USART_INIT_DefaultRecords);
+
+#endif //TODO

@@ -3,6 +3,18 @@
 #
 # Arduino IDE variable equivalents used in Makefiles
 #
+# The Arduino IDE defines a number of variables in its Java
+# code.  It usually uses those variables itself for compiling
+# the source code into objects and then into binaries, doing
+# in Java pretty much similar things than what make does.
+#
+# In this file, we define the variables that the Arduino IDE
+# Java code usually defines, so that reading the Arduino
+# definitions from makefiles work correctly.
+#
+# So: This file is *not* used by the IDE.  This file is used
+# by the make system to be compatible with the IDE.
+#
 
 # Object files in cores/<core> and variants/<variant>
 

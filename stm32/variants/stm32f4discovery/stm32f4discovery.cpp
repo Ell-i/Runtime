@@ -22,7 +22,7 @@
 
 #include "stm32f4discovery_gpio.h"
 #include "stm32f4discovery_timer.h"
-#include "stm32f4discovery_usart.h"
+// #include "stm32f4discovery_usart.h" // TODO
 
 /*
  * With the current Arduino API, it is not possible to reliably
@@ -46,29 +46,30 @@ const void * __GPIOE = &GPIOE_INIT1;
 const void * __GPIOF = &GPIOF_INIT1;
 const void * __GPIOG = &GPIOG_INIT1;
 const void * __GPIOH = &GPIOH_INIT1;
-const void * __GPIOI = &GPIOI_INIT1;
+// const void * __GPIOI = &GPIOI_INIT1; // TODO 
 
 
 const void * __TIM1 = &TIM1_INIT1;
 const void * __TIM2 = &TIM2_INIT1;
 const void * __TIM3 = &TIM3_INIT1;
-const void * __TIM3 = &TIM4_INIT1;
-const void * __TIM3 = &TIM5_INIT1;
-const void * __TIM3 = &TIM6_INIT1;
-const void * __TIM3 = &TIM7_INIT1;
-const void * __TIM3 = &TIM8_INIT1;
-const void * __TIM3 = &TIM9_INIT1;
-const void * __TIM3 = &TIM10_INIT1;
-const void * __TIM3 = &TIM11_INIT1;
-const void * __TIM3 = &TIM12_INIT1;
-const void * __TIM3 = &TIM13_INIT1;
+const void * __TIM4 = &TIM4_INIT1;
+const void * __TIM5 = &TIM5_INIT1;
+const void * __TIM6 = &TIM6_INIT1;
+const void * __TIM7 = &TIM7_INIT1;
+const void * __TIM8 = &TIM8_INIT1;
+const void * __TIM9 = &TIM9_INIT1;
+const void * __TIM10 = &TIM10_INIT1;
+const void * __TIM11 = &TIM11_INIT1;
+const void * __TIM12 = &TIM12_INIT1;
+const void * __TIM13 = &TIM13_INIT1;
 const void * __TIM14 = &TIM14_INIT1;
 
 
+#if 0
 const void * __USART1 = &USART1_INIT;
 const void * __USART2 = &USART2_INIT;
 const void * __USART3 = &USART3_INIT;
-const void * __USART4 = &USART4_INIT;
-const void * __USART5 = &USART5_INIT;
+// const void * __USART4 = &USART4_INIT; // TODO UART
+// const void * __USART5 = &USART5_INIT; // TODO UART
 const void * __USART6 = &USART6_INIT;
-
+#endif

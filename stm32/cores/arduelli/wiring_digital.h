@@ -25,7 +25,14 @@
 # define _WIRING_DIGITAL_H_
 
 #include "arduelli_gpio.h"
-#include "ellduino_gpio.h" // XXX replace with variant_gpio.h
+
+#if defined(ELLI_STM32F051_ELLDUINO)
+# include "ellduino_gpio.h"  // XXX replace with variant_gpio.h
+#elif defined(ELLI_STM32F407_DISCOVERY)
+# include "stm32f4discovery_gpio.h" // XXX To be placed into the variant.h!
+#else
+# error "Unknown board.  Please define."
+#endif
 
 /**************************************
  * Arduino APIs
@@ -40,10 +47,21 @@ int digitalRead(pin_t pin) {
 
 static inline
 void  digitalWrite(pin_t pin, uint32_t val) {
-    if (val)
-        GPIOPIN[pin].gpio_port->BSRR = GPIOPIN[pin].gpio_mask;
-    else
-        GPIOPIN[pin].gpio_port->BRR  = GPIOPIN[pin].gpio_mask;
+// TODO: Check if the following ifdefs are really needed, or could we
+// use BSRRL also in Cortex-M0 without too much overhead
+#if defined(STM32F40_41xxx)
+    if (val) // Set
+        GPIOPIN[pin].gpio_port->BSRRL = GPIOPIN[pin].gpio_mask;
+    else    // Reset
+        GPIOPIN[pin].gpio_port->BSRRH = GPIOPIN[pin].gpio_mask;
+#elif defined(STM32F0XX)
+    if (val) // Set
+        GPIOPIN[pin].gpio_port->BSRR  = GPIOPIN[pin].gpio_mask;
+    else    // Reset
+        GPIOPIN[pin].gpio_port->BRR   = GPIOPIN[pin].gpio_mask;
+#else
+# error "Unknown board.  Please define."
+#endif
 }
 
 #endif//_WIRING_DIGITAL_H_
