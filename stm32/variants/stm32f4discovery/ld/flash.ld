@@ -23,12 +23,13 @@ ENTRY(Reset_Handler)
 
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 64K
-  RAM  (xrw) : ORIGIN = 0x20000000, LENGTH = 8K
+  FLASH	 (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K
+  RAM 	 (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
+  CCMRAM (rwx) : ORIGIN = 0x10000000, LENGTH = 64K
 }
 
 /* highest address of the user mode stack */
-_estack = 0x20002000;
+_estack = 0x20020000;
 
 /* Sections Definitions */
 
