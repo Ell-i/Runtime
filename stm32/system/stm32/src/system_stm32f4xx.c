@@ -473,10 +473,18 @@ static void SetSysClock(void)
 /*            PLL (clocked by HSE) used as System clock source                */
 /******************************************************************************/
   __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
-  
+
+  /* Wait until HSI is ready. */
+  while ((RCC->CR & RCC_CR_HSIRDY) == 0)
+      ;
+
+  /* Enable the HSI. */
+  RCC->CFGR &= (uint32_t)((uint32_t)~(RCC_CFGR_SW));
+  RCC->CFGR |= RCC_CFGR_SW_HSI;
+
   /* Enable HSE */
   RCC->CR |= ((uint32_t)RCC_CR_HSEON);
- 
+
   /* Wait till HSE is ready and if Time out is reached exit */
   do
   {
