@@ -21,11 +21,12 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2013-2014
  */
 
-#ifdef __STM32F051__
+#if defined(__STM32F051__)
 # include <stm32f0xx.h>
-#endif
-#ifdef __STM32F407__
+#elif defined(__STM32F407__)
 # include <stm32f4xx.h>
+#else
+# error "Unknown chip.  Please define."
 #endif
 #include <system_init.h>
 

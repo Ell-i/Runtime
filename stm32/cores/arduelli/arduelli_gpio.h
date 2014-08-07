@@ -51,13 +51,15 @@
  * so that we don't need to have separate #ifdefs for that below.
  */
 #if defined(ELLI_STM32F051_ELLDUINO)
-#define GPIO_AHBENR AHBENR
-#define GPIO_ODR_PREFIX GPIO_ODR_
+# define GPIO_AHBENR AHBENR
+# define GPIO_RCC_AHBENR_BITMASK(port) RCC_ ## AHBENR ## _GPIO ## port ## EN
+# define GPIO_PREFIX_ODR(pin)          GPIO_ODR_ ## pin
 #elif defined(ELLI_STM32F407_DISCOVERY)
-#define GPIO_AHBENR AHB1ENR
-#define GPIO_ODR_PREFIX GPIO_ODR_ODR_
+# define GPIO_AHBENR AHB1ENR
+# define GPIO_RCC_AHBENR_BITMASK(port) RCC_ ## AHB1ENR ## _GPIO ## port ## EN
+# define GPIO_PREFIX_ODR(pin)          GPIO_ODR_ODR_ ## pin
 #else
-#error "Unknown board.  Please define."
+# error "Unknown board.  Please define."
 #endif
 
 
@@ -103,7 +105,7 @@
     GPIO ## port ## _RCC_INIT_DefaultRecords[] = {                      \
         {                                                               \
             IF(init_r_address) &RCC->GPIO_AHBENR,                       \
-            IF(init_r_ones)    RCC_ ## GPIO_AHBENR ## _GPIO ## port ## EN, \
+            IF(init_r_ones)    GPIO_RCC_AHBENR_BITMASK(port),           \
         },                                                              \
     };                                                                  \
     const SystemInitRecordArray                                         \
@@ -292,10 +294,9 @@ struct GPIO {
 #define DEFINE_GPIO_PIN(port, pin)         \
 {                                          \
     IF(gpio_port) GPIO ## port,            \
-    IF(gpio_mask) GPIO_ODR_PREFIX ## pin,        \
+    IF(gpio_mask) GPIO_PREFIX_ODR(pin),    \
     IF(gpio_pin)  pin,                     \
 }
-
 
 /*********************************************************************************
  *

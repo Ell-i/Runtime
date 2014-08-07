@@ -6,6 +6,9 @@
 RESULT="{$1}"; shift
 FILES="$@"
 
+# Enable the following line for debugging
+# echo >&2 "Expanding $RESULT from $FILES"
+
 # Expand as long as there are {variable} constructs in the result
 while echo "$RESULT" | grep -q '{.*}'; do
     # Extract the variable name from the result

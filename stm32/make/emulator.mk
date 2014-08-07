@@ -4,7 +4,11 @@
 # Define make variables for the Emulator
 #
 
-VARIABLE_FILES := $(TOP)make/emulator.txt $(TOP)make/$(VARIANT).txt $(TOP)platform.txt
+VARIABLE_FILES := $(TOP)make/emulator.txt $(TOP)make/$(VARIANT).txt $(TOP)platform.txt $(TOP)boards.txt
+
+ifeq ($(SCRIPTDIR),)
+SCRIPTDIR=$(TOP)scripts/
+endif
 
 define expand
 $(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
@@ -25,9 +29,6 @@ EXTRA_CFLAGS += \
 #
 # No user serviceable parts below
 #
-ifeq ($(SCRIPTDIR),)
-SCRIPTDIR=$(TOP)scripts/
-endif
 
 LD_LINKER_FILE := $(SCRIPTDIR)/elf_i386.xc
 

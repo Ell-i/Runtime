@@ -4,7 +4,7 @@
 # Compile and link an application
 #
 
-TOP ?=../
+TOP ?=$(shell pwd)/../
 MAKEDIR ?= $(TOP)make/
 
 #
@@ -48,6 +48,7 @@ all:  $(APP) $(APP).hex
 clean::
 	rm -f $(APP)
 	rm -f $(APP).hex
+	rm -f $(APP).bin
 	rm -f $(APP).lst
 	rm -f $(APP_OBJS)
 	rm -f $(PRE_OBJS)

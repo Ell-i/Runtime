@@ -4,13 +4,17 @@
 # Extract make variables from the Arduino IDE specifications
 #
 
-VARIABLE_FILES := $(TOP)make/$(VARIANT).txt $(TOP)platform.txt
+VARIABLE_FILES := $(TOP)make/$(VARIANT).txt $(TOP)platform.txt $(TOP)boards.txt
+
+ifeq ($(SCRIPTDIR),)
+SCRIPTDIR=$(TOP)scripts/
+endif
 
 define expand
 $(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
 endef
 
-$(eval EXTRA_CFLAGS_FROM_BUILD := $(call exapand,$(VARIANT).build.extra_flags))
+$(eval EXTRA_CFLAGS_FROM_BUILD := $(call expand,$(VARIANT).build.extra_flags))
 
 EXTRA_CFLAGS += \
 	$(EXTRA_CFLAGS_FROM_BUILD) \
@@ -22,10 +26,6 @@ EXTRA_CFLAGS += \
 #
 # No user serviceable parts below
 #
-
-ifeq ($(SCRIPTDIR),)
-SCRIPTDIR=$(TOP)scripts/
-endif
 
 $(eval CC  	:= $(call expand,compiler.cmd.cc))
 $(eval CXX      := $(call expand,compiler.cmd.cxx))
