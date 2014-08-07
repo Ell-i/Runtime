@@ -149,6 +149,7 @@
     static const uint32_t __GPIO ## port ## _PIN ## pin ## _AF =        \
         GPIO_AFRx_AFRx0_AF ## af<< ((pin % 8) * 4)
 
+#define DEFINE_GPIO_PIN_DUMMY(port, pin) DEFINE_GPIO_PIN_INIT(port, pin, INPUT, PUSH_PULL, HIGH, NO_PULL, 0)
 
 #define DEFINE_GPIO_INIT_RECORD(port)                                   \
 const SystemInitRecordData32Only GPIO ## port ## _INIT_DefaultRecords[] = { \

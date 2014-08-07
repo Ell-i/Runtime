@@ -24,6 +24,8 @@
 #include "arduelli_gpio.h"
 #include "arduelli_timer.h"
 
+// XXX FIXME: The pin numbering in this file is wrong, see issue #18
+
 static inline
 void analogWrite(pin_t pin, uint32_t value) {
 

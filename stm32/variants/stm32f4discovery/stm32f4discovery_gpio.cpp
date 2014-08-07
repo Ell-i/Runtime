@@ -35,7 +35,7 @@ DEFINE_GPIO_INIT_RECORD(E);
 DEFINE_GPIO_INIT_RECORD(F);
 DEFINE_GPIO_INIT_RECORD(G);
 DEFINE_GPIO_INIT_RECORD(H);
-// DEFINE_GPIO_INIT_RECORD(I);  TODO, PORT I is only 12 pins 
+DEFINE_GPIO_INIT_RECORD(I); // Actually only 12 bits, but the SW doesn't care
 
 /*
  * Boot-time definitions for the STM32F4 series MCU ports.
@@ -54,4 +54,4 @@ DEFINE_GPIO_PORT(E, GPIOE_INIT_DefaultRecords, GPIOE_INIT_AltFunctRecords);
 DEFINE_GPIO_PORT(F, GPIOF_INIT_DefaultRecords, GPIOF_INIT_AltFunctRecords);
 DEFINE_GPIO_PORT(G, GPIOG_INIT_DefaultRecords, GPIOG_INIT_AltFunctRecords);
 DEFINE_GPIO_PORT(H, GPIOH_INIT_DefaultRecords, GPIOH_INIT_AltFunctRecords);
-// DEFINE_GPIO_PORT(I, GPIOI_INIT_DefaultRecords, GPIOI_INIT_AltFunctRecords);  TODO, PORT I is only 12 pins 
+DEFINE_GPIO_PORT(I, GPIOI_INIT_DefaultRecords, GPIOI_INIT_AltFunctRecords);

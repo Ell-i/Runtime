@@ -17,7 +17,7 @@
  */
 
 /*
- * Authors: Lari Lehtom√§ki <lari@lehtomaki.fi>  2014
+ * Authors: Lari Lehtom‰ki <lari@lehtomaki.fi>  2014
  */
 
 #include "stm32f4discovery_gpio.h"
