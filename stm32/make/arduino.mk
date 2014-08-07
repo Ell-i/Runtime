@@ -37,7 +37,8 @@ $(eval CFLAGS   := $(call expand,compiler.cmd.cc.flags))
 $(eval CXXFLAGS := $(call expand,compiler.cmd.cxx.flags))
 $(eval LDFLAGS  := $(call expand,compiler.cmd.ld.flags))
 $(eval ARFLAGS  := $(call expand,compiler.cmd.ar.flags))
-$(eval EHFLAGS  := $(call expand,compiler.cmd.elf2hex.flags))
+$(eval E2HFLAGS := $(call expand,compiler.cmd.elf2hex.flags))
+$(eval E2BFLAGS := $(call expand,compiler.cmd.elf2bin.flags))
 
 $(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
 

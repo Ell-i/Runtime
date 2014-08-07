@@ -80,6 +80,7 @@ compiler.cmd.ld.libs=       "-L{build.path}" "-L{build.variant.path}" "{build.va
 
 compiler.cmd.elf2hex=       {compiler.prefix}objcopy
 compiler.cmd.elf2hex.flags= -O ihex
+compiler.cmd.elf2bin.flags= -O binary
 compiler.cmd.elf2hex.files= "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
 
 

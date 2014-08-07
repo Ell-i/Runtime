@@ -43,7 +43,7 @@ APP_OBJS ?= main.o $(APP).o $(VARIANT).o
 
 VPATH += $(TOP)cores/arduelli $(TOP)variants/$(VARIANT)
 
-all:  $(APP) $(APP).hex
+all:  $(APP) $(APP).hex $(APP).bin
 
 clean::
 	rm -f $(APP)
@@ -59,10 +59,13 @@ $(APP):	$(APP_OBJS) $(SYSTEM_LIBS) $(PRE_OBJS) $(POST_OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS)
 
 #
-# Define rules for producing .hex files
+# Define rules for producing .hex and .bin files
 #
 
-.PHONY:	.hex
+.PHONY:	.hex .bin
 
 %.hex:	%
-	$(ELF2HEX) $(EHFLAGS) $< $@
+	$(ELF2HEX) $(E2HFLAGS) $< $@
+
+%.bin:  %
+	$(ELF2HEX) $(E2BFLAGS) $< $@
