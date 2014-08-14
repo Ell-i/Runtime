@@ -8,19 +8,13 @@ TOP ?=$(shell pwd)/../
 MAKEDIR ?= $(TOP)make/
 
 #
-# Check that variant to build for is defined
+# Set up the compilation environment, recursively if needed
 #
-#VARIANT ?= ellduino
-
-ifeq ($(VARIANT),)
-$(error VARIANT must be defined.)
-endif
+include $(MAKEDIR)combinations.mk
 
 #
-# Set up the compilation environment, identical to the Arduino IDE,
-# and include system lib building; we depend on system libraries
+# Add dependcies to system libraries, and applicatoin libraries
 #
-include $(MAKEDIR)$(PLATFORM).mk
 include $(MAKEDIR)system_libs_inc.mk
 include $(MAKEDIR)libs_inc.mk
 
@@ -41,7 +35,9 @@ APP_OBJS ?= main.o $(APP).o $(VARIANT).o
 # Rules
 #
 
-VPATH += $(TOP)cores/arduelli $(TOP)variants/$(VARIANT)
+VPATH += $(TOP)cores/arduelli $(TOP)variants/$(VARIANT) $(APPLICATION_SRC_DIR)
+
+ifdef LOCAL_RULES
 
 all:  $(APP) $(APP).hex $(APP).bin
 
@@ -69,3 +65,5 @@ $(APP):	$(APP_OBJS) $(SYSTEM_LIBS) $(PRE_OBJS) $(POST_OBJS)
 
 %.bin:  %
 	$(ELF2HEX) $(E2BFLAGS) $< $@
+
+endif

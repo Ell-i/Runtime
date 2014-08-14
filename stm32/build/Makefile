@@ -17,16 +17,26 @@
 # along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-PLATFORM ?= arduino
-# PLATFORM = emulator
-
-all:
-	make PLATFORM=$(PLATFORM) -f ../make/app.mk all
+all: 	sketch.cpp
+	@APPLICATION_SRC_DIR=$(PWD) $(MAKE) -f ../make/app.mk all
 
 clean:
-	make PLATFORM=$(PLATFORM) -f ../make/app.mk clean
+	@APPLICATION_SRC_DIR=$(PWD) $(MAKE) -f ../make/app.mk clean
+
+clobber: clean
+	@echo
+	@echo "*********************************************************"
+	@echo "**** Removing sketch.cpp"
+	@echo "*********************************************************"
+	@echo
+	rm -f sketch.cpp
 
 sketch.cpp: Makefile
+	@echo
+	@echo "*********************************************************"
+	@echo "**** Creating sketch.cpp"
+	@echo "*********************************************************"
+	@echo
 	echo "#include <Arduino.h>" > sketch.cpp
-	echo "void setup() {}"      >> sketch.cpp 
+	echo "void setup() {}"      >> sketch.cpp
 	echo "void loop() {}"       >> sketch.cpp
