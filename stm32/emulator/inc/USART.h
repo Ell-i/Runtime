@@ -35,6 +35,15 @@
 
 class UniversalSynchronousAsynchronousReceiverTransmitter {
 public:
+#if defined(__STM32F407__)
+    DEFINE_REGISTER(16, USART, SR,       0);
+    DEFINE_REGISTER(16, USART, DR,       0);
+    DEFINE_REGISTER(16, USART, BRR,      0);
+    DEFINE_REGISTER(16, USART, CR1,      0);
+    DEFINE_REGISTER(16, USART, CR2,      0);
+    DEFINE_REGISTER(16, USART, CR3,      0);
+    DEFINE_REGISTER(16, USART, GTPR,     0);
+#elif defined(__STM32F051__)
     DEFINE_REGISTER(32, USART, CR1,      0);
     DEFINE_REGISTER(32, USART, CR2,      0);
     DEFINE_REGISTER(32, USART, CR3,      0);
@@ -46,6 +55,9 @@ public:
     DEFINE_REGISTER(32, USART, ICR,      0);
     DEFINE_REGISTER(16, USART, RDR,      0);
     DEFINE_REGISTER(16, USART, TDR,      0);
+#else
+# error "Unknown MCU die.  Please define."
+#endif
 protected:
     UniversalSynchronousAsynchronousReceiverTransmitter() {}
 public:

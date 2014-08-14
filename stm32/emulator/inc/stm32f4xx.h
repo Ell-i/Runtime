@@ -21,7 +21,7 @@
 #define _EMULATOR_STM32F4XX_
 
 #include <stdint.h>
-#include "../../system/stm32/inc/stm32f0xx.h"  // XXX FIX PATH
+#include "../../system/stm32/inc/stm32f4xx.h"  // XXX FIX PATH
 #include "./stm32fxxx.h"
 
 #endif //_EMULATOR_STM32F4XX_

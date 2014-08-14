@@ -64,7 +64,7 @@
 
 
 /**
- * XXX (later) This code is based on the assumption that the C++ version of 
+ * XXX (later) This code is based on the assumption that the C++ version of
  * the D32 macro will be used. Although it cuould be removed and use the direct
  * value, it is still used to keep homogeneity.
  */

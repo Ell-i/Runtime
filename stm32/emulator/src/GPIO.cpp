@@ -33,4 +33,5 @@ GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOE;
 GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOF;
 GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOG;
 GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOH;
+GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOI;
 
