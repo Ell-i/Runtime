@@ -17,10 +17,11 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <USART.h>
+#ifndef _EMULATOR_STM32F4XX_
+#define _EMULATOR_STM32F4XX_
 
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART1;
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
+#include <stdint.h>
+#include "../../system/stm32/inc/stm32f0xx.h"  // XXX FIX PATH
+#include "./stm32fxxx.h"
 
+#endif //_EMULATOR_STM32F4XX_

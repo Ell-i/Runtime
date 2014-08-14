@@ -25,7 +25,13 @@
 #define _USART_H_
 
 #include <Register.h>
-#include <stm32f0xx.h>
+
+#ifdef __STM32F051__
+# include <stm32f0xx.h>
+#endif
+#ifdef __STM32F407__
+# include <stm32f4xx.h>
+#endif
 
 class UniversalSynchronousAsynchronousReceiverTransmitter {
 public:

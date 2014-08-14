@@ -67,7 +67,12 @@ VPATH += $(TOP)system/stm32/src $(TOP)variants/$(VARIANT)
 # Rules
 #
 
+ifeq ($(PLATFORM),hardware)
 SYSTEM_LIB = $(TOP)variants/$(VARIANT)/lib$(SYSTEM_TYPE).a
+endif
+ifeq ($(PLATFORM),emulator)
+SYSTEM_LIB = ./libsystem_$(VARIANT).a
+endif
 
 ifdef LOCAL_RULES
 
