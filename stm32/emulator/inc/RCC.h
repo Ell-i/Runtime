@@ -25,6 +25,9 @@
 class ResetClockControl {
 public:
     DEFINE_REGISTER(32, RCC, CR,       0x0200FF83); // PLL set for SetSysClock
+#if defined(__STM32F407__)
+    DEFINE_REGISTER(32, RCC, PLLCFGR,  0x24003010); // XXX Check, set to reset value
+#endif
     DEFINE_REGISTER(32, RCC, CFGR,     0x00000008); // PLL set for SetSysClock
     DEFINE_REGISTER(32, RCC, CIR,      0x00000000);
     DEFINE_REGISTER(32, RCC, APB1RSTR, 0x00000000);
