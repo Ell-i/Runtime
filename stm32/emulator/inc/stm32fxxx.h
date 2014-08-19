@@ -29,11 +29,16 @@ typedef Register preg16_t;
  * Undefine the main address defines in the real stm32f0xx.h, causing
  * a compile error on all constructs that use them.
  */
-#undef FLASH_BASE
+/* XXX There is a problem with undefining FLASH_BASE, because it
+ * is used by the stm32f4 initialization of the SCB->VTOR
+ */
+//#undef FLASH_BASE
 #undef SRAM_BASE
 #undef PERIPH_BASE
 
 #undef RCC
+#undef PWR
+#undef SCB
 #undef FLASH
 #undef GPIOA
 #undef GPIOB
@@ -73,6 +78,8 @@ typedef Register preg16_t;
 #undef SPI2
 
 #include <RCC.h>
+#include <PWR.h>
+#include <SCB.h>
 #include <FLASH.h>
 #include <GPIO.h>
 #include <TIM.h>

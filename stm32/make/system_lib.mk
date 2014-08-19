@@ -46,11 +46,9 @@ SYSTEM_OBJS += \
 endif
 ifeq ($(VARIANT),stm32f4discovery)
 SYSTEM_TYPE = stm32f4
-ifneq ($(PLATFORM),emulator)
 SYSTEM_OBJS += \
 	startup_stm32f40xx.o \
 	system_stm32f4xx.o
-endif
 endif
 
 SYSTEM_OBJS += \
