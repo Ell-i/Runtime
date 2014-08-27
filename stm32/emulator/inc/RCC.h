@@ -37,7 +37,7 @@ public:
     DEFINE_REGISTER(32, RCC, PLLCFGR,  0x24003010); // XXX Check, set to reset value
 #endif
 #if defined(__STM32F407__)
-    RegisterRCC_CFGR CFGR;
+    Register_RCC_CFGR CFGR;
 #elif defined(__STM32F051__)
     DEFINE_REGISTER(32, RCC, CFGR,     0x00000008); // PLL set for SetSysClock
 #else

@@ -17,15 +17,25 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _REGISTER_RCC_CFGR_H_
-#define _REGISTER_RCC_CFGR_H_
+/**
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
+ */
+
+#ifndef _REGISTER_GPIO_BSRR_H_
+#define _REGISTER_GPIO_BSRR_H_
 
 #include <Register.h>
 
-class Register_RCC_CFGR : public Register {
+class Register_GPIO_ODR;
+
+class Register_GPIO_BSRR : public Register {
+    Register_GPIO_ODR & odr_;
 public:
-    Register_RCC_CFGR() : Register("RCC", "CFGR", 32, 0) {}
-    uint32_t operator = (uint32_t arg);
+    Register_GPIO_BSRR(Register_GPIO_ODR &odr)
+        : Register("GPIO", "BSRR", 32, 0)
+        , odr_(odr)
+        {}
+    uint32_t  operator = (uint32_t arg);
 };
 
-#endif //_REGISTER_RCC_CFGR_H_
+#endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 ELL-i co-operative.
+ * Copyright (c) 2014 ELL-i co-operative.
  *
  * This is part of ELL-i software.
  *
@@ -17,15 +17,20 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _REGISTER_RCC_CFGR_H_
-#define _REGISTER_RCC_CFGR_H_
+/**
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
+ */
 
-#include <Register.h>
+#include <Register_GPIO_BRR.h>
+#include <Register_GPIO_IDR.h>
+#include <Register_GPIO_ODR.h>
 
-class Register_RCC_CFGR : public Register {
-public:
-    Register_RCC_CFGR() : Register("RCC", "CFGR", 32, 0) {}
-    uint32_t operator = (uint32_t arg);
-};
+uint32_t Register_GPIO_BRR::operator = (uint32_t arg) {
+    printout("=", 0);
 
-#endif //_REGISTER_RCC_CFGR_H_
+    uint32_t value = odr_.value_;
+    value &= ~(arg & 0xffff);
+    odr_.assign(value);
+
+    return 0; // See STM32F0xx Refence Manual RM0091 Doc ID 018940 Rev 5 page 165.
+}

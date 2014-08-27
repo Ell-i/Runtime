@@ -44,9 +44,12 @@ public:
     uint32_t  operator &= (uint32_t);
     uint32_t  operator =  (uint32_t);
     uint32_t  operator =  (uint32_t) volatile;
-    uint32_t  operator &  (uint32_t);
-    uint32_t  operator &  (uint16_t);
+    uint32_t  operator &  (uint32_t) const;
+    //uint32_t  operator &  (uint16_t) const; // XXX Do we really need this?
     operator uint32_t () volatile { return value_; }
+
+protected:
+    void printout(const std::string opStr, uint32_t result) const;
 };
 
 #define DEFINE_REGISTER(size, periph, name, value)            \

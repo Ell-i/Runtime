@@ -19,13 +19,10 @@
 
 #include <Register_RCC_CFGR.h>
 
-uint32_t RegisterRCC_CFGR::operator = (uint32_t arg) {
-    std::cout
-        << std::setbase(16)
-        << (periph_) << ':'
-        << (name_)   << ':'
-        << (value_)  << "=" << arg << '\n';
-    /*XXX Keep PLL enabled to prevent loop */
-    value_ = 0x00000008;
+uint32_t Register_RCC_CFGR::operator = (uint32_t arg) {
+    printout("=", arg);
+    /* XXX Keep PLL enabled to prevent loop in the startup code */
+    /* NB.  This is really an ugly hack.  We need to think hard how to model this better. */
+    value_ = arg | 0x00000008;
     return value_;
 }

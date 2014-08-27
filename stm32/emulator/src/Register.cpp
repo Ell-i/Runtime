@@ -19,35 +19,35 @@
 
 #include <Register.h>
 
+void Register::printout(const std::string opStr, uint32_t result) const {
+    std::cout << std::setbase(16)
+              << periph_ << ':'
+              << name_   << ':'
+              << "value=" << value_
+              << "->" << result
+              << std::endl;
+}
+
 uint32_t Register::operator = (uint32_t arg) volatile {
     return *(const_cast<Register*>(this)) = arg;
 }
 
-uint32_t Register::operator = (uint32_t arg) {
-    std::cout
-        << std::setbase(16)
-        << (periph_) << ':'
-        << (name_)   << ':'
-        << (value_)  << "=" << arg << '\n';
-    value_ = arg;
-    return value_;
+uint32_t Register::operator  = (uint32_t arg) {
+    printout("=", arg);
+    return value_  = arg;
 }
 
 uint32_t Register::operator |= (uint32_t arg) {
-    // XXX move setbase to a better location
-    std::cout << std::setbase(16) << periph_
-              << ':' << name_ << ':' << value_ << "|=" << arg << '\n';
+    printout("|=", value_ | arg);
     return value_ |= arg;
 }
 
 uint32_t Register::operator &= (uint32_t arg) {
-    std::cout << periph_ << ':'
-              << name_ << ':' << value_ << "&=" << arg << '\n';
+    printout("&=", value_ & arg);
     return value_ &= arg;
 }
 
-uint32_t Register::operator &  (uint32_t arg) {
-    std::cout << periph_ << ':'
-              << name_ << ':' << value_ << '&' << arg << '\n';
-    return value_ & arg;
+uint32_t Register::operator &  (uint32_t arg) const {
+    printout("&", value_ & arg);
+    return value_ &  arg;
 }

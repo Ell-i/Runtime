@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 ELL-i co-operative.
+ * Copyright (c) 2014 ELL-i co-operative.
  *
  * This is part of ELL-i software.
  *
@@ -17,15 +17,19 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _REGISTER_RCC_CFGR_H_
-#define _REGISTER_RCC_CFGR_H_
+/**
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
+ */
 
-#include <Register.h>
+#include "Register_GPIO_IDR.h"
 
-class Register_RCC_CFGR : public Register {
-public:
-    Register_RCC_CFGR() : Register("RCC", "CFGR", 32, 0) {}
-    uint32_t operator = (uint32_t arg);
-};
 
-#endif //_REGISTER_RCC_CFGR_H_
+uint32_t Register_GPIO_IDR::operator = (uint32_t arg) {
+    printout("=", arg);
+    assign(arg);
+    return value_;
+}
+
+void Register_GPIO_IDR::assign(uint32_t arg) {
+    value_ = arg;
+}

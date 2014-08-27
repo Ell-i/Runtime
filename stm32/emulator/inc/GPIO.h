@@ -18,29 +18,47 @@
  */
 
 #include <Register.h>
+#include <Register_GPIO_MODER.h>
+//#include <Register_GPIO_OTYPER.h>
+//#include <Register_GPIO_OSPEEDR.h>
+#include <Register_GPIO_PUPDR.h>
+#include <Register_GPIO_IDR.h>
+#include <Register_GPIO_ODR.h>
+#include <Register_GPIO_BSRR.h>
+//#include <Register_GPIO_LCKR.h>
+#include <Register_GPIO_AFR.h>
+#include <Register_GPIO_BRR.h>
+
 
 class GeneralPurposeInputOutput {
 public:
-    DEFINE_REGISTER(32, GPIO, MODER, 0);
-    //DEFINE_REGISTER(32, GPIO, OTYPER, 0);
-    //DEFINE_REGISTER(32, GPIO, OSPEEDR, 0);
-    DEFINE_REGISTER(32, GPIO, PUPDR, 0);
-    DEFINE_REGISTER(32, GPIO, IDR, 0);
-    //DEFINE_REGISTER(32, GPIO, ODR, 0);
+    Register_GPIO_MODER MODER;
+    //Register_GPIO_OTYPER OTYPER;
+    //Register_GPIO_OSPEEDR OSPEEDR;
+    Register_GPIO_PUPDR PUPDR;
+    Register_GPIO_ODR ODR;
+    Register_GPIO_IDR IDR;
 #if defined(__STM32F407__)
+    // XXX REWRITE
     DEFINE_REGISTER(16, GPIO, BSRRL, 0);
-    DEFINE_REGISTER(32, GPIO, AFR, 0)[2];
     DEFINE_REGISTER(16, GPIO, BSRRH, 0);
-#elif defined(__STM32F051__)
-    DEFINE_REGISTER(32, GPIO, BSRR, 0);
-    //DEFINE_REGISTER(32, GPIO, LCKR, 0);
     DEFINE_REGISTER(32, GPIO, AFR, 0)[2];
-    DEFINE_REGISTER(32, GPIO, BRR, 0);
+#elif defined(__STM32F051__)
+    Register_GPIO_BSRR BSRR;
+    Register_GPIO_AFR AFR[2];
+    //Register_GPIO_LCKR LCKR;
+    Register_GPIO_BRR BRR;
 #else
 # error "Unknown MCU die.  Please define."
 #endif
 protected:
-    GeneralPurposeInputOutput() {}
+    GeneralPurposeInputOutput()
+        : ODR(IDR)
+#if defined(__STM32F051__)
+        , BSRR(ODR)
+        , BRR(ODR)
+#endif
+        {}
 public:
     static GeneralPurposeInputOutput GPIOA;
     static GeneralPurposeInputOutput GPIOB;
