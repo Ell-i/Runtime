@@ -229,4 +229,15 @@ extern void SystemInitPeripherals(void);
 
 # define IF(x) .x=
 
+/********************************
+ * XXX Temporary helper for compiling inlineable Arduino APIs
+ *     differently for the emulator and the real hardware
+ */
+
+#ifndef EMULATOR
+#define ARDUINO_INLINE_API static inline
+#else
+#define ARDUINO_INLINE_API /*empty*/
+#endif
+
 #endif//_SYSTEM_INIT_H_

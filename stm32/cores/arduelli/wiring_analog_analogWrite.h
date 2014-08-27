@@ -26,7 +26,7 @@
 
 // XXX FIXME: The pin numbering in this file is wrong, see issue #18
 
-static inline
+ARDUINO_INLINE_API
 void analogWrite(pin_t pin, uint32_t value) {
 
     const uint32_t pin_shift = (GPIOPIN[pin].gpio_pin * 2);
@@ -39,7 +39,7 @@ void analogWrite(pin_t pin, uint32_t value) {
     *(PWMPIN[pin].pwm_ccr) = value;
 }
 
-static inline
+ARDUINO_INLINE_API
 void noAnalogWrite(pin_t pin) {
 
     const uint32_t pin_shift = (GPIOPIN[pin].gpio_pin * 2);

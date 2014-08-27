@@ -40,12 +40,12 @@
 
 #include "wiring_digital_pinMode.h"
 
-static inline
+ARDUINO_INLINE_API
 int digitalRead(pin_t pin) {
     return GPIOPIN[pin].gpio_port->IDR & GPIOPIN[pin].gpio_mask? 1: 0;
 }
 
-static inline
+ARDUINO_INLINE_API
 void  digitalWrite(pin_t pin, uint32_t val) {
 // TODO: Check if the following ifdefs are really needed, or could we
 // use BSRRL also in Cortex-M0 without too much overhead
