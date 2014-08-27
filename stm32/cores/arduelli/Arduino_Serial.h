@@ -61,10 +61,10 @@ inline void Serial::begin(uint32_t baudrate) const {
     PinFunctionActivate(&usart_.usart_rx_function_);
 
     /* Set the baud rate -- use 16 bit oversampling */
-    usart_.usart_->BRR = SystemCoreClock / baudrate;
+    usart_.usart_->BRR = (SystemCoreClock / baudrate);
 
     /* Enable the transmitter and the USART */
-    usart_.usart_->CR1 |= USART_CR1_TE | USART_CR1_UE;
+    usart_.usart_->CR1 |= (USART_CR1_TE | USART_CR1_UE);
 }
 
 inline void Serial::write(uint8_t c) const {

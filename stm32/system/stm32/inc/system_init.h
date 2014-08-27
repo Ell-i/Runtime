@@ -224,7 +224,7 @@ extern void SystemInitPeripherals(void);
 # endif
 
 /********************************
- * XXX TBD
+ * XXX TBD REMOVE THE USE OF THIS UGLY MACRO!
  */
 
 # define IF(x) .x=

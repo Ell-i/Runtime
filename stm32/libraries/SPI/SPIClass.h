@@ -108,63 +108,66 @@ public:
     void end(void) const {
         /* XXX Semantic inconsistency with begin(void) */
         spi_master_end(&spi_);
-    }
+    };
 
     void setBitOrder(const SPIBitOrder bitOrder) const {
         setBitOrder(BOARD_SPI_DEFAULT_SS, bitOrder);
-    }
+    };
     void setBitOrder(const uint8_t ss_pin, const SPIBitOrder bitOrder) const {
         ssPinCR1_[ss_pin] &= ~SPI_CR1_LSBFIRST;
         ssPinCR1_[ss_pin] |=  bitOrder;
-    }
+    };
 
     uint32_t setClockDivider(const SPIClockDivider clockDivider) const {
         return setClockDivider(BOARD_SPI_DEFAULT_SS, clockDivider);
-    }
+    };
+
     uint32_t setClockDivider(const uint8_t ss_pin, const SPIClockDivider clockDivider) const {
         uint32_t oldValue = ssPinCR1_[ss_pin] & SPI_CR1_BR;
         ssPinCR1_[ss_pin] &= ~SPI_CR1_BR;
         ssPinCR1_[ss_pin] |= clockDivider;
         return oldValue;
-    }
+    };
 
     uint32_t setClock(const uint32_t hertz) const {
         return setClock(BOARD_SPI_DEFAULT_SS, hertz);
-    }
+    };
+
     uint32_t setClock(const uint8_t ss_pin, const uint32_t hertz) const {
-        uint32_t outputHertz = SystemCoreClock>>1;
+        // XXX rewrite this function!
+        uint32_t outputHertz = SystemCoreClock >> 1;
         uint8_t wantedDivider = 0;
         SPIClockDivider wantedDividerEnum;
-        
-        if (hertz<outputHertz)
-        {
-            for (wantedDivider=1; wantedDivider < 7; wantedDivider++){
+
+        if (hertz < outputHertz) {
+            for (wantedDivider=1; wantedDivider < 7; wantedDivider++) {
                 outputHertz>>=1;
                 if (hertz >= outputHertz) break;
             }
         }
-        
+
         //XXX There should be a better way than typecasting.
         wantedDividerEnum =  static_cast<SPIClockDivider>(wantedDivider<<3);
         setClockDivider(ss_pin, wantedDividerEnum);
         return outputHertz;
-    }
+    };
 
     void setDataMode(SPIDataMode dataMode) const {
         setDataMode(BOARD_SPI_DEFAULT_SS, dataMode);
-    }
+    };
+
     void setDataMode(uint8_t ss_pin, SPIDataMode dataMode) const {
         ssPinCR1_[ss_pin] &= ~(SPI_CR1_CPHA | SPI_CR1_CPOL);
         ssPinCR1_[ss_pin] |=  dataMode;
-    }
+    };
 
     uint8_t transfer(uint8_t data, SPITransferMode mode = SPI_LAST) const {
         return transfer(BOARD_SPI_DEFAULT_SS, data, mode);
-    }
+    };
 
     uint8_t transfer(uint8_t ss_pin, uint8_t data, SPITransferMode mode = SPI_LAST) const {
         return transfer(ss_pin, &data, 1, mode);
-    }
+    };
 
     uint8_t transfer(uint8_t ss_pin, uint8_t data[], uint8_t len,
                      SPITransferMode mode = SPI_LAST) const {

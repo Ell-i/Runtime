@@ -33,7 +33,6 @@ public:
     Register_GPIO_IDR() : Register("GPIO", "IDR", 32, 0) {}
 
     uint32_t operator = (uint32_t arg);
-    uint32_t operator & (uint32_t arg);
 
 private:
     friend class Register_GPIO_ODR;

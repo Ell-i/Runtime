@@ -45,7 +45,7 @@ public:
     uint32_t  operator =  (uint32_t);
     uint32_t  operator =  (uint32_t) volatile;
     uint32_t  operator &  (uint32_t) const;
-    //uint32_t  operator &  (uint16_t) const; // XXX Do we really need this?
+    //uint16_t  operator &  (uint16_t) const; // XXX Do we really need this?
     operator uint32_t () volatile { return value_; }
 
 protected:
@@ -57,8 +57,7 @@ class Class ## name : public Register {                       \
 public:                                                       \
     Class ## name() : Register(# periph, # name, size, value) {}; \
     uint32_t operator=(uint32_t arg) {                        \
-        std::cout << periph_ << ":" << name_ << ":" << "="    \
-            << arg << '\n';                                   \
+        printout("=", arg);                                   \
         return value_ = arg;                                  \
     }                                                         \
 } name
