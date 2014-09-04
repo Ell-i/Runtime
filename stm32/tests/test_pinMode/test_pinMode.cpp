@@ -20,6 +20,10 @@
 #include "wiring_digital.h"
 #include "variant.h" // Explicitly make sure the init records are linked
 
+#ifdef EMULATOR
+#include <unistd.h>
+#endif
+
 void setup() {
     pinMode(0, INPUT);
     pinMode(1, INPUT_PULLUP);

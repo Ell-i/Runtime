@@ -18,6 +18,9 @@
  */
 
 #include "wiring_analog.h"
+#ifdef EMULATOR
+#include <unistd.h>
+#endif
 
 void setup() {
     analogWrite(0, 0);

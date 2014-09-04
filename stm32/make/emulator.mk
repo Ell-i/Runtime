@@ -25,7 +25,7 @@ EXTRA_CFLAGS += \
 	-I$(TOP)system/stm32/inc \
 	-I$(TOP)system/stm32/CMSIS/Include \
 	-I$(TOP)variants/$(VARIANT) \
-	-Wno-deprecated-register \
+	-Wno-deprecated \
 
 #
 # No user serviceable parts below

@@ -18,6 +18,9 @@
  */
 
 #include "ellduino_Serial.h"
+#ifdef EMULATOR
+#include <unistd.h>
+#endif
 
 void setup() {
     Serial.begin(57600);

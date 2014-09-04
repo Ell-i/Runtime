@@ -19,6 +19,9 @@
 
 
 #include <SPI.h>
+#ifdef EMULATOR
+#include <unistd.h>
+#endif
 
 void setup() {
     SPI.begin();

@@ -18,6 +18,9 @@
  */
 
 #include "wiring_digital.h"
+#ifdef EMULATOR
+#include <unistd.h>
+#endif
 
 void setup() {
     pinMode(0, INPUT);

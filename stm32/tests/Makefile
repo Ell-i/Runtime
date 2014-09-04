@@ -14,6 +14,8 @@
 #
 #
 
+TOP = $(shell cd ..; pwd)/
+
 TARGETS = \
     test_pinMode \
     test_digitalRead \
@@ -22,9 +24,6 @@ TARGETS = \
     test_Serial_begin \
     test_Serial_write_uint8 \
     test_SPI_begin \
-
-PLATFORM ?= arduino
-# PLATFORM = emulator
 
 .PHONY : $(TARGETS) all clean tests
 
@@ -35,7 +34,8 @@ clean:	$(TARGETS)
 clean:	TARGET=clean
 
 $(TARGETS): %:
-	$(MAKE) -C $* -f `pwd`/../make/app.mk TOP=`pwd`/../ APP=$@ PLATFORM=$(PLATFORM) $(TARGET)
+	@APPLICATION_SRC_DIR=$(PWD)/$* $(MAKE) -C $* -f $(TOP)make/app.mk \
+		TOP=$(TOP) APP=$@ PLATFORM=$(PLATFORM) $(TARGET)
 
 tests:	PLATFORM = emulator
 tests:  $(TARGETS)
