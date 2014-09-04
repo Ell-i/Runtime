@@ -236,8 +236,12 @@ extern void SystemInitPeripherals(void);
 
 #ifndef EMULATOR
 #define ARDUINO_INLINE_API static inline
+#define ARDUINO_INLINE_MEMBER_FUNCTION inline
+#define ARDUINO_GLOBAL_IMMUTABLE static const
 #else
 #define ARDUINO_INLINE_API /*empty*/
+#define ARDUINO_INLINE_MEMBER_FUNCTION __attribute__((noinline))
+#define ARDUINO_GLOBAL_IMMUTABLE const
 #endif
 
 #endif//_SYSTEM_INIT_H_

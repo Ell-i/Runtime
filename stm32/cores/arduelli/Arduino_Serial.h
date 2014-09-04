@@ -55,7 +55,8 @@ public:
 constexpr Serial::Serial(const USART &usart)
     : usart_(usart) {}
 
-inline void Serial::begin(uint32_t baudrate) const {
+ARDUINO_INLINE_MEMBER_FUNCTION
+void Serial::begin(uint32_t baudrate) const {
     /* Place the GPIO pins into the right alternative function */
     PinFunctionActivate(&usart_.usart_tx_function_);
     PinFunctionActivate(&usart_.usart_rx_function_);

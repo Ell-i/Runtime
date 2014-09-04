@@ -28,6 +28,7 @@
 # include <ellduino_gpio.h> // XXX To be placed into the variant.h!
 # include <ellduino_timer.h>
 # include <ellduino_usart.h>
+# include <ellduino_Serial.h>
 #elif defined(ELLI_STM32F407_DISCOVERY)
 # include <stm32f4discovery_gpio.h> // XXX To be placed into the variant.h!
 # include <stm32f4discovery_timer.h>
