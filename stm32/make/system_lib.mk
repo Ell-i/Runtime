@@ -48,6 +48,12 @@ SYSTEM_OBJS += \
 	startup_stm32f40xx.o \
 	system_stm32f4xx.o
 endif
+ifeq ($(VARIANT),stm32f334nucleo)
+SYSTEM_TYPE = stm32f3
+SYSTEM_OBJS += \
+	startup_stm32f334x8.o \
+	system_stm32f3xx.o
+endif
 
 SYSTEM_OBJS += \
 	system_init.o \

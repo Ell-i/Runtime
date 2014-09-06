@@ -20,6 +20,7 @@
 
 VARIANTS = \
 	ellduino \
+	stm32f334nucleo \
 	stm32f4discovery
 #	stm32f0discovery \
 

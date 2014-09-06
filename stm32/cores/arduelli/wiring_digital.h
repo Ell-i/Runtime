@@ -30,6 +30,8 @@
 # include "ellduino_gpio.h"  // XXX replace with variant_gpio.h
 #elif defined(ELLI_STM32F407_DISCOVERY)
 # include "stm32f4discovery_gpio.h" // XXX To be placed into the variant.h!
+#elif defined(ELLI_STM32F334_NUCLEO)
+# include "stm32f334nucleo_gpio.h" // XXX To be placed into the variant.h!
 #else
 # error "Unknown board.  Please define."
 #endif
@@ -49,7 +51,7 @@ static inline
 void  digitalWrite(pin_t pin, uint32_t val) {
 // TODO: Check if the following ifdefs are really needed, or could we
 // use BSRRL also in Cortex-M0 without too much overhead
-#if defined(STM32F40_41xxx)
+#if defined(STM32F40_41xxx) || defined(STM32F334x8)
     if (val) // Set
         GPIOPIN[pin].gpio_port->BSRRL = GPIOPIN[pin].gpio_mask;
     else    // Reset

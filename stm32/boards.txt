@@ -87,3 +87,25 @@ stm32f4discovery.build.variant_system_libs=-lstm32f4
 
 stm32f4discovery.build.ldscript=ld/flash.ld
 stm32f4discovery.build.extra_flags=-D__STM32F407__ -DSTM32F40_41xxx
+
+##############################################################
+
+stm32f334nucleo.name=ST STM32F334 nucleo
+stm32f334nucleo.vid.0=0483
+stm32f334nucleo.pid.0=374B
+
+stm32f334nucleo.upload.tool=st-link
+stm32f334nucleo.upload.protocol=stm
+stm32f334nucleo.upload.maximum_size=65535
+stm32f334nucleo.upload.wait_for_upload_port=true
+stm32f334nucleo.upload.native_usb=true
+
+stm32f334nucleo.build.mcu=cortex-m4
+stm32f334nucleo.build.f_cpu=72000000L
+stm32f334nucleo.build.board=STM32F334_NUCLEO
+stm32f334nucleo.build.core=arduelli
+stm32f334nucleo.build.variant=stm32f334nucleo
+stm32f334nucleo.build.variant_system_libs=-lstm32f3
+
+stm32f334nucleo.build.ldscript=ld/flash.ld
+stm32f334nucleo.build.extra_flags=-D__STM32F334__ -DSTM32F334x8
