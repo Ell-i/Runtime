@@ -14,7 +14,7 @@ define expand
 $(shell $(SCRIPTDIR)expand-arduino-ide-definition.sh $(1) $(VARIABLE_FILES))
 endef
 
-$(eval EXTRA_CFLAGS_FROM_BUILD := $(call exapand,$(VARIANT).build.extra_flags))
+$(eval EXTRA_CFLAGS_FROM_BUILD := $(call expand,$(VARIANT).build.extra_flags))
 
 EXTRA_CFLAGS += \
         -DEMULATOR \
@@ -25,6 +25,7 @@ EXTRA_CFLAGS += \
 	-I$(TOP)system/stm32/inc \
 	-I$(TOP)system/stm32/CMSIS/Include \
 	-I$(TOP)variants/$(VARIANT) \
+	-Wno-deprecated-register \
 
 #
 # No user serviceable parts below
@@ -52,21 +53,27 @@ CFLAGS   := \
 CXXFLAGS := \
   $(subst -std=gnu++0x,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
 
-LDFLAGS  := -m32 -demangle -march=i386 $(LD_SCRIPT)
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
 
-$(eval LIBS     = $(call expand,compiler.cmd.ld.libs))
+$(eval LIBS := \
+  $(subst -lstm32f0,-lsystem_$(VARIANT),$(subst -lstm32f4,-lsystem_$(VARIANT),$(call expand,compiler.cmd.ld.libs))))
 
 CFLAGS   += $(EXTRA_CFLAGS)
 CXXFLAGS += $(EXTRA_CFLAGS)
 
 #
-# Arrange segments
+# Linking segments and shared library creation
 #
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-PRE_OBJS  := emulator_pre.o
-POST_OBJS := emulator_post.o
+PRE_OBJS    := emulator_pre.o
+POST_OBJS   := emulator_post.o
+SHAREDFLAGS := -Wl,-dylib -Wl,-macosx_version_min -Wl,10.8
+LDFLAGS     := -m32 -Wl,-arch -Wl,i386 $(LD_SCRIPT)
+else
+LDFLAGS  := -m32 -march=i386 $(LD_SCRIPT)
+SHAREDFLAGS := -shared -Xlinker --export-dynamic
+DYLD        = $(LD)
 endif
 
 #
@@ -79,5 +86,7 @@ LIBS += -lstdc++
 # Additional system objects
 #
 
-SYSTEM_OBJS := emulator.o Register.o RCC.o FLASH.o GPIO.o TIM.o USART.o SPI.o
+SYSTEM_OBJS := emulator.o Register.o  GPIO.o TIM.o USART.o SPI.o
+SYSTEM_OBJS += PWR.o SCB.o RCC.o FLASH.o
+SYSTEM_OBJS += Register_RCC_CFGR.o
 VPATH += $(TOP)emulator/src

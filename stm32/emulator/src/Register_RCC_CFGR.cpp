@@ -17,10 +17,15 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <USART.h>
+#include <Register_RCC_CFGR.h>
 
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART1;
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
-
+uint32_t RegisterRCC_CFGR::operator = (uint32_t arg) {
+    std::cout
+        << std::setbase(16)
+        << (periph_) << ':'
+        << (name_)   << ':'
+        << (value_)  << "=" << arg << '\n';
+    /*XXX Keep PLL enabled to prevent loop */
+    value_ = 0x00000008;
+    return value_;
+}

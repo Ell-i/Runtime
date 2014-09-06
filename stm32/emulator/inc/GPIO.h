@@ -27,10 +27,18 @@ public:
     DEFINE_REGISTER(32, GPIO, PUPDR, 0);
     DEFINE_REGISTER(32, GPIO, IDR, 0);
     //DEFINE_REGISTER(32, GPIO, ODR, 0);
+#if defined(__STM32F407__)
+    DEFINE_REGISTER(16, GPIO, BSRRL, 0);
+    DEFINE_REGISTER(32, GPIO, AFR, 0)[2];
+    DEFINE_REGISTER(16, GPIO, BSRRH, 0);
+#elif defined(__STM32F051__)
     DEFINE_REGISTER(32, GPIO, BSRR, 0);
     //DEFINE_REGISTER(32, GPIO, LCKR, 0);
     DEFINE_REGISTER(32, GPIO, AFR, 0)[2];
     DEFINE_REGISTER(32, GPIO, BRR, 0);
+#else
+# error "Unknown MCU die.  Please define."
+#endif
 protected:
     GeneralPurposeInputOutput() {}
 public:
@@ -42,6 +50,7 @@ public:
     static GeneralPurposeInputOutput GPIOF;
     static GeneralPurposeInputOutput GPIOG;
     static GeneralPurposeInputOutput GPIOH;
+    static GeneralPurposeInputOutput GPIOI;
 };
 
 GeneralPurposeInputOutput *const GPIOA = &GeneralPurposeInputOutput::GPIOA;
@@ -52,3 +61,4 @@ GeneralPurposeInputOutput *const GPIOE = &GeneralPurposeInputOutput::GPIOE;
 GeneralPurposeInputOutput *const GPIOF = &GeneralPurposeInputOutput::GPIOF;
 GeneralPurposeInputOutput *const GPIOG = &GeneralPurposeInputOutput::GPIOG;
 GeneralPurposeInputOutput *const GPIOH = &GeneralPurposeInputOutput::GPIOH;
+GeneralPurposeInputOutput *const GPIOI = &GeneralPurposeInputOutput::GPIOI;

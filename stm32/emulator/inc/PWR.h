@@ -17,10 +17,22 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <USART.h>
+#ifndef _PWR_H_
+#define _PWR_H_
 
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART1;
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
+#include <Register.h>
 
+class PowerController {
+public:
+#if defined(__STM32F407__)
+    DEFINE_REGISTER(32, PWR, CR,       0x00004000); // XXX Check, set to reset value
+#endif
+protected:
+    PowerController() {}
+public:
+    static PowerController PWR;
+};
+
+PowerController *const PWR = &PowerController::PWR;
+
+#endif //_PWR_H_

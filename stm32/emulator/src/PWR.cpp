@@ -17,10 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <USART.h>
+#include <PWR.h>
 
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART1;
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
+PowerController PowerController::PWR;
 

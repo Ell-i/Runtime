@@ -17,10 +17,15 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <USART.h>
+#ifndef _REGISTER_RCC_CFGR_H_
+#define _REGISTER_RCC_CFGR_H_
 
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART1;
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
+#include <Register.h>
 
+class RegisterRCC_CFGR : public Register {
+public:
+    RegisterRCC_CFGR() : Register("RCC", "CFGR", 32, 0) {}
+    uint32_t operator = (uint32_t arg);
+};
+
+#endif //_REGISTER_RCC_CFGR_H_

@@ -17,10 +17,25 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <USART.h>
+#ifndef _SCB_H_
+#define _SCB_H_
 
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART1;
-UniversalSynchronousAsynchronousReceiverTransmitter
-UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
+#include <Register.h>
 
+class SystemControlBlock {
+public:
+#if defined(__STM32F407__)
+    /* XXX Set to reset value */
+    DEFINE_REGISTER(32, SCB, CPUID,    0x410FC241);
+    DEFINE_REGISTER(32, SCB, ICSR,     0x00000000);
+    DEFINE_REGISTER(32, SCB, VTOR,     0x00000000);
+#endif
+protected:
+    SystemControlBlock() {}
+public:
+    static SystemControlBlock SCB;
+};
+
+SystemControlBlock *const SCB = &SystemControlBlock::SCB;
+
+#endif //_SCB_H_

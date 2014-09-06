@@ -22,6 +22,16 @@
 Timer Timer::TIM1;
 Timer Timer::TIM2;
 Timer Timer::TIM3;
+Timer Timer::TIM4;
+Timer Timer::TIM5;
+Timer Timer::TIM6;
+Timer Timer::TIM7;
+Timer Timer::TIM8;
+Timer Timer::TIM9;
+Timer Timer::TIM10;
+Timer Timer::TIM11;
+Timer Timer::TIM12;
+Timer Timer::TIM13;
 Timer Timer::TIM14;
 Timer Timer::TIM15;
 Timer Timer::TIM16;
