@@ -68,7 +68,6 @@ public:
 
     static const struct encX24j600_register_init_static_16bit encX24j600_init[];
     static const size_t encX24j600_init_size;
-    /// XXX FIXME do we need this: static enc_rx_packet_header_t rx_header;
 
 private:
 
@@ -141,6 +140,6 @@ ENCX24J600Class::spi_transfer(uint8_t *buffer, uint16_t len) const {
 
 # include <encX24J600/encX24J600_reg.h>
 # include <encX24J600/encX24J600_begin.h>
-//# include <encX24J600/encX24J600_packet.h>
+# include <encX24J600/encX24J600_packet.h>
 
 #endif//_ENCX24J600_CLASS_H_

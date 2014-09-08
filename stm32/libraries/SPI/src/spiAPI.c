@@ -29,7 +29,7 @@
  * Transmit, don't read.
  */
 // XXX Refactor the dummy reads out, if possible.  If not, document.
-size_t inline spi_transfer_write(
+size_t /*inline*/ spi_transfer_write(
     const struct SPI *const spi, uint8_t data[], const size_t len) {
 
     /* Get a handle for writing and reading 8-bit data */
@@ -104,7 +104,7 @@ size_t inline spi_transfer_write(
 /**
  * Transmit and read
  */
-size_t inline spi_transfer_read(
+size_t /*inline*/ spi_transfer_read(
     const struct SPI *const spi, uint8_t data[], const size_t len) {
     /* Get a handle for writing and reading 8-bit data */
     volatile uint8_t *const DR8 = (volatile uint8_t *const)&spi->spi_->DR;

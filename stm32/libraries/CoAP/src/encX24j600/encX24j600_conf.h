@@ -41,7 +41,7 @@
 # define MAX_PACKET_SIZE 1536
 
 # define ENC_BUFFER_START 0x0000
-# define ENC_BUFFER_SIZE  0x2000
+# define ENC_BUFFER_SIZE  0x6000
 # define ENC_BUFFER_END   0x5FFF
 
 # define RX_BUFFER_START (0x5340) /* Default value */
@@ -57,10 +57,6 @@
 # define ENC_PHY_REG(number)    ((number) +  ENC_PHY_OFFSET)
 # define ENC_IS_PHY_REG(number) ((number) >= ENC_PHY_OFFSET)
 
-/* ESTAT: Ethernet status register.  Page 93. */
-enum {
-    E_STAT_CLOCK_READY = 0x1000,
-};
 enum enc_reg_t {
     E_TX_START  = ENC_SFR_REG(0x00),
     E_TX_LEN    = ENC_SFR_REG(0x02),
@@ -185,7 +181,7 @@ enum enc_spi_op_t {
 
     ENC_SPI_DMA_STOP      = 0xD2,
     ENC_SPI_DMA_CKSUM     = 0xD4,
-    ENC_SPI_SET_TX_RTS    = 0xD8,
+    ENC_SPI_TX_REQUEST    = 0xD8,
     ENC_SPI_DMA_CKSUM_S   = 0xDA,
     ENC_SPI_DMA_COPY      = 0xDC,
     ENC_SPI_DMA_COPY_S    = 0xDE,
@@ -256,6 +252,11 @@ enum E_CON2 {
     AESLEN_256   = 0x0002,
     AESLEN_192   = 0x0001,
     AESLEN_128   = 0x0000,
+};
+
+/* ESTAT: Ethernet status register.  Page 93. */
+enum E_STAT {
+    CLOCK_READY = 0x1000,
 };
 
 enum E_RX_FILTER_CON {

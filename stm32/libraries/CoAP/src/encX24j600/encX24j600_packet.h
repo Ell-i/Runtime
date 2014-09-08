@@ -21,24 +21,44 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  * @author Ivan Raul <ivan.raul@ell-i.org> 2014
  *
- * @brief ENC28J60 ethernet interface
+ * @brief ENCX24J600 ethernet interface
  */
 
-#ifndef  _ENC28J60_PACKET_H_
-# define _ENC28J60_PACKET_H_
+#ifndef  _ENCX24J600_PACKET_H_
+# define _ENCX24J600_PACKET_H_
 
-# include <enc28j60/ENC28J60.h>
+# include <encX24J600/ENCX24J600.h>
 # include <netinet/ethernet.h>
 
+typedef struct {
+    uint8_t  rx_padding0;
+    uint8_t  rx_cmd;
+    // Start of the actual RX header
+    uint16_t rx_next;
+    uint16_t rx_length;
+    uint8_t  rx_flags0;
+    uint8_t  rx_flags1;
+    uint8_t  rx_flags2;
+    uint8_t  rx_padding2;
+} enc_rx_packet_header_t;
+
 inline int
-ENC28J60Class::availablePackets(void) const {
-    return reg_get(E_PKT_CNT);
+ENCX24J600Class::availablePackets(void) const {
+    register int value;
+
+    spi_master_activate(ss_pin_);
+    // Read just the low order 8 bits of E_STAT, the packet count
+    value = spi_transfer_3bytes(ENC_SPI_READ_REG_UB, E_STAT, 0);
+    spi_master_deactivate(ss_pin_);
+
+    return value;
 }
 
 inline int
-ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
+ENCX24J600Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
+    enc_rx_packet_header_t rx_header;
 
-    rx_header.rx_cmd = ENC_SPI_READ_MEM;
+    rx_header.rx_cmd = ENC_SPI_READ_RX;
     spi_transfer((unsigned char *)&rx_header, sizeof(enc_rx_packet_header_t));
 
     register unsigned int plen = rx_header.rx_length;
@@ -50,62 +70,32 @@ ENC28J60Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
     /* Assumed buffer has extra space at the
      * beginning for the command
      */
-    *(buffer - 1) = ENC_SPI_READ_MEM;
+    *(buffer - 1) = ENC_SPI_READ_RX;
     spi_transfer(buffer-1, plen+1);
 
     /*
      * Go to the beginning of the next packet.
-     *
-     * NB.  It might be possible to avoid this call if len ==
-     *      rx_header.rx_length, but that would need to be tested, as
-     *      it is not clear from the data sheet.
      */
-    reg_set(E_RD_PTR, next);
-
-    /*
-     * Free the ENC28J60 buffer memory for the next packets.
-     * See Errata #14.
-     */
-    reg_set(E_RX_RD_PTR, next == RX_BUFFER_START? RX_BUFFER_END: next-1);
+    reg_set(E_RX_TAIL, next);
+    reg_set(E_RX_RD_PT, next);
 
     /* Decrement the packet count */
-    reg_bitop(ENC_SPI_SET_BF, E_CON2, E_CON2_PKT_DEC);
+    spi_master_activate(ss_pin_);
+    spi_send_single_byte(ENC_SPI_SET_PKT_DEC);
+    spi_master_deactivate(ss_pin_);
 
     return plen;
 
 }
 
 inline void
-ENC28J60Class::getHeader(enc_rx_packet_header_t *rx_header) const {
-    rx_header->rx_cmd = ENC_SPI_READ_MEM;
-
-    spi_transfer((unsigned char *)rx_header, sizeof(enc_rx_packet_header_t));
-
-    register unsigned int next = rx_header->rx_next;
-
-    /*
-     * Go to the beginning of the next packet.
-     */
-    reg_set(E_RD_PTR, next);
-
-    /*
-     * Free the ENC28J60 buffer memory for the next packets.
-     * See Errata #14.
-     */
-    reg_set(E_RX_RD_PTR, next == RX_BUFFER_START? RX_BUFFER_END: next-1);
-
-    /* Decrement the packet count */
-    reg_bitop(ENC_SPI_SET_BF, E_CON2, E_CON2_PKT_DEC);
-}
-
-
-inline void
-ENC28J60Class::sendPacket(uint8_t *buffer, size_t len) const {
+ENCX24J600Class::sendPacket(uint8_t *buffer, size_t len) const {
     /*
      * Wait until the previous packet has been sent.
      */
     // DEBUG_SET_LED0(1);
-    while ((reg_get(E_CON1) & E_CON1_TX_REQUEST)) {
+    while ((reg_get(E_CON1) & TX_REQUEST)) {
+# if 0
         // DEBUG_SET_LED1(1);
         /*
          * Reset the transmit logic if it has been stalled
@@ -120,50 +110,47 @@ ENC28J60Class::sendPacket(uint8_t *buffer, size_t len) const {
          *
          * XXX FIXME
          */
-# if 0
+#  if 0
         if ((reg_get(E_INT_REQ) & E_INT_REQ_TX_ERR)) {
-# endif
+#  endif
             // DEBUG_SET_LED2(1);
             /* Reset the transmit logic */
             reg_bitop(ENC_SPI_SET_BF, E_CON1, E_CON1_TX_RESET);
             reg_bitop(ENC_SPI_CLR_BF, E_CON1, E_CON1_TX_RESET);
-# if 0
+#  if 0
             /* XXX: The example code doesn't do the following
                while the data sheet tells to do so. */
             reg_bitop(ENC_SPI_CLR_BF, E_INT_REQ, E_INT_REQ_TX_ERR);
-# endif
+#  endif
             // DEBUG_SET_LED2(0);
-# if 0
+#  if 0
         } else {
             ; // XXX: Allow other threads to run
         }
-# endif
+#  endif
         // DEBUG_SET_LED1(0);
+# endif
     }
 
     /*
-     * Write the packet to the ENC28J60 packet buffer.
-     *
-     * NB.  The per-packet control byte is there already
-     *      at TX_BUFFER_START. It was written there at
-     *      enc_init().
+     * Write the packet to the ENCX24J600 packet buffer.
      */
-    reg_set(E_WR_PTR, TX_BUFFER_START + 1);
-    
+    reg_set(E_GP_RD_PT, TX_BUFFER_START);
+
     *(buffer - 1) = ENC_SPI_WRITE_MEM;
     spi_transfer_send(buffer-1, len+1);
 
     /*
      * Set the packet start and end.
      */
-    reg_set(E_TX_STA, TX_BUFFER_START);
-    reg_set(E_TX_END, TX_BUFFER_START + 1 + len);
+    reg_set(E_TX_START, TX_BUFFER_START);
+    reg_set(E_TX_LEN,   TX_BUFFER_START + len);
 
     /*
      * Request transmission.
      */
-    reg_bitop(ENC_SPI_SET_BF, E_CON1, E_CON1_TX_REQUEST);
+    spi_send_single_byte(ENC_SPI_TX_REQUEST);
     // DEBUG_SET_LED0(0);
 }
 
-#endif //_ENC28J60_PACKET_H_
+#endif //_ENCX24J600_PACKET_H_

@@ -20,6 +20,10 @@
 #include <ENCX24J600.h>
 #include <Arduino.h>
 
+#ifdef EMULATOR
+#include <unistd.h>
+#endif
+
 void setup() {
     Serial.begin(57600);
     ENCX24J600.begin();

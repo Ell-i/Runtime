@@ -10,7 +10,7 @@ MAKEDIR ?= $(TOP)make/
 #
 # Define the variant to build for
 #
-PLATFORM := arduino
+# PLATFORM := arduino
 VARIANT  ?= ellduino
 
 APP := test_ENCX24J600_begin

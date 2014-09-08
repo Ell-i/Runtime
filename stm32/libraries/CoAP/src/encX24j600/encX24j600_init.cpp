@@ -40,7 +40,7 @@ const struct encX24j600_register_init_static_16bit ENCX24J600Class::encX24j600_i
     D16(E_TX_LEN,    TX_BUFFER_LEN),
     /* RX buffer */
     D16(E_RX_START,  RX_BUFFER_START),
-    D16(E_RX_TAIL,   RX_BUFFER_END),
+    D16(E_RX_TAIL,   RX_BUFFER_END & ~0x01), // Clear low-order bit for an even address
     D16(E_RX_HEAD,   RX_BUFFER_START),
 
     /**********************************
@@ -143,7 +143,7 @@ const struct encX24j600_register_init_static_16bit ENCX24J600Class::encX24j600_i
         0
         |   ETHEN             /* 1: Enable Ethernet */
         |   STRCH             /* 1: Stretch events on LEDs to 50 ms */
-        |   TXMAC             /* 1: Automatically insert source MAC address to outgoing */
+        | ! TXMAC             /* 0: Do not insert source MAC address to outgoing packets */
         |   SHA1MD5           /* 1: Use SHA1 in the hashing engine */
         |   COCON_NONE0       /* 0000: Don't output any clock */
         |   AUTOFC            /* 1: Enable automatic flow control */

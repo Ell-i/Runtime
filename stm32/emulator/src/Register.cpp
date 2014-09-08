@@ -51,3 +51,9 @@ uint32_t Register::operator &  (uint32_t arg) {
               << name_ << ':' << value_ << '&' << arg << '\n';
     return value_ & arg;
 }
+
+uint32_t Register::operator &  (uint16_t arg) {
+    std::cout << periph_ << ':'
+              << name_ << ':' << value_ << '&' << arg << '\n';
+    return value_ & arg;
+}

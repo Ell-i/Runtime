@@ -66,7 +66,7 @@ ENCX24J600Class::begin() const {
     digitalWrite(DEBUG_PIN, 0);
 
     /* Step 3. Poll CLKRDY (ESTAT<12>) and wait for it to become set. */
-    while ((reg_get(E_STAT) & E_STAT_CLOCK_READY) == 0)
+    while ((reg_get(E_STAT) & CLOCK_READY) == 0)
         ;
 
     /* Step 4. Issue a System Reset command by setting ETHRST (ECON2<4>). */
