@@ -334,14 +334,4 @@ static const uint32_t GPIO_pin_mode_pupdr_values[PIN_MODE_NUMBER] = {
     0, GPIO_PUPDR_PUPDR0_0, GPIO_PUPDR_PUPDR0_1, 0,
 };
 
-/*
- * They type for Arduino pins, i.e., basically an index
- * to the pin description table, defined below.
- *
- * XXX: Try to replace with an explicit class that has an explicit
- *      constructor from an integer.  Probably generates worse code,
- *      but is worth trying with a good compiler (LLVM?).
- */
-typedef const uint32_t pin_t;
-
 #endif//_ARDUELLI_GPIO_H_

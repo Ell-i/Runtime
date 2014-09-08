@@ -53,7 +53,7 @@ clean::
 	rm -f $(APP).lst
 	rm -f make.map
 
-$(APP):	$(APP_OBJS) $(SYSTEM_LIBS)
+$(APP):	$(APP_OBJS) $(SYSTEM_LIBS) $(LIBS)
 	$(LD) $(LDFLAGS) -o $@ $(APP_OBJS) $(LIBS)
 
 #
@@ -78,7 +78,7 @@ clean::
 	rm -f $(PRE_OBJS)
 	rm -f $(POST_OBJS)
 
-$(APP):	$(APP_OBJS) libsystem_$(VARIANT).a $(PRE_OBJS) $(POST_OBJS)
+$(APP):	$(APP_OBJS) libsystem_$(VARIANT).a $(LIBS) $(PRE_OBJS) $(POST_OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS)
 
 lib$(APP).so: $(APP_OBJS) libsystem_$(VARIANT).a $(PRE_OBJS) $(POST_OBJS)

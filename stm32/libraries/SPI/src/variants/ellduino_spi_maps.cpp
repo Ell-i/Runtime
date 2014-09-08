@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 ELL-i co-operative
+ * Copyright (c) 2014 ELL-i co-operative.
  *
  * This file is part of ELL-i software.
  *
@@ -19,11 +19,9 @@
 
 /**
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
- *
- * @brief The Arduino library SPI class for STM32F
  */
 
-#include <SPIClass.h>
+#include "variants/ellduino_spi.h"
 
 Pin2Int7 spimap1, spimap2;
 

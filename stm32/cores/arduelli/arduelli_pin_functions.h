@@ -28,6 +28,16 @@
 
 # include <system_init.h>
 
+/*
+ * They type for Arduino pins, i.e., basically an index
+ * to the pin description table, defined below.
+ *
+ * XXX: Try to replace with an explicit class that has an explicit
+ *      constructor from an integer.  Probably generates worse code,
+ *      but is worth trying with a good compiler (LLVM?).
+ */
+typedef const uint32_t pin_t;
+
 /**
  * A const data structure to define a pin alternate function.
  */

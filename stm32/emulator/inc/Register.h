@@ -45,7 +45,7 @@ public:
     uint32_t  operator =  (uint32_t);
     uint32_t  operator =  (uint32_t) volatile;
     uint32_t  operator &  (uint32_t) const;
-    //uint16_t  operator &  (uint16_t) const; // XXX Do we really need this?
+    uint16_t  operator &  (uint16_t) const; // Needed by the SPI library
     operator uint32_t () volatile { return value_; }
 
 protected:
