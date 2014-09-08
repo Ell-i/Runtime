@@ -41,7 +41,7 @@ ENCX24J600Class::reg_get(enc_reg_t reg) const {
     }
 
     spi_master_deactivate(ss_pin_);
-    
+
     return value;
 }
 

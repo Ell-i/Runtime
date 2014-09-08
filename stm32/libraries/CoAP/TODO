@@ -1,5 +1,7 @@
 CLEAN UP ETHERNET HEADER DEFINITION!  See ethernet.h
 
+Move MAC address handling to the driver, add an API
+
 Refactor the code so that it gets compiled and optimised as a large single object:
 
 In the overall.c file, define the packet structure, similar to the test case

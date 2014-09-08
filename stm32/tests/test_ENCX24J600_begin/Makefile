@@ -1,10 +1,8 @@
 #
-# Copyright (c) 2013-2014 ELL-i co-operative
+# Copyright (c) 2014 ELL-i co-operative
 #
 # Compile and link an application
 #
-# XXX Do we really need this makefile?  The default app.mk should work.
-# 
 
 TOP ?= $(shell pwd)/../../
 MAKEDIR ?= $(TOP)make/
@@ -17,11 +15,14 @@ VARIANT  ?= ellduino
 
 APP := test_ENCX24J600_begin
 
-APP_OBJS ?= main.o $(APP).o $(VARIANT).o
+APP_OBJS ?= main.o $(APP).o $(VARIANT).o encX24j600_init.o
 
 include $(TOP)make/app.mk
 
-VPATH  += ../../libraries/CoAP/src/coap
+VPATH  += \
+	../../libraries/CoAP/src/coap \
+	../../libraries/CoAP/src/encX24j600 \
+
 CXXFLAGS += \
 	-I../../libraries/CoAP/src/encX24J600 \
 

@@ -32,7 +32,7 @@
 /*
  * ENCX24J600 RX/TX buffer assignment
  *
- * ENCx24J600 can use a TX buffer from anywhere; the RX buffer is 
+ * ENCx24J600 can use a TX buffer from anywhere; the RX buffer is
  * at the end of memory, by default at 0x5340, see Section 3.5.2.
  *
  * Use larger than standard Ethernet packet worths for the RX/TX buffer, 0x600 = 1536 bytes
@@ -42,11 +42,13 @@
 
 # define ENC_BUFFER_START 0x0000
 # define ENC_BUFFER_SIZE  0x2000
+# define ENC_BUFFER_END   0x5FFF
 
-# define RX_BUFFER_END   (ENC_BUFFER_END)
 # define RX_BUFFER_START (0x5340) /* Default value */
+# define RX_BUFFER_END   (ENC_BUFFER_END)
+# define TX_BUFFER_LEN   (0x2000)
 # define TX_BUFFER_END   (RX_BUFFER_START)
-# define TX_BUFFER_START (TX_BUFFER_END - (RX_BUFFER_END - RX_BUFFER_START))
+# define TX_BUFFER_START (TX_BUFFER_END - TX_BUFFER_LEN)
 
 /* Offset added to physical register addresses to fold them into the same address space */
 # define ENC_PHY_OFFSET 0xA0 /* See Table 3-1 on page 20.  0x9F is the last SPI SFR */
@@ -85,48 +87,20 @@ enum enc_reg_t {
     E_PM_M2     = ENC_SFR_REG(0x2A),
     E_PM_M3     = ENC_SFR_REG(0x2C),
     E_PM_M4     = ENC_SFR_REG(0x2E),
-    E_PM_CS     = ENC_SFR_REG(0x30),
-    E_PM_O      = ENC_SFR_REG(0x32),
-    E_RX_FCON   = ENC_SFR_REG(0x34),
+    E_PM_CKSUM  = ENC_SFR_REG(0x30),
+    E_PM_OFF    = ENC_SFR_REG(0x32),
+    E_RX_FCOND  = ENC_SFR_REG(0x34),
 
     MAC_CON1    = ENC_SFR_REG(0x40),
-//    XXX
-# define MAC_CON1_LOOP_BACK   0x10
-# define MAC_CON1_TX_PAUSE    0x08
-# define MAC_CON1_RX_PAUSE    0x04
-# define MAC_CON1_PASS_ALL    0x02
-# define MAC_CON1_RX_EN       0x01
     MAC_CON2    = ENC_SFR_REG(0x42),
-// XXX
-# define MAC_CON2_MAC_RST     0x80
-# define MAC_CON2_RND_RST     0x40
-# define MAC_CON2_RX_RST      0x08
-# define MAC_CON2_RX_FUN_RST  0x04
-# define MAC_CON2_TX_RST      0x02
-# define MAC_CON2_TX_FUN_RST  0x01
-# define MAC_CON3_PAD_CRC_2   0x80
-# define MAC_CON3_PAD_CRC_1   0x40
-# define MAC_CON3_PAD_CRC_0   0x20
-# define MAC_CON3_TX_CRC_EN   0x10
-# define MAC_CON3_PHDR_LEN    0x08
-# define MAC_CON3_HUGE_FRAMES 0x04
-# define MAC_CON3_FR_LEN_CHK  0x02
-# define MAC_CON3_FULL_DPX    0x01
-# define MAC_CON4_DEFER       0x40
-# define MAC_CON4_BP_EN       0x20
-# define MAC_CON4_NO_BKOFF    0x10
-# define MAC_CON4_LONG_PRE    0x02
-# define MAC_CON4_PURE_PRE    0x01
     MAC_BBIPG   = ENC_SFR_REG(0x44),
     MAC_IPG     = ENC_SFR_REG(0x46),
     MAC_CL_CON  = ENC_SFR_REG(0x48),
     MAC_MAX_FL  = ENC_SFR_REG(0x4A),
 
     MII_CMD     = ENC_SFR_REG(0x52),
-# define MII_CMD_SCAN       0x02
-# define MII_CMD_READ       0x01
     MII_REG_ADR = ENC_SFR_REG(0x54),
-    
+
     MAC_ADDR3   = ENC_SFR_REG(0x60),
     MAC_ADDR2   = ENC_SFR_REG(0x62),
     MAC_ADDR1   = ENC_SFR_REG(0x64),
@@ -139,9 +113,9 @@ enum enc_reg_t {
     E_PAUSE     = ENC_SFR_REG(0x6C),
     E_CON2      = ENC_SFR_REG(0x6E),
     E_RX_WM     = ENC_SFR_REG(0x70),
-    E_EI        = ENC_SFR_REG(0x72),
+    E_INT_ENA   = ENC_SFR_REG(0x72),
     E_IDLE_D    = ENC_SFR_REG(0x74),
-    
+
     E_GP_DATA   = ENC_SFR_REG(0x80), /* 8-bit register, ok to access as 16 bits */
     E_RX_DATA   = ENC_SFR_REG(0x82), /* 8-bit register, ok to access as 16 bits */
     E_UDA_DATA  = ENC_SFR_REG(0x84), /* 8-bit register, ok to access as 16 bits */
@@ -227,6 +201,101 @@ enum enc_spi_op_t {
 //    XXX CHECK ABOVE
 };
 
+enum E_CON1 {
+    MODEXST      = 0x8000,
+    HASHEN       = 0x4000,
+    HASHOP       = 0x2000,
+    HASHLST      = 0x1000,
+    AESST        = 0x0800,
+    AES_DECRYPT  = 0x0400,
+    AES_ENCRYPT  = 0x0200,
+    AES_INIT     = 0x0000,
+    PKT_DEC      = 0x0100,
+    FC_END       = 0x00C0,
+    FC_ENABLE    = 0x0080,
+    FC_PAUSE     = 0x0040,
+    FC_IDLE      = 0x0000,
+    DMA_START    = 0x0020,
+    DMAST        = 0x0020,
+    DMACPY       = 0x0010,
+    DMACSSD      = 0x0008,
+    DMANOCS      = 0x0004,
+    TX_REQUEST   = 0x0002,
+    RX_ENABLE    = 0x0001,
+    RXEN         = 0x0001,
+};
+
+enum E_CON2 {
+    ETHEN        = 0x8000,
+    STRCH        = 0x4000,
+    TXMAC        = 0x2000,
+    SHA1MD5      = 0x1000,
+    COCON_50     = 0x0F00,
+    COCON_100    = 0x0E00,
+    COCON_NONE1  = 0x0D00,
+    COCON_3125   = 0x0C00,
+    COCON_4000   = 0x0B00,
+    COCON_5000   = 0x0A00,
+    COCON_6250   = 0x0900,
+    COCON_8000   = 0x0800,
+    COCON_8333   = 0x0700,
+    COCON_10000  = 0x0600,
+    COCON_12500  = 0x0500,
+    COCON_16666  = 0x0400,
+    COCON_20000  = 0x0300,
+    COCON_25000  = 0x0200,
+    COCON_33333  = 0x0100,
+    COCON_NONE0  = 0x0000,
+    AUTOFC       = 0x0080,
+    TX_RESET     = 0x0040,
+    RX_RESET     = 0x0020,
+    ETH_RESET    = 0x0010,
+    MODLEN_1024  = 0x0008,
+    MODLEN_768   = 0x0004,
+    MODLEN_512   = 0x0000,
+    AESLEN_256   = 0x0002,
+    AESLEN_192   = 0x0001,
+    AESLEN_128   = 0x0000,
+};
+
+enum E_RX_FILTER_CON {
+    HT_EN        = 0x8000,
+    MP_EN        = 0x4000,
+    NOT_PM       = 0x1000,
+    PM_MAGIC     = 0x0900,
+    PM_HASHTABLE = 0x0800,
+    PM_NOT_BCAST = 0x0700,
+    PM_IS_BCAST  = 0x0600,
+    PM_NOT_MCAST = 0x0500,
+    PM_IS_MCAST  = 0x0400,
+    PM_NOT_UCAST = 0x0300,
+    PM_IS_UCAST  = 0x0200,
+    PM_ALL       = 0x0100,
+    PM_DISABLE   = 0x0000,
+    CRC_E_EN     = 0x0080,
+    CRC_EN       = 0x0040,
+    RUNT_E_EN    = 0x0020,
+    RUNT_EN      = 0x0010,
+    UC_EN        = 0x0008,
+    NOT_ME_EN    = 0x0004,
+    MC_EN        = 0x0002,
+    BC_EN        = 0x0001,
+};
+
+enum E_INT_ENA {
+    INT          = 0x8000,
+    MODEX        = 0x4000,
+    HASH         = 0x2000,
+    AES          = 0x1000,
+    LINK         = 0x0800,
+    PKT          = 0x0040,
+    DMA          = 0x0020,
+    TX           = 0x0008,
+    TX_ABT       = 0x0004,
+    RX_ABT       = 0x0002,
+    PC_FULL      = 0x0001,
+};
+
 typedef uint16_t enc_reg_value_t;
 typedef uint8_t  enc_buf_value_t;
 typedef size_t   enc_buf_len_t;
@@ -254,7 +323,7 @@ enum enc_rx_packet_status_t {
  * Transferred over SPI, see Data Sheet page 33-34
  */
 
-typedef struct encx24j600_register_init_static_8bit {
+typedef struct encX24j600_register_init_static_16bit {
     enc_reg_t       reg;
     enc_reg_value_t value;
 } device_register_init_static_8bit_t;

@@ -30,9 +30,9 @@
 #include <Arduino.h>
 #endif
 
-inline void 
+inline void
 ENCX24J600Class::begin() const {
-    
+
     spi_master_begin(&ENCX24J600_SPI, ss_pin_);
 
     /* Reset routine, see Section 8.1 of the Data shsset (39935c.pdf) */
@@ -45,7 +45,7 @@ ENCX24J600Class::begin() const {
     /*
      * Steps 1-2: Write 1234h to EUDAST.  Read EUDAST to see if it now
      * equals 1234h. If it does not, the SPI/PSP interface may not be
-     * ready yet, so return to step 1 and try again. 
+     * ready yet, so return to step 1 and try again.
      */
     do {
         reg_set(E_UDA_START, 0x1234);
@@ -66,50 +66,47 @@ ENCX24J600Class::begin() const {
     digitalWrite(DEBUG_PIN, 0);
 
     /* Step 3. Poll CLKRDY (ESTAT<12>) and wait for it to become set. */
-    while ((reg_get(E_STAT) & E_STAT_CLOCK_READY) == 0) 
+    while ((reg_get(E_STAT) & E_STAT_CLOCK_READY) == 0)
         ;
 
     /* Step 4. Issue a System Reset command by setting ETHRST (ECON2<4>). */
     spi_send_single_byte(ENC_SPI_RESET);
-    
-    /* 
+
+    /*
      * Step 5. In software, wait at least 25us for the Reset to take
-     * place and the SPI/PSP interface to begin operating again. 
+     * place and the SPI/PSP interface to begin operating again.
      */
     // XXX Replace with something better
     for (volatile int i = 0; i < 25 * 48; i++)
         ;
 
-    /* 
+    /*
      * Step 6. Read EUDAST to confirm that the System Reset took
      * place. EUDAST should have reverted back to its Reset default of
-     * 0000h. 
+     * 0000h.
      */
-    if (reg_get(E_UDA_START) != 0x0000) 
+    if (reg_get(E_UDA_START) != 0x0000)
         /* XXX fail? */;
 
 
-#if 0
-    // XXX TODO
     /*
      * Initialize all non-phy registers to their desired values
      */
- 
-    for (   const device_register_init_static_8bit_t *p = encX24j600_init; 
-            p < encX24j600_init + encX24j600_init_size; 
+
+    for (   const device_register_init_static_8bit_t *p = encX24j600_init;
+            p < encX24j600_init + encX24j600_init_size;
             p++) {
         reg_set(p->reg, p->value);
     }
 
-    /* 
+    /*
      * Wait until the PHY is no longer in reset.  We do this instead of
      * Step 7. Wait at least 256us for the PHY registers and PHY
-     * status bits to become available. 
+     * status bits to become available.
      */
 
     while (reg_get(PHY_CON1) & PHY_CON1_PRST)
         ;
-#endif
 
     /*
      * Initialise the PHY

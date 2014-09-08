@@ -35,16 +35,15 @@ class ENCX24J600Class {
 public:
     const static pin_t ss_pin_ = 2; // XXX Must allow constant propagration, make in constructor!
 
-    const static uint32_t spiCR1value = 
-        // XXX Check the clock divider!
+    const static uint32_t spiCR1value =
         0
         | ! SPI_CR1_CPHA       /* Data at first edge */
         | ! SPI_CR1_CPOL       /* Clock low when idle */
         |   SPI_CR1_MSTR       /* Master mode */
-        |   SPI_CR1_BR_1       /* Clock divider 8 XXX CHECK! */
+        |   SPI_CR1_BR_1       /* Clock divider 8: 72 MHz / 8 = 9 MHz < 14 MHz */
         |   SPI_CR1_SPE        /* SPI enabled */
         | ! SPI_CR1_LSBFIRST   /* MSB first */
-        
+
         |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */
         |   SPI_CR1_SSM        /* Software Slave management enabled */
         | ! SPI_CR1_RXONLY     /* 0: Full duplex */
@@ -64,20 +63,20 @@ public:
     void begin() const;
     int  availablePackets(void) const;
 
-    int  receivePacket(uint8_t *buffer, size_t len) const; 
+    int  receivePacket(uint8_t *buffer, size_t len) const;
     void sendPacket   (uint8_t *buffer, size_t len) const;
 
-    static const struct encX24J600_register_init_static_8bit encX24J600_init[];
-    static const size_t encX24J600_init_size;
+    static const struct encX24j600_register_init_static_16bit encX24j600_init[];
+    static const size_t encX24j600_init_size;
     /// XXX FIXME do we need this: static enc_rx_packet_header_t rx_header;
-    
+
 private:
 
-    void    spi_send_single_byte(enc_spi_op_t op) const 
+    void    spi_send_single_byte(enc_spi_op_t op) const
         __attribute__((always_inline));
     uint8_t  spi_transfer_3bytes(uint8_t cmd, uint8_t address,  uint8_t value) const;
     uint16_t spi_transfer_4bytes(uint8_t cmd, uint8_t address, uint16_t value) const;
-    void    spi_transfer_send(uint8_t *buffer, uint16_t len) const 
+    void    spi_transfer_send(uint8_t *buffer, uint16_t len) const
         __attribute__((always_inline));
     void    spi_transfer     (uint8_t *buffer, uint16_t len) const /// XXX rename
         __attribute__((always_inline));
