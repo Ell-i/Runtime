@@ -178,12 +178,12 @@ SECTIONS
      */
     .ccm (NOLOAD) :
     {
-    . = ALING(4);
+        . = ALIGN(4);
         _sccm = .;       /* Start of the Core coupled memory */
         _ccm = .;
         *(.ccm)
         *(.ccm.*)
-        .= ALIGN(4);
+        . = ALIGN(4);
         _eccm = . ;     /* End of the Core coupled memory */
     } > CCMRAM
 
