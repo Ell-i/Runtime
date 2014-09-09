@@ -24,13 +24,15 @@
 #ifndef _SYSTEM_INIT_H_
 # define _SYSTEM_INIT_H_
 
-#ifdef __STM32F051__
+#if defined(__STM32F051__)
 # include <stm32f0xx.h>
 # include <stm32f0xx_extra.h>
-#endif
-#ifdef __STM32F407__
+#elif defined(__STM32F407__)
 # include <stm32f4xx.h>
 # include <stm32f4xx_extra.h>
+#elif defined(__STM32F334__)
+# include <stm32f3xx.h>
+# include <stm32f3xx_extra.h>
 #endif
 
 /**

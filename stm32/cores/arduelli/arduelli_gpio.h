@@ -50,7 +50,7 @@
  * We define here the registers used for GPIO,
  * so that we don't need to have separate #ifdefs for that below.
  */
-#if defined(ELLI_STM32F051_ELLDUINO)
+#if defined(ELLI_STM32F051_ELLDUINO) || defined(ELLI_STM32F334_NUCLEO)
 # define GPIO_AHBENR AHBENR
 # define GPIO_RCC_AHBENR_BITMASK(port) RCC_ ## AHBENR ## _GPIO ## port ## EN
 # define GPIO_PREFIX_ODR(pin)          GPIO_ODR_ ## pin

@@ -25,6 +25,8 @@
 # include <stm32f0xx.h>
 #elif defined(__STM32F407__)
 # include <stm32f4xx.h>
+#elif defined(__STM32F334__)
+# include <stm32f3xx.h>
 #else
 # error "Unknown chip.  Please define."
 #endif
