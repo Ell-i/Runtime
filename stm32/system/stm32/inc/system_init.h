@@ -260,7 +260,9 @@ extern void *memset(void *dst, int c, size_t size);
 #define ARDUINO_INLINE_MEMBER_FUNCTION inline
 #define ARDUINO_GLOBAL_IMMUTABLE static const
 #else
+#ifndef ARDUINO_INLINE_API
 #define ARDUINO_INLINE_API /*empty*/
+#endif
 #define ARDUINO_INLINE_MEMBER_FUNCTION __attribute__((noinline))
 #define ARDUINO_GLOBAL_IMMUTABLE const
 #endif

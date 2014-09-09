@@ -29,33 +29,5 @@
 
 #include "variants/stm32f4discovery_spi.h"
 
-#include "SPIInitSTM32F0.cppinc"
+Pin2Int7 spimap1, spimap2;
 
-/*
- * Boot-time definitions for the STM32F4 series MCU SPIs.
- *
- * These macros here generate SystemInitRecord structures to the
- * SYSTEM_INIT_SECTION linker section.  The boot time initialisation
- * code iterates the records from that section, initialising the MCU
- * peripheral ports accordingly.
- */
-
-# warning TBD
-DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2,
-                  SPI_INIT_STM32F0_DefaultRecordsData,
-                  SPI_INIT_STM32F0_DefaultRecordsOffsets,
-                  SPI_INIT_STM32F0_DefaultRecordsCount);
-DEFINE_SPI_DEVICE(/*SPI*/2, /*APB*/1,
-                  SPI_INIT_STM32F0_DefaultRecordsData,
-                  SPI_INIT_STM32F0_DefaultRecordsOffsets,
-                  SPI_INIT_STM32F0_DefaultRecordsCount);
-
-struct SPIdynamicFields _SPI1dynamicFields;
-struct SPIdynamicFields _SPI2dynamicFields;
-
-/**
- * XXX.  Linking hack, to be removed once linking gets fixed.
- */
-
-const void * __SPI1 = &SPI1_INIT;
-const void * __SPI2 = &SPI2_INIT;
