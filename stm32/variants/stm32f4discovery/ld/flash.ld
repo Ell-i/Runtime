@@ -168,6 +168,28 @@ SECTIONS
     __exidx_end = .;
 
     /*
+     * The Core coupled memory (CCM) backed section.
+     *
+     * In STM32F4 based devices CCM is connected directly to ARM core and therefore
+     * explicitly reserved for prosessor core. This memory area is accessible even
+     * as DMA transfer is accessing SRAM on background.
+     *
+     * Reference: STM32F4 reference manual (RM0090), page 62, Figure 2.
+     */
+    .ccm (NOLOAD) :
+    {
+    . = ALING(4);
+        _sccm = .;       /* Start of the Core coupled memory */
+        _ccm = .;
+        *(.ccm)
+        *(.ccm.*)
+        .= ALIGN(4);
+        _eccm = . ;     /* End of the Core coupled memory */
+    } > CCMRAM
+
+
+
+    /*
      * Debugging information, stored in the ELF object but not
      * in the actual binary or hex file.
      *
