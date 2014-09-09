@@ -26,11 +26,14 @@
 
 #include <Register.h>
 
-#ifdef __STM32F051__
+#if defined(__STM32F051__)
 # include <stm32f0xx.h>
-#endif
-#ifdef __STM32F407__
+#elif defined(__STM32F407__)
 # include <stm32f4xx.h>
+#elif defined(__STM32F334__)
+# include <stm32f3xx.h>
+#else
+# error "Unknown MCU die.  Please define."
 #endif
 
 class UniversalSynchronousAsynchronousReceiverTransmitter {
@@ -43,7 +46,7 @@ public:
     DEFINE_REGISTER(16, USART, CR2,      0);
     DEFINE_REGISTER(16, USART, CR3,      0);
     DEFINE_REGISTER(16, USART, GTPR,     0);
-#elif defined(__STM32F051__)
+#elif defined(__STM32F051__) || defined(__STM32F334__)
     DEFINE_REGISTER(32, USART, CR1,      0);
     DEFINE_REGISTER(32, USART, CR2,      0);
     DEFINE_REGISTER(32, USART, CR3,      0);

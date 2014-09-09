@@ -26,9 +26,9 @@
 class ResetClockControl {
 public:
 
-#if defined(__STM32F407__)
+#if defined(__STM32F407__) || defined(__STM32F334__)
     DEFINE_REGISTER(32, RCC, CR,       0x0202FF83); // HSERDY set for SetSysClock
-#elif defined(__STM32F051__)
+#elif defined(__STM32F051__) || defined(__STM32F334__)
     DEFINE_REGISTER(32, RCC, CR,       0x0200FF83); // PLL set for SetSysClock
 #else
 # error "Unknown MCU die.  Please define."
@@ -38,7 +38,7 @@ public:
 #endif
 #if defined(__STM32F407__)
     RegisterRCC_CFGR CFGR;
-#elif defined(__STM32F051__)
+#elif defined(__STM32F051__) || defined(__STM32F334__)
     DEFINE_REGISTER(32, RCC, CFGR,     0x00000008); // PLL set for SetSysClock
 #else
 # error "Unknown MCU die.  Please define."
@@ -47,7 +47,7 @@ public:
     DEFINE_REGISTER(32, RCC, APB1RSTR, 0x00000000);
 #if defined(__STM32F407__)
     DEFINE_REGISTER(32, RCC, AHB1ENR,  0x00000014 /* XXX CHECK ME */);
-#elif defined(__STM32F051__)
+#elif defined(__STM32F051__) || defined(__STM32F334__)
     DEFINE_REGISTER(32, RCC, AHBENR,   0x00000014);
 #else
 # error "Unknown MCU die.  Please define."
