@@ -28,6 +28,7 @@
 #include <netinet/ip.h>
 #include <netinet/arp.h>
 #include <netinet/util.h>
+#include <system_memory.h>
 
 /**
  * XXX
