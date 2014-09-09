@@ -33,7 +33,7 @@
 # include <stm32f4discovery_gpio.h> // XXX To be placed into the variant.h!
 # include <stm32f4discovery_timer.h>
 # include <stm32f4discovery_usart.h>
-// # include <stm32f4discovery_Serial.h>
+# include <stm32f4discovery_Serial.h>
 #else
 # error "Unknown board.  Please define."
 #endif

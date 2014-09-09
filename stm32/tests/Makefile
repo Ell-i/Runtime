@@ -34,6 +34,10 @@ clean:	$(TARGETS)
 clean:	TARGET=clean
 
 $(TARGETS): %:
+	@echo
+	@echo "========================================================="
+	@echo "==== $*"
+	@echo "========================================================="
 	@APPLICATION_SRC_DIR=$(PWD)/$* $(MAKE) -C $* -f $(TOP)make/app.mk \
 		TOP=$(TOP) APP=$@ PLATFORM=$(PLATFORM) $(TARGET)
 

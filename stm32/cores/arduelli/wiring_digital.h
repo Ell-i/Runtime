@@ -24,6 +24,7 @@
 #ifndef _WIRING_DIGITAL_H_
 # define _WIRING_DIGITAL_H_
 
+#include "arduelli_pin_functions.h"
 #include "arduelli_gpio.h"
 
 #if defined(ELLI_STM32F051_ELLDUINO)

@@ -17,7 +17,13 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if defined(ELLI_STM32F051_ELLDUINO)
 #include "ellduino_Serial.h"
+#elif defined(ELLI_STM32F407_DISCOVERY)
+#include "stm32f4discovery_Serial.h"
+#else
+#error "Unknown board."
+#endif
 #ifdef EMULATOR
 #include <unistd.h>
 #endif
