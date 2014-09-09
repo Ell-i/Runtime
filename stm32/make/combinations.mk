@@ -40,11 +40,13 @@ PLATFORMS = \
 #
 SYSTEM_LIBS := \
     $(TOP)variants/ellduino/libstm32f0.a \
+    $(TOP)variants/stm32f334nucleo/libstm32f3.a \
     $(TOP)variants/stm32f4discovery/libstm32f4.a \
 #   $(TOP)variants/stm32f0discovery/libstm32f0.a \
 
 VARIANTS = \
 	ellduino \
+	stm32f334nucleo \
 	stm32f4discovery \
 
 MAKE_TARGETS = all clean tests
