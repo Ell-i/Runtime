@@ -40,6 +40,14 @@ public:
     Register_GPIO_IDR IDR;
 #if defined(__STM32F407__) || defined(__STM32F334__)
     // XXX REWRITE
+    DEFINE_REGISTER(32, GPIO, MODER, 0);
+    //DEFINE_REGISTER(32, GPIO, OTYPER, 0);
+    //DEFINE_REGISTER(32, GPIO, OSPEEDR, 0);
+    DEFINE_REGISTER(32, GPIO, PUPDR, 0);
+    DEFINE_REGISTER(32, GPIO, IDR, 0);
+    //DEFINE_REGISTER(32, GPIO, ODR, 0);
+#if defined(__STM32F407__) || defined(__STM32F334__)
+    //Add partial emulator support for STM32F334
     DEFINE_REGISTER(16, GPIO, BSRRL, 0);
     DEFINE_REGISTER(16, GPIO, BSRRH, 0);
     DEFINE_REGISTER(32, GPIO, AFR, 0)[2];
