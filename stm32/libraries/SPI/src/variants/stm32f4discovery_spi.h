@@ -26,7 +26,7 @@
 # include <system_init.h>
 # include <SPI/spiStruct.h>
 
-# error NOT PORTED YET.
+# warning NOT PORTED YET.
 
 /**
  * Declarations for externally visible SPI init records.

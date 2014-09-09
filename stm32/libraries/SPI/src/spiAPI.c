@@ -43,12 +43,18 @@ size_t /*inline*/ spi_transfer_write(
 
     if (len == 0) return 0;
 
+# if defined(STM32F0XX)
     for(size_t count = 0; count < len; count++) {
         *DR8 = data[count];
         while (!(spi->spi_->SR & SPI_SR_FRLVL))
             ;
         dummy = *DR8;
     }
+# elif defined(STM32F40_41xxx)
+#  warning STM32F4 SPI not implemented yet.  Will not work!
+# else
+#  error "Unsupported MCU."
+# endif
 
 # ifdef notyet // XXX doesn't work correctly, please debug.
     if (len == 1) {
@@ -117,12 +123,18 @@ size_t /*inline*/ spi_transfer_read(
 
     if (len == 0) return 0;
 
+# if defined(STM32F0XX)
     for(size_t count = 0; count < len; count++) {
         *DR8 = data[count];
         while (!(spi->spi_->SR & SPI_SR_FRLVL))
             ;
         data[count] = *DR8;
     }
+# elif defined(STM32F40_41xxx)
+#  warning STM32F4 SPI not implemented yet.  Will not work!
+# else
+#  error "Unsupported MCU."
+# endif
 
 # ifdef notyet // XXX doesn't work correctly, please debug.
     if (len == 1) {

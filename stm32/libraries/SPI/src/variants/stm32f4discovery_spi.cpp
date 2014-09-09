@@ -34,7 +34,7 @@
  * peripheral ports accordingly.
  */
 
-# error TBD
+# warning TBD
 DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2,
                   SPI_INIT_STM32F0_DefaultRecordsData,
                   SPI_INIT_STM32F0_DefaultRecordsOffsets,

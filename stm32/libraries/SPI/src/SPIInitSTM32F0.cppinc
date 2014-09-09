@@ -41,16 +41,20 @@ static const uint8_t  p ## _ ## r ## _offset =  offsetof(p, r)/sizeof(uint32_t);
         | ! SPI_CR2_RXDMAEN    /* Disable RX DMA */
         | ! SPI_CR2_TXDMAEN    /* Disable TX DMA */
         |   SPI_CR2_SSOE       /* NSS output automatically managed by hardware */
+# if defined(STM32F0XX)
         | ! SPI_CR2_NSSP       /* Default: NO NSS pulse */
         | ! SPI_CR2_FRF        /* SPI Motorola mode */
+# endif
         | ! SPI_CR2_ERRIE      /* Error interrupt disabled */
         | ! SPI_CR2_RXNEIE     /* RX buffer not empty interrupt disabled */
         | ! SPI_CR2_TXEIE      /* TX buffer empty interrupt disabled */
+# if defined(STM32F0XX)
         /* 0111: 8 bits data size */
         |   SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
         | ! SPI_CR2_FRXTH      /* 0: RXNE goes high with two bytes */
         | ! SPI_CR2_LDMARX     /* N/A: RX DMA even */
         | ! SPI_CR2_LDMATX     /* N/A: TX DMA even */
+# endif
         );
     D16(SPI_TypeDef, CR1,
         0
@@ -64,7 +68,13 @@ static const uint8_t  p ## _ ## r ## _offset =  offsetof(p, r)/sizeof(uint32_t);
         |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */
         |   SPI_CR1_SSM        /* Software Slave management enabled */
         | ! SPI_CR1_RXONLY     /* 0: Full duplex */
+# if defined(STM32F0XX)
         | ! SPI_CR1_CRCL       /* 0: N/A (8-bit CRC length) */
+# elif defined(STM32F40_41xxx)
+        | ! SPI_CR1_DFF        /* 0: 8-bit data format */
+# else
+#  error "Unsupported MCU."
+# endif
         | ! SPI_CR1_CRCNEXT    /* 0: Transmit TX buffer, not CERC */
         | ! SPI_CR1_CRCEN      /* 0: CRC disabled */
         |   SPI_CR1_BIDIOE     /* 1: Output enabled */
@@ -81,5 +91,5 @@ const SystemInitRecordRegisterOffset SPI_INIT_STM32F0_DefaultRecordsOffsets[] = 
     { SPI_TypeDef_CR1_offset },
 };
 
-const uint8_t SPI_INIT_STM32F0_DefaultRecordsCount = 
+const uint8_t SPI_INIT_STM32F0_DefaultRecordsCount =
     COUNT_OF(SPI_INIT_STM32F0_DefaultRecordsData);

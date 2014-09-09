@@ -4,26 +4,32 @@
 # Define non-core library include paths
 #
 
+LIBES      := $(subst $(TOP)libraries/,,$(wildcard $(TOP)libraries/*))
+LIBES_LIBS := $(patsubst %,lib%.a,$(LIBES))
+LIBS       := $(LIBES_LIBS) $(LIBS)
+
+CFLAGS    += $(patsubst %,-I$(TOP)/libraries/%,$(LIBES))
+CXXFLAGS  += $(patsubst %,-I$(TOP)/libraries/%,$(LIBES))
+
 ifdef LOCAL_RULES
 
-# XXX TBD This is wrong, use libs, not wildcarding
-CFLAGS    += $(patsubst %,-I%,$(wildcard $(TOP)libraries/*/.))
-CXXFLAGS  += $(patsubst %,-I%,$(wildcard $(TOP)libraries/*/.))
+.PHONY: $(LIBES)
 
-LIBS      += \
-	$(TOP)build/$(PLATFORM)/$(VARIANT)/libSPI.a \
-#	$(TOP)build/$(PLATFORM)/$(VARIANT)/libCoAP.a
-
-
-all:	$(LIBS)
+all:	$(LIBES)
 all:	TARGET=all
 
-clean::	$(LIBS)
+clean:: $(LIBES)
 clean::	TARGET=clean
 
-$(LIBS): %:
-	@make -C $(TOP)build/$(PLATFORM)/$(VARIANT) -f $(TOP)make/lib.mk LIB=SPI \
-		LOCAL_RULES=TRUE TOP=$(TOP) PLATFORM=$(PLATFORM) VARIANT=$(VARIANT) $(TARGET)
-# XXX replace "SPI" above with the right thing
+$(LIBES): %:
+	@if [ -f $(TOP)libraries/$@/Makefile ]; then \
+		echo "make -C $(PLATFORM)/$(VARIANT) -f $(TOP)libraries/$@/Makefile"; \
+		$(MAKE) -C $(TOP)build/$(PLATFORM)/$(VARIANT) -f $(TOP)libraries/$@/Makefile LIB=lib$@.a \
+			LOCAL_RULES=TRUE TOP=$(TOP) PLATFORM=$(PLATFORM) VARIANT=$(VARIANT) $(TARGET); \
+	else \
+		echo "make -C $(PLATFORM)/$(VARIANT) -f $(TOP)make/lib.mk LIB=lib$@.a"; \
+		$(MAKE) -C $(TOP)build/$(PLATFORM)/$(VARIANT) -f $(TOP)make/lib.mk LIB=lib$@.a \
+			LOCAL_RULES=TRUE TOP=$(TOP) PLATFORM=$(PLATFORM) VARIANT=$(VARIANT) $(TARGET); \
+	fi
 
 endif
