@@ -56,7 +56,10 @@ CXXFLAGS := \
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
 
 $(eval LIBS := \
-  $(subst -lstm32f0,-lsystem_$(VARIANT),$(subst -lstm32f4,-lsystem_$(VARIANT),$(call expand,compiler.cmd.ld.libs))))
+  $(subst -lstm32f0,-lsystem_$(VARIANT), \
+  $(subst -lstm32f4,-lsystem_$(VARIANT), \
+  $(subst -lstm32f3,-lsystem_$(VARIANT), \
+  $(call expand,compiler.cmd.ld.libs)))))
 
 CFLAGS   += $(EXTRA_CFLAGS)
 CXXFLAGS += $(EXTRA_CFLAGS)
