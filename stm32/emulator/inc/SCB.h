@@ -24,7 +24,7 @@
 
 class SystemControlBlock {
 public:
-#if defined(__STM32F407__)
+#if defined(__STM32F407__) || defined(__STM32F334__)
     /* XXX Set to reset value */
     DEFINE_REGISTER(32, SCB, CPUID,    0x410FC241);
     DEFINE_REGISTER(32, SCB, ICSR,     0x00000000);
