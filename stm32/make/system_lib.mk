@@ -53,7 +53,7 @@ endif
 ifeq ($(VARIANT),stm32f334nucleo)
 SYSTEM_TYPE = stm32f3
 SYSTEM_OBJS += \
-	startup_stm32f334x8.o \
+	startup_stm32f334xx.o \
 	system_stm32f3xx.o
 endif
 
