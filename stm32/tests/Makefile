@@ -24,6 +24,7 @@ TARGETS = \
     test_Serial_begin \
     test_Serial_write_uint8 \
     test_SPI_begin \
+    test_SPI_transfer \
 
 .PHONY : $(TARGETS) all clean tests
 

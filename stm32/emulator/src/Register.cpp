@@ -24,11 +24,12 @@ void Register::printout(const std::string opStr, uint32_t result) const {
               << periph_ << ':'
               << name_   << ':'
               << "value=" << value_
-              << "->" << result
+              << "->" << opStr << result
               << std::endl;
 }
 
 uint32_t Register::operator = (uint32_t arg) volatile {
+    ((Register *)this)->printout("=", arg);
     return *(const_cast<Register*>(this)) = arg;
 }
 

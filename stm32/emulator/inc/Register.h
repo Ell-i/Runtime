@@ -27,15 +27,15 @@
 
 class Register {
 protected:
+    uint32_t    value_;
     const std::string periph_;
     const std::string name_;
-    uint32_t    value_;
     uint8_t     size_;
     Register(std::string periph, std::string name,
              uint8_t size, uint32_t value)
-        : periph_(periph)
+        : value_(value)
+        , periph_(periph)
         , name_(name)
-        , value_(value)
         , size_(size)
         {};
 

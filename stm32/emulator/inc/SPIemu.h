@@ -38,7 +38,11 @@ class SerialPeripheralInterface {
 public:
     DEFINE_REGISTER(16, SPI, CR1,      0);
     DEFINE_REGISTER(16, SPI, CR2,      0);
+#ifdef __STM32F051__
+    DEFINE_REGISTER(16, SPI, SR,       SPI_SR_FRLVL);
+#else
     DEFINE_REGISTER(16, SPI, SR,       0);
+#endif
     DEFINE_REGISTER(16, SPI, DR,       0);
 protected:
     SerialPeripheralInterface() {}
