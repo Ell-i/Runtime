@@ -255,16 +255,18 @@ extern void *memset(void *dst, int c, size_t size);
  *     differently for the emulator and the real hardware
  */
 
-#ifndef EMULATOR
-#define ARDUINO_INLINE_API static inline
-#define ARDUINO_INLINE_MEMBER_FUNCTION inline
-#define ARDUINO_GLOBAL_IMMUTABLE static const
-#else
-#ifndef ARDUINO_INLINE_API
-#define ARDUINO_INLINE_API /*empty*/
-#endif
-#define ARDUINO_INLINE_MEMBER_FUNCTION __attribute__((noinline))
-#define ARDUINO_GLOBAL_IMMUTABLE const
-#endif
+# ifndef EMULATOR
+#  define ARDUINO_INLINE_API static inline
+#  define ARDUINO_INLINE_MEMBER_FUNCTION inline
+#  define ARDUINO_GLOBAL_IMMUTABLE static const
+# else
+#  ifndef  ARDUINO_INLINE_API
+#   define ARDUINO_INLINE_API /*empty*/
+#  endif
+#  ifndef  ARDUINO_INLINE_MEMBER_FUNCTION
+#   define ARDUINO_INLINE_MEMBER_FUNCTION __attribute__((noinline))
+#  endif
+#  define ARDUINO_GLOBAL_IMMUTABLE const
+# endif
 
 #endif//_SYSTEM_INIT_H_

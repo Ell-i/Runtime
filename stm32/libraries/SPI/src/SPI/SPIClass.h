@@ -78,6 +78,32 @@ typedef TinyMap<uint8_t,uint32_t,7> Pin2Int7;
 
 //XXX TODO: Figure out a better implementation for setClock
 
+# if defined(STM32F0XX)
+#  define SPI_CR1_CRCL_OR_DFF SPI_CR1_CRCL /* 0: N/A (8-bit CRC length) */
+# elif defined(STM32F40_41xxx)
+#  define SPI_CR1_CRCL_OR_DFF SPI_CR1_DFF  /* 0: 8-bit data format */
+# else
+#  error "Unsupported MCU."
+# endif
+
+# define SPI_CR1_DEFAULT_INIT_VALUE (                           \
+    0                                                           \
+    | ! SPI_CR1_CPHA       /* Data at first edge */             \
+    | ! SPI_CR1_CPOL       /* Clock low when idle */            \
+    |   SPI_CR1_MSTR       /* Master mode */                    \
+    |   SPI_CR1_BR_1       /* Clock divider 8 */                \
+    |   SPI_CR1_SPE        /* SPI enabled */                    \
+    | ! SPI_CR1_LSBFIRST   /* MSB first */                      \
+    |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */ \
+    |   SPI_CR1_SSM        /* Software Slave management enabled */ \
+    | ! SPI_CR1_RXONLY     /* 0: Full duplex */                 \
+    | ! SPI_CR1_CRCL_OR_DFF /* Varies, see above */             \
+    | ! SPI_CR1_CRCNEXT    /* 0: Transmit TX buffer, not CERC */\
+    | ! SPI_CR1_CRCEN      /* 0: CRC disabled */                \
+    |   SPI_CR1_BIDIOE     /* 1: Output enabled */              \
+    | ! SPI_CR1_BIDIMODE   /* 0: 2-Line (uni)directional data */\
+    )
+
 class SPIClass {
 public:
     const struct SPI &spi_;
@@ -85,30 +111,7 @@ public:
     void begin(const uint8_t ss_pin = BOARD_SPI_DEFAULT_SS) const {
         spi_master_begin(&spi_, ss_pin);
         // Sigh.  While this fixes the initialisation, it generates huge tables?
-        ssPinCR1_[ss_pin] =
-            0
-            | ! SPI_CR1_CPHA       /* Data at first edge */
-            | ! SPI_CR1_CPOL       /* Clock low when idle */
-            |   SPI_CR1_MSTR       /* Master mode */
-            |   SPI_CR1_BR_1       /* Clock divider 8 */
-            |   SPI_CR1_SPE        /* SPI enabled */
-            | ! SPI_CR1_LSBFIRST   /* MSB first */
-
-            |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */
-            |   SPI_CR1_SSM        /* Software Slave management enabled */
-            | ! SPI_CR1_RXONLY     /* 0: Full duplex */
-# if defined(STM32F0XX)
-            | ! SPI_CR1_CRCL       /* 0: N/A (8-bit CRC length) */
-# elif defined(STM32F40_41xxx)
-            | ! SPI_CR1_DFF        /* 0: 8-bit data format */
-# else
-#  error "Unsupported MCU."
-# endif
-            | ! SPI_CR1_CRCNEXT    /* 0: Transmit TX buffer, not CERC */
-            | ! SPI_CR1_CRCEN      /* 0: CRC disabled */
-            |   SPI_CR1_BIDIOE     /* 1: Output enabled */
-            | ! SPI_CR1_BIDIMODE   /* 0: 2-Line (uni)directional data */
-            ;
+        ssPinCR1_[ss_pin] = SPI_CR1_DEFAULT_INIT_VALUE;
     };
 
     void end(const uint8_t ss_pin = BOARD_SPI_DEFAULT_SS) const {
