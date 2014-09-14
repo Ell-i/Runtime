@@ -187,14 +187,6 @@ extern uint32_t _sidata, _sdata, _edata, _sbss, _ebss;
  * Reset handler
  */
 void Reset_Handler(void) {
-#ifndef EMULATOR
-    /* XXX: I'm not sure if this stack initialisation is *really*
-     *      needed.  According to ARM documentation the CPU should
-     *      do it itself.
-     */
-    register void *const stack = &_estack;
-    __asm__ volatile ("mov    sp, %0" : : "r" (stack));
-#endif
 
     /* Copy initialised non-const data from flash to RAM */
     register uint32_t *flash = &_sidata;
