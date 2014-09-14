@@ -18,7 +18,7 @@
  */
 
 #include <SPI/spiStruct.h>
-#include <SPI/spiApi.h>
+#include <SPI/spiAPI.h>
 #if defined(ELLI_STM32F051_ELLDUINO)
 # include <variants/ellduino_spi.h>    // XXX To be placed into the variant.h!
 #elif defined(ELLI_STM32F407_DISCOVERY)
@@ -26,4 +26,4 @@
 #else
 # error "The SPI library is not yet supported with this board."
 #endif
-#include <SPI/spiClass.h>
+#include <SPI/SPIClass.h>
