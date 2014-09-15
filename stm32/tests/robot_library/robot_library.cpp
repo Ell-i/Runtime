@@ -44,7 +44,8 @@ extern "C" {
     }
 
     /*
-     * C interface for the digital api calls
+     * C interface for the Arduino Digital API calls
+       Reorganise for Robot Framework integration
      */
     void t_pinMode(pin_t pin, const enum pin_mode mode) {
         pinMode(pin, mode);
@@ -57,7 +58,8 @@ extern "C" {
     }
 
     /*
-     * C interface for the analog api calls
+     * C interface for the Arduino Analog API calls
+       Reorganise for Robot Framework integration
      */
     void t_analogWrite(pin_t pin, uint32_t val) {
         analogWrite(pin, val);
@@ -67,7 +69,8 @@ extern "C" {
     }
 
     /*
-     * C interface for Serial
+     * C interface for the Arduino Serial object
+       Reorganise for Robot Framework integration
      */
     void t_SerialBegin(uint32_t baudrate) {
         Serial.begin(baudrate);
