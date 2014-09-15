@@ -52,3 +52,8 @@ uint32_t Register::operator &  (uint32_t arg) const {
     printout("&", value_ & arg);
     return value_ &  arg;
 }
+
+uint16_t Register::operator &  (uint16_t arg) const {
+    printout("&(16b)", value_ & arg);
+    return value_ &  arg;
+}

@@ -38,8 +38,9 @@ uint16_t Register_SPI_SR::operator &  (uint16_t arg) const {
     // XXX SPI_SR_FRLVL should probably be part of value_,
     // but defining it in the constructor causes a circular
     // makefile dependency.  Hence we "cheat" and add it here.  YMMV.
+    uint32_t v = value_;
 #ifdef SPI_SR_FRLVL
-    value_ |= SPI_SR_FRLVL;
+    v |= SPI_SR_FRLVL;
 #endif
-    return value_ & arg;
+    return v & arg;
 }
