@@ -91,4 +91,5 @@ SYSTEM_OBJS += PWR.o SCB.o RCC.o FLASH.o
 SYSTEM_OBJS += Register_RCC_CFGR.o
 SYSTEM_OBJS += Register_GPIO_PUPDR.o Register_GPIO_MODER.o Register_GPIO_IDR.o
 SYSTEM_OBJS += Register_GPIO_ODR.o Register_GPIO_BSRR.o Register_GPIO_AFR.o Register_GPIO_BRR.o
+SYSTEM_OBJS += Register_SPI_SR.o Register_SPI_DR.o
 VPATH += $(TOP)emulator/src

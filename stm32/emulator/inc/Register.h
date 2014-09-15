@@ -27,10 +27,11 @@
 
 class Register {
 protected:
-    uint32_t    value_;
+    uint32_t          value_;
     const std::string periph_;
     const std::string name_;
-    uint8_t     size_;
+    uint8_t           size_;
+
     Register(std::string periph, std::string name,
              uint8_t size, uint32_t value)
         : value_(value)
@@ -45,7 +46,6 @@ public:
     uint32_t  operator =  (uint32_t);
     uint32_t  operator =  (uint32_t) volatile;
     uint32_t  operator &  (uint32_t) const;
-    uint16_t  operator &  (uint16_t) const; // Needed by the SPI library
     operator uint32_t () volatile { return value_; }
 
 protected:

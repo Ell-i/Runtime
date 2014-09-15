@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 ELL-i co-operative.
+ * Copyright (c) 2013-2014 ELL-i co-operative.
  *
  * This is part of ELL-i software.
  *
@@ -17,33 +17,21 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
- */
-
-#ifndef  _SPI_H_
-# define _SPI_H_
+#ifndef  _REGISTER_SPI_SR_H_
+# define _REGISTER_SPI_SR_H_
 
 # include <Register.h>
-# include <Register_SPI_SR.h>
 # include <Register_SPI_DR.h>
 
-class SerialPeripheralInterface {
+class Register_SPI_SR : public Register {
+    Register_SPI_DR & dr_;
 public:
-    DEFINE_REGISTER(16, SPI, CR1,      0);
-    DEFINE_REGISTER(16, SPI, CR2,      0);
-    Register_SPI_SR SR;
-    Register_SPI_DR DR;
-protected:
-    SerialPeripheralInterface()
-        : SR(DR)
+    Register_SPI_SR(Register_SPI_DR &dr)
+        : Register("SPI", "SR", 16, 0)
+        , dr_(dr)
         {}
-public:
-    static SerialPeripheralInterface SPI1;
-    static SerialPeripheralInterface SPI2;
+    uint32_t operator = (uint32_t arg);
+    uint16_t operator & (uint16_t) const;
 };
 
-SerialPeripheralInterface *const SPI1 = &SerialPeripheralInterface::SPI1;
-SerialPeripheralInterface *const SPI2 = &SerialPeripheralInterface::SPI2;
-
-#endif //_SPI_H_
+#endif //_REGISTER_SPI_SR_H_
