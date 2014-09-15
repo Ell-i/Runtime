@@ -17,6 +17,8 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <arduelli_api_definitions.h>
+
 #if defined(ELLI_STM32F051_ELLDUINO)
 #include "ellduino_Serial.h"
 #elif defined(ELLI_STM32F407_DISCOVERY)

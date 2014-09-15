@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2013 ELL-i co-op.
+ * Copyright (c) 2014 ELL-i co-operative.
  *
- * This is part of ELL-i software.
+ * This file is part of ELL-i software.
  *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,23 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <arduelli_api_definitions.h>
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ *
+ * @brief  Macros for defining Arduino API types
+ */
 
-#if defined(ELLI_STM32F051_ELLDUINO)
-#include "ellduino_Serial.h"
-#elif defined(ELLI_STM32F407_DISCOVERY)
-#include "stm32f4discovery_Serial.h"
-#else
-#error "Unknown board."
-#endif
-#ifdef EMULATOR
-#include <unistd.h>
-#endif
+#ifndef  _ARDUELLI_API_DEFINITIONS_H_
+# define _ARDUELLI_API_DEFINITIONS_H_
 
-void setup() {
-    Serial.begin(57600);
-}
+# include <system_init.h>
 
-void loop() {
-#ifdef EMULATOR
-    _exit(0);
-#endif
-}
+/*
+ * Arduino API denominators
+ */
+
+# define ARDUINO_INLINE_API              static inline
+# define ARDUINO_INLINE_MEMBER_FUNCTION         inline
+# define ARDUINO_GLOBAL_IMMUTABLE        static const
+
+#endif //_ARDUELLI_API_FUNCTION_H_

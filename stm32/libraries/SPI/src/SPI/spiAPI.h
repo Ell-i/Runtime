@@ -40,7 +40,7 @@
 #ifndef  _SPIAPI_H_
 # define _SPIAPI_H_
 
-# include <stdlib.h> // define size_t
+# include <system_init.h>
 # include <arduelli_pin_functions.h> // XXX Replace with non-core specific?
 # include <SPI/spiStruct.h>
 # include <wiring_digital.h>
@@ -56,7 +56,8 @@
 extern "C" {
 # endif
 
-static inline void spi_master_begin(const struct SPI *const spi, const pin_t ss_pin) __attribute__ ((always_inline));
+static inline void
+spi_master_begin(const struct SPI *const spi, const pin_t ss_pin) __attribute__ ((always_inline));
 
 /**
  * Connect an SPI peripheral to the given pins as a master.
@@ -64,9 +65,10 @@ static inline void spi_master_begin(const struct SPI *const spi, const pin_t ss_
  * In the current ELL-i runtime we pre-configure the used SPI
  * peripherals as masters using the system_init.[ch] functions.
  * Hence, to activate an SPI as a master it is enough to connect the
- * SPI to the right output pins. 
+ * SPI to the right output pins.
  */
-static inline void spi_master_begin(const struct SPI *const spi, const pin_t ss_pin) {
+static inline
+void spi_master_begin(const struct SPI *const spi, const pin_t ss_pin) {
     digitalWrite(ss_pin, 1); /* Avoid glitch */
     pinMode(ss_pin, OUTPUT);
     if (0 == spi->spi_dynamic_->spi_dyn_outstanding_begin_calls_++) {
@@ -84,7 +86,8 @@ static inline void spi_master_deactivate(const pin_t ss_pin) { digitalWrite(ss_p
 /**
  * XXX
  */
-static inline void spi_master_end  (const struct SPI *const spi, const pin_t ss_pin) {
+static inline
+void spi_master_end  (const struct SPI *const spi, const pin_t ss_pin) {
     pinMode(ss_pin, INPUT /* XXX DEFAULT */);
     if (0 == --spi->spi_dynamic_->spi_dyn_outstanding_begin_calls_) {
         PinFunctionDeactivate(&spi->spi_miso_function_);
@@ -106,7 +109,8 @@ extern size_t spi_transfer_read(
 static inline size_t spi_transfer_raw(
     const struct SPI *const spi, const uint32_t cr1,
     uint8_t data[], size_t len, uint8_t read) __attribute__((always_inline));
-static inline size_t spi_transfer_raw(
+static inline
+size_t spi_transfer_raw(
     const struct SPI *const spi, const uint32_t cr1,
     uint8_t data[], size_t len, uint8_t read) {
 
@@ -128,7 +132,8 @@ static inline size_t spi_transfer_raw(
 static inline size_t spi_transfer(
     const struct SPI *const spi, const pin_t ss_pin, const uint32_t cr1,
     uint8_t data[], size_t len, uint8_t read) __attribute__((always_inline));
-static inline size_t spi_transfer(
+static inline
+size_t spi_transfer(
     const struct SPI *const spi, const pin_t ss_pin, const uint32_t cr1,
     uint8_t data[], size_t len, uint8_t read) {
 

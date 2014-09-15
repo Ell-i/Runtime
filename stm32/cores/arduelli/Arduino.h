@@ -23,6 +23,8 @@
  * @brief The Arduino IDE compatible header.
  */
 
+#include <arduelli_api_definitions.h>
+
 #include <main.h>
 #if defined(ELLI_STM32F051_ELLDUINO)
 # include <ellduino_gpio.h> // XXX To be placed into the variant.h!

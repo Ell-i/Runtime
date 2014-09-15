@@ -17,13 +17,6 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef EMULATOR
-/* We do want the lower level C API functions inline
-   here, even when compiling for the emulator. */
-# define ARDUINO_INLINE_API static inline
-# define ARDUINO_INLINE_MEMBER_FUNCTION inline
-#endif
-
 #include <SPI.h>
 #ifdef EMULATOR
 #include <unistd.h>

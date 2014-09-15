@@ -26,8 +26,6 @@
 #ifndef _ARDUELLI_PIN_FUNCTIONS_H_
 # define _ARDUELLI_PIN_FUNCTIONS_H_
 
-# include <system_init.h>
-
 /*
  * They type for Arduino pins, i.e., basically an index
  * to the pin description table, defined below.

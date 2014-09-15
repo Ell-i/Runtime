@@ -21,12 +21,6 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifdef EMULATOR
-/* We do want the lower level C API functions inline
-   here, even when compiling for the emulator. */
-# define ARDUINO_INLINE_API static inline
-#endif
-
 #include "variants/stm32f4discovery_spi.h"
 
 Pin2Int7 spimap1, spimap2;

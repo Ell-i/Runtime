@@ -42,8 +42,13 @@ $(TARGETS): %:
 	@echo "========================================================="
 	@echo "==== $*"
 	@echo "========================================================="
-	@APPLICATION_SRC_DIR=$(PWD)/$* $(MAKE) -C $* -f $(TOP)make/app.mk \
-		TOP=$(TOP) APP=$@ PLATFORM=$(PLATFORM) $(TARGET)
+	@if [ -f $*/Makefile ]; then \
+		$(MAKE) -C $* PLATFORM=$(PLATFORM) $(TARGET); \
+	else \
+		$(MAKE) -C $* -f $(TOP)make/app.mk \
+			APPLICATION_SRC_DIR=$(PWD)/$* \
+			TOP=$(TOP) APP=$@ PLATFORM=$(PLATFORM) $(TARGET); \
+	fi
 
 tests:	PLATFORM = emulator
 tests:  $(TARGETS)

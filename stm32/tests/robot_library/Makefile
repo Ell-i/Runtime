@@ -21,12 +21,15 @@ MAKEDIR ?= $(TOP)make/
 
 APP := robot_library
 
-APP_OBJS ?= $(APP).o $(VARIANT).o
+APP_OBJS := $(APP).o $(VARIANT).o
+
+EXTRA_CFLAGS += \
+	-I$(TOP)libraries/SPI/src/variants \
 
 include $(TOP)make/app.mk
 
 VPATH += \
-	$(PWD) \
+	$(TOP)tests/robot_library \
 #	$(TOP)libraries/CoAP/src/coap \
 #	$(TOP)libraries/CoAP/src/encX24j600 \
 #
