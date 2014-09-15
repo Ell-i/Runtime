@@ -52,4 +52,7 @@ extern "C" {
     void t_analogWrite(pin_t pin, uint32_t val) {
         analogWrite(pin, val);
     }
+    void t_noAnalogWrite(pin_t pin) {
+        noAnalogWrite(pin);
+    }
 };
