@@ -25,7 +25,7 @@
 
 #include "Arduino_Serial.h"
 
-ARDUINO_GLOBAL_IMMUTABLE class SerialClass Serial  DEFINE_SERIAL(2, A, 14, 1, A, 15, 1);
-ARDUINO_GLOBAL_IMMUTABLE class SerialClass Serial1 DEFINE_SERIAL(1, A,  9, 1, A, 10, 1);
+static const class SerialClass Serial  DEFINE_SERIAL(2, A, 14, 1, A, 15, 1);
+static const class SerialClass Serial1 DEFINE_SERIAL(1, A,  9, 1, A, 10, 1);
 
 #endif //_ELLDUINO_SERIAL_H_

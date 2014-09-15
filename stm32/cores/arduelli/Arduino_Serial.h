@@ -55,7 +55,7 @@ public:
 constexpr SerialClass::SerialClass(const USART &usart)
     : usart_(usart) {}
 
-ARDUINO_INLINE_MEMBER_FUNCTION
+inline
 void SerialClass::begin(uint32_t baudrate) const {
     /* Place the GPIO pins into the right alternative function */
     PinFunctionActivate(&usart_.usart_tx_function_);
@@ -68,7 +68,7 @@ void SerialClass::begin(uint32_t baudrate) const {
     usart_.usart_->CR1 |= (USART_CR1_TE | USART_CR1_UE);
 }
 
-ARDUINO_INLINE_MEMBER_FUNCTION
+inline
 void SerialClass::write(uint8_t c) const {
 
 # if defined(STM32F0XX)

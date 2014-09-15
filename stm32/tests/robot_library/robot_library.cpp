@@ -17,6 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ellduino_spi.h>
 #include <Arduino.h>
 
 /**
@@ -30,6 +31,11 @@
 
 extern "C" {
     /*
+     * The actual C test wrappers.  For the individual functions,
+     * see the actual API call.
+     */
+
+    /*
      * This is a dummy main, called by startup code, doing nothing.
      */
     int main() {
@@ -37,8 +43,7 @@ extern "C" {
     }
 
     /*
-     * The actual C test wrappers.  For the individual functions,
-     * see the actual API call.
+     * C interface for the digital api calls
      */
     void t_pinMode(pin_t pin, const enum pin_mode mode) {
         pinMode(pin, mode);
@@ -49,10 +54,49 @@ extern "C" {
     void t_digitalWrite(pin_t pin, uint32_t val) {
         digitalWrite(pin, val);
     }
+
+    /*
+     * C interface for the analog api calls
+     */
     void t_analogWrite(pin_t pin, uint32_t val) {
         analogWrite(pin, val);
     }
     void t_noAnalogWrite(pin_t pin) {
         noAnalogWrite(pin);
+    }
+    
+    /*
+     * C interface for Serial
+     */
+    void t_SerialBegin(uint32_t baudrate) {
+        Serial.begin(baudrate);
+    }
+    void t_SerialWrite(uint8_t c) {
+        Serial.write(c);
+    }
+
+    /*
+     * C interface for SPI
+     */
+    void t_SPI_Begin(const uint8_t ss_pin) {
+        SPI.begin(ss_pin);
+    }
+    void t_SPI_End(const uint8_t ss_pin) {
+        SPI.end(ss_pin);
+    }
+    void t_SPI_setBitOrder(const SPIBitOrder bitOrder) {
+        SPI.setBitOrder(bitOrder);
+    }
+    uint32_t t_SPI_setClockDivider(const uint8_t ss_pin, const SPIClockDivider clockDivider) {
+        return SPI.setClockDivider(ss_pin, clockDivider);
+    }
+    uint32_t t_SPI_setClock(const uint8_t ss_pin, const uint32_t hertz) {
+        return SPI.setClock(ss_pin, hertz);
+    }
+    void t_SPI_setDataMode(uint8_t ss_pin, SPIDataMode dataMode) {
+        SPI.setDataMode(ss_pin, dataMode);
+    }
+    uint8_t t_SPI_transfer(uint8_t ss_pin, uint8_t data) {
+        return SPI.transfer(ss_pin, data);
     }
 };
