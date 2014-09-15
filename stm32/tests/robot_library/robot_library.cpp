@@ -17,6 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ellduino_spi.h>
 #include <Arduino.h>
 #include <SPI.h>
 
@@ -43,7 +44,7 @@ extern "C" {
     }
 
     /*
-     * C interface for the Arduino Digital API calls
+     * C interface for the digital api calls
      */
     void t_pinMode(pin_t pin, const enum pin_mode mode) {
         pinMode(pin, mode);
@@ -56,7 +57,7 @@ extern "C" {
     }
 
     /*
-     * C interface for the Arduino Analog API calls
+     * C interface for the analog api calls
      */
     void t_analogWrite(pin_t pin, uint32_t val) {
         analogWrite(pin, val);
@@ -66,7 +67,7 @@ extern "C" {
     }
 
     /*
-     * C interface for the Arduino Serial object
+     * C interface for Serial
      */
     void t_SerialBegin(uint32_t baudrate) {
         Serial.begin(baudrate);
