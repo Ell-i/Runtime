@@ -36,7 +36,6 @@
 # define D32(p, r, v) [offsetof(p, r)/sizeof(uint32_t)] = { v }
 #endif
 
-#if 0 // TODO \/
 const SystemInitRecordData32Only USART_INIT_DefaultRecords[] = {
     D32(USART_TypeDef, CR1,
         0
@@ -105,18 +104,10 @@ const SystemInitRecordData32Only USART_INIT_DefaultRecords[] = {
         | ! USART_CR3_IREN     /* 0:    Default value, IrDA not used */
         | ! USART_CR3_EIE      /* 0:    Disable error interrupts, XXX TBD */
         ),
-    /* Default to 115200 bauds at 48 MHz clock, see Table 48 on page 589 of RM0091 */
-    D32(USART_TypeDef, BRR, 0x1A1),
-    /* Guard time and prescaler not needed as IrDA nor smartcard are used */
-    D32(USART_TypeDef, GTPR, 0),
-    /* Receiver timeout not used */
-    D32(USART_TypeDef, RTOR, 0),
 };
-// TODO ^ 
-
 
 /*
- * Boot-time definitions for the STM32F4 series MCU USARTs.
+ * Boot-time definitions for the STM32F334 series MCU USARTs.
  *
  * These macros here generate SystemInitRecord structures to the
  * SYSTEM_INIT_SECTION linker section.  The boot time initialisation
@@ -127,8 +118,3 @@ const SystemInitRecordData32Only USART_INIT_DefaultRecords[] = {
 DEFINE_USART_DEVICE(/*USART*/1, /*APB*/2, USART_INIT_DefaultRecords);
 DEFINE_USART_DEVICE(/*USART*/2, /*APB*/1, USART_INIT_DefaultRecords);
 DEFINE_USART_DEVICE(/*USART*/3, /*APB*/1, USART_INIT_DefaultRecords);
-// DEFINE_USART_DEVICE(/*USART*/4, /*APB*/1, USART_INIT_DefaultRecords); // UART
-// DEFINE_USART_DEVICE(/*USART*/5, /*APB*/1, USART_INIT_DefaultRecords); // UART
-DEFINE_USART_DEVICE(/*USART*/6, /*APB*/2, USART_INIT_DefaultRecords);
-
-#endif //TODO
