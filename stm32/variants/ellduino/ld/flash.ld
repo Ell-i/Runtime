@@ -36,7 +36,7 @@ SECTIONS
 {
     .text :
     {
-        /* 
+        /*
          * For Cortex-M devices, the text segment starts with the
          * interrupt vectors, including the address of the reset handler.
          * This is initialised in the XXX assembler file.
@@ -54,13 +54,29 @@ SECTIONS
         /*
          * XXX
          */
-        . = ALIGN(4);
+        . = ALIGN(16);
         __peripheral_start = .;
         KEEP (*(.peripheral.RCC*))      /* Read-only RCC initialisation data */
         KEEP (*(SORT(.peripheral.*)))  /* Read-only peripheral initialisation data */
         __peripheral_end = .;
 
-        /* 
+        /*
+         * XXX
+         */
+        . = ALIGN(16);
+        __udp_sockets = .;
+        KEEP (*(.socket.udp.*))       /* Read-only UDP socket data structures */
+        __udp_sockets_end = .;
+
+        /*
+         * XXX
+         */
+        . = ALIGN(16);
+        __coap_urls = .;
+        KEEP (*(.coap.url*))       /* Read-only UDP socket data structures */
+        __coap_urls_end = .;
+
+        /*
          * The following sections are needed to jump from ARM code to Thumb
          * ocde and vice versa.  They are not needed in Cortex-M0, but they
          * don't harm either (other than confuse the reader...)
@@ -115,12 +131,12 @@ SECTIONS
 
     } > FLASH
 
-    /* 
+    /*
      * The initialized data section.
      *
      * The initialized data values need to be stored into the flash as the
      * the RAM contents are not preserved over resets.  The assembler startup
-     * code copies the data into its proper location in RAM.  Hence, the 
+     * code copies the data into its proper location in RAM.  Hence, the
      * addresses are linked as if this section was actually stored in RAM.
      */
     .data  : AT ( _sidata )
@@ -138,7 +154,7 @@ SECTIONS
     } >RAM
 
     /*
-     * The uninitialized data section. 
+     * The uninitialized data section.
      *
      * All the global and static (i.e. non-automatic) variables that
      * are initialised as zero get assigned into this section.  This
@@ -166,7 +182,7 @@ SECTIONS
     __exidx_start = .;
     __exidx_end = .;
 
-    /* 
+    /*
      * Debugging information, stored in the ELF object but not
      * in the actual binary or hex file.
      *
@@ -186,7 +202,7 @@ SECTIONS
     }
 
     /*
-     * Traditional symbol table debugging sections.  
+     * Traditional symbol table debugging sections.
      */
     .stab          0 : { *(.stab) }
     .stabstr       0 : { *(.stabstr) }
@@ -195,11 +211,11 @@ SECTIONS
     .stab.index    0 : { *(.stab.index) }
     .stab.indexstr 0 : { *(.stab.indexstr) }
     .comment       0 : { *(.comment) }
-    /* 
+    /*
      * DWARF debug sections.
      *
      * Symbols in the DWARF debugging sections are relative to the beginning
-     * of the section so we begin them at 0.  
+     * of the section so we begin them at 0.
      */
 
     /* DWARF 1 */

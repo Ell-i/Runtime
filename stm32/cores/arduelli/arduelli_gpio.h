@@ -114,6 +114,7 @@
         = {                                                             \
         IF(init_record_type)   ADDR_AND_ONES,                           \
         IF(init_record_number) COUNT_OF(GPIO ## port ## _RCC_INIT_DefaultRecords), \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_offset) 0 },                                   \
         { IF(init_records_addr_and_ones) GPIO ## port ## _RCC_INIT_DefaultRecords, }, \
     };                                                                  \
@@ -123,6 +124,7 @@
         = {                                                             \
         IF(init_record_type)   DATA32_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records1),                 \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_address32) &GPIO ## port->MODER },             \
         { IF(init_records_data32_only) init_records1, },                \
     };                                                                  \
@@ -132,6 +134,7 @@
         = {                                                             \
         IF(init_record_type)   DATA32_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records2),                 \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_address32) &GPIO ## port->AFR[0] },            \
         { IF(init_records_data32_only) init_records2, },                \
     }
@@ -330,15 +333,5 @@ static const uint32_t GPIO_pin_mode_moder_values[PIN_MODE_NUMBER] = {
 static const uint32_t GPIO_pin_mode_pupdr_values[PIN_MODE_NUMBER] = {
     0, GPIO_PUPDR_PUPDR0_0, GPIO_PUPDR_PUPDR0_1, 0,
 };
-
-/*
- * They type for Arduino pins, i.e., basically an index
- * to the pin description table, defined below.
- *
- * XXX: Try to replace with an explicit class that has an explicit
- *      constructor from an integer.  Probably generates worse code,
- *      but is worth trying with a good compiler (LLVM?).
- */
-typedef const uint32_t pin_t;
 
 #endif//_ARDUELLI_GPIO_H_

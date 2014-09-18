@@ -21,7 +21,8 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#include "ellduino_spi.h"
+#include <SPI/spiStruct.h>
+#include <system_init.h>
 
 /*
  * Boot-time definitions for the STM32F0 series MCU SPI registers.
@@ -40,16 +41,20 @@ static const uint8_t  p ## _ ## r ## _offset =  offsetof(p, r)/sizeof(uint32_t);
         | ! SPI_CR2_RXDMAEN    /* Disable RX DMA */
         | ! SPI_CR2_TXDMAEN    /* Disable TX DMA */
         |   SPI_CR2_SSOE       /* NSS output automatically managed by hardware */
+# if defined(STM32F0XX)
         | ! SPI_CR2_NSSP       /* Default: NO NSS pulse */
         | ! SPI_CR2_FRF        /* SPI Motorola mode */
+# endif
         | ! SPI_CR2_ERRIE      /* Error interrupt disabled */
         | ! SPI_CR2_RXNEIE     /* RX buffer not empty interrupt disabled */
         | ! SPI_CR2_TXEIE      /* TX buffer empty interrupt disabled */
+# if defined(STM32F0XX)
         /* 0111: 8 bits data size */
         |   SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
         | ! SPI_CR2_FRXTH      /* 0: RXNE goes high with two bytes */
         | ! SPI_CR2_LDMARX     /* N/A: RX DMA even */
         | ! SPI_CR2_LDMATX     /* N/A: TX DMA even */
+# endif
         );
     D16(SPI_TypeDef, CR1,
         0
@@ -63,38 +68,28 @@ static const uint8_t  p ## _ ## r ## _offset =  offsetof(p, r)/sizeof(uint32_t);
         |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */
         |   SPI_CR1_SSM        /* Software Slave management enabled */
         | ! SPI_CR1_RXONLY     /* 0: Full duplex */
+# if defined(STM32F0XX)
         | ! SPI_CR1_CRCL       /* 0: N/A (8-bit CRC length) */
+# elif defined(STM32F40_41xxx)
+        | ! SPI_CR1_DFF        /* 0: 8-bit data format */
+# else
+#  error "Unsupported MCU."
+# endif
         | ! SPI_CR1_CRCNEXT    /* 0: Transmit TX buffer, not CERC */
         | ! SPI_CR1_CRCEN      /* 0: CRC disabled */
         |   SPI_CR1_BIDIOE     /* 1: Output enabled */
         | ! SPI_CR1_BIDIMODE   /* 0: 2-Line (uni)directional data */
         );
 
-const SystemInitRecordData16Only SPI_INIT_DefaultRecordsData[] = {
+const SystemInitRecordData16Only SPI_INIT_STM32F0_DefaultRecordsData[] = {
     { SPI_TypeDef_CR2_value },
     { SPI_TypeDef_CR1_value },
 };
 
-const SystemInitRecordRegisterOffset SPI_INIT_DefaultRecordsOffsets[] = {
+const SystemInitRecordRegisterOffset SPI_INIT_STM32F0_DefaultRecordsOffsets[] = {
     { SPI_TypeDef_CR2_offset },
     { SPI_TypeDef_CR1_offset },
 };
 
-/*
- * Boot-time definitions for the STM32F0 series MCU SPIs.
- *
- * These macros here generate SystemInitRecord structures to the
- * SYSTEM_INIT_SECTION linker section.  The boot time initialisation
- * code iterates the records from that section, initialising the MCU
- * peripheral ports accordingly.
- */
-
-DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2, SPI_INIT_DefaultRecordsData, SPI_INIT_DefaultRecordsOffsets);
-DEFINE_SPI_DEVICE(/*SPI*/2, /*APB*/1, SPI_INIT_DefaultRecordsData, SPI_INIT_DefaultRecordsOffsets);
-
-/**
- * XXX
- */
-
-const void * __SPI1 = &SPI1_INIT;
-const void * __SPI2 = &SPI2_INIT;
+const uint8_t SPI_INIT_STM32F0_DefaultRecordsCount =
+    COUNT_OF(SPI_INIT_STM32F0_DefaultRecordsData);

@@ -21,27 +21,23 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifndef _SPI_H_
-#define _SPI_H_
+#ifndef  _SPI_H_
+# define _SPI_H_
 
-#include <Register.h>
-
-#ifdef __STM32F051__
-# include <stm32f0xx.h>
-#endif
-#ifdef __STM32F407__
-# include <stm32f4xx.h>
-#endif
-
+# include <Register.h>
+# include <Register_SPI_SR.h>
+# include <Register_SPI_DR.h>
 
 class SerialPeripheralInterface {
 public:
     DEFINE_REGISTER(16, SPI, CR1,      0);
     DEFINE_REGISTER(16, SPI, CR2,      0);
-    DEFINE_REGISTER(16, SPI, SR,       0);
-    DEFINE_REGISTER(16, SPI, DR,       0);
+    Register_SPI_SR SR;
+    Register_SPI_DR DR;
 protected:
-    SerialPeripheralInterface() {}
+    SerialPeripheralInterface()
+        : SR(DR)
+        {}
 public:
     static SerialPeripheralInterface SPI1;
     static SerialPeripheralInterface SPI2;

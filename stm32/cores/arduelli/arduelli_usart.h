@@ -78,6 +78,7 @@
         = {                                                             \
         IF(init_record_type)   ADDR_AND_ONES,                           \
         IF(init_record_number) COUNT_OF(USART ## usart ##_RCC_INIT_DefaultRecords), \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_offset) 0 },                                   \
         { IF(init_records_addr_and_ones) USART ## usart ## _RCC_INIT_DefaultRecords, }, \
     };                                                                  \
@@ -87,6 +88,7 @@
         = {                                                             \
         IF(init_record_type)   DATA32_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records),                  \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_address32) &USART ## usart->CR1 },             \
         { IF(init_records_data32_only) init_records, },                 \
     }

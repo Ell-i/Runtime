@@ -77,6 +77,7 @@
         = {                                                             \
         IF(init_record_type)   DATA16_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records2),                 \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_address16) &TIM ## timer->CR1 },               \
         { IF(init_records_data16_only) init_records2, },                \
     };                                                                  \
@@ -86,6 +87,7 @@
         = {                                                             \
         IF(init_record_type)   DATA16_ONLY,                             \
         IF(init_record_number) COUNT_OF(init_records1),                 \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_address16) &TIM ## timer->CR1 },               \
         { IF(init_records_data16_only) init_records1, },                \
     };                                                                  \
@@ -95,6 +97,7 @@
         = {                                                             \
         IF(init_record_type)   ADDR_AND_ONES,                           \
         IF(init_record_number) COUNT_OF(TIM ## timer ##_RCC_INIT_DefaultRecords), \
+        IF(init_record_reserved) 0,                                     \
         { IF(init_record_offset) 0 },                                   \
         { IF(init_records_addr_and_ones) TIM ## timer ## _RCC_INIT_DefaultRecords, }, \
     }

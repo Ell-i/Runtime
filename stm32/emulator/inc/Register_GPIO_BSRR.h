@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2014 ELL-i co-operative
+ * Copyright (c) 2013-2014 ELL-i co-operative.
  *
- * This file is part of ELL-i software.
+ * This is part of ELL-i software.
  *
  * ELL-i software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,24 @@
  */
 
 /**
- * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
- *
- * @brief The Arduino library SPI class for STM32F
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
  */
 
-#include <SPIClass.h>
+#ifndef _REGISTER_GPIO_BSRR_H_
+#define _REGISTER_GPIO_BSRR_H_
 
-Pin2Int7 spimap1, spimap2;
+#include <Register.h>
 
+class Register_GPIO_ODR;
+
+class Register_GPIO_BSRR : public Register {
+    Register_GPIO_ODR & odr_;
+public:
+    Register_GPIO_BSRR(Register_GPIO_ODR &odr)
+        : Register("GPIO", "BSRR", 32, 0)
+        , odr_(odr)
+        {}
+    uint32_t  operator = (uint32_t arg);
+};
+
+#endif

@@ -90,7 +90,7 @@
  *
  * With GCC, generates fair but not optimal code.
  */
-static inline
+ARDUINO_INLINE_API
 void pinMode(pin_t pin, const enum pin_mode mode) {
 
     const uint32_t pin_shift = (GPIOPIN[pin].gpio_pin * 2);

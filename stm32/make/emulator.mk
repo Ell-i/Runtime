@@ -25,7 +25,7 @@ EXTRA_CFLAGS += \
 	-I$(TOP)system/stm32/inc \
 	-I$(TOP)system/stm32/CMSIS/Include \
 	-I$(TOP)variants/$(VARIANT) \
-	-Wno-deprecated-register \
+	-Wno-deprecated \
 
 #
 # No user serviceable parts below
@@ -48,10 +48,10 @@ AR  := ar
 ELF2HEX := :
 
 CFLAGS   := \
-  $(subst -std=c99,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cc.flags)))
+  $(subst -std=c99,-std=c++11,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cc.flags)))
 
 CXXFLAGS := \
-  $(subst -std=gnu++0x,-std=c++98,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
+  $(subst -std=gnu++0x,-std=c++11,$(subst -mcpu=cortex-m0,,$(call expand,compiler.cmd.cxx.flags)))
 
 ARFLAGS  := $(call expand,compiler.cmd.ar.flags)
 
@@ -92,4 +92,7 @@ LIBS += -lstdc++
 SYSTEM_OBJS := emulator.o Register.o  GPIO.o TIM.o USART.o SPI.o
 SYSTEM_OBJS += PWR.o SCB.o RCC.o FLASH.o
 SYSTEM_OBJS += Register_RCC_CFGR.o
+SYSTEM_OBJS += Register_GPIO_PUPDR.o Register_GPIO_MODER.o Register_GPIO_IDR.o
+SYSTEM_OBJS += Register_GPIO_ODR.o Register_GPIO_BSRR.o Register_GPIO_AFR.o Register_GPIO_BRR.o
+SYSTEM_OBJS += Register_SPI_SR.o Register_SPI_DR.o
 VPATH += $(TOP)emulator/src

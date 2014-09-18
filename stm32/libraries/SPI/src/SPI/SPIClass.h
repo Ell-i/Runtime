@@ -26,10 +26,15 @@
 #ifndef _SPI_CLASS_H_
 #define _SPI_CLASS_H_
 
-#include <stm32f0xx.h>
-#include <spiStruct.h>
-#include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
-#include <arduelli_thread.h> // XXX TBD -- is this the right file name?
+#include <SPI/spiStruct.h>
+#include <SPI/spiAPI.h>
+#if defined(ELLI_STM32F051_ELLDUINO)
+# include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
+#elif defined(ELLI_STM32F407_DISCOVERY)
+# include <stm32f4discovery_gpio.h>
+#else
+# error "The SPI library is not yet supported with this board."
+#endif
 #include <wiring_digital.h>
 #include <TinyMap.h>
 
@@ -73,42 +78,45 @@ typedef TinyMap<uint8_t,uint32_t,7> Pin2Int7;
 
 //XXX TODO: Figure out a better implementation for setClock
 
+# if defined(STM32F0XX)
+#  define SPI_CR1_CRCL_OR_DFF SPI_CR1_CRCL /* 0: N/A (8-bit CRC length) */
+# elif defined(STM32F40_41xxx)
+#  define SPI_CR1_CRCL_OR_DFF SPI_CR1_DFF  /* 0: 8-bit data format */
+# else
+#  error "Unsupported MCU."
+# endif
+
+# define SPI_CR1_DEFAULT_INIT_VALUE (                           \
+    0                                                           \
+    | ! SPI_CR1_CPHA       /* Data at first edge */             \
+    | ! SPI_CR1_CPOL       /* Clock low when idle */            \
+    |   SPI_CR1_MSTR       /* Master mode */                    \
+    |   SPI_CR1_BR_1       /* Clock divider 8 */                \
+    |   SPI_CR1_SPE        /* SPI enabled */                    \
+    | ! SPI_CR1_LSBFIRST   /* MSB first */                      \
+    |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */ \
+    |   SPI_CR1_SSM        /* Software Slave management enabled */ \
+    | ! SPI_CR1_RXONLY     /* 0: Full duplex */                 \
+    | ! SPI_CR1_CRCL_OR_DFF /* Varies, see above */             \
+    | ! SPI_CR1_CRCNEXT    /* 0: Transmit TX buffer, not CERC */\
+    | ! SPI_CR1_CRCEN      /* 0: CRC disabled */                \
+    |   SPI_CR1_BIDIOE     /* 1: Output enabled */              \
+    | ! SPI_CR1_BIDIMODE   /* 0: 2-Line (uni)directional data */\
+    )
+
 class SPIClass {
 public:
     const struct SPI &spi_;
     constexpr SPIClass(const SPI &spi, Pin2Int7 &ssPinCR1) : spi_(spi), ssPinCR1_(ssPinCR1) {};
     void begin(const uint8_t ss_pin = BOARD_SPI_DEFAULT_SS) const {
-        digitalWrite(ss_pin, 1); /* Avoid glitch */
-        pinMode(ss_pin, OUTPUT);
-        spi_master_begin(&spi_);
-        ssPinCR1_[ss_pin] = 0
-                            | ! SPI_CR1_CPHA       /* Data at first edge */
-                            | ! SPI_CR1_CPOL       /* Clock low when idle */
-                            |   SPI_CR1_MSTR       /* Master mode */
-                            |   SPI_CR1_BR_1       /* Clock divider 8 */
-                            |   SPI_CR1_SPE        /* SPI enabled */
-                            | ! SPI_CR1_LSBFIRST   /* MSB first */
-
-                            |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */
-                            |   SPI_CR1_SSM        /* Software Slave management enabled */
-                            | ! SPI_CR1_RXONLY     /* 0: Full duplex */
-                            | ! SPI_CR1_CRCL       /* 0: N/A (8-bit CRC length) */
-                            | ! SPI_CR1_CRCNEXT    /* 0: Transmit TX buffer, not CERC */
-                            | ! SPI_CR1_CRCEN      /* 0: CRC disabled */
-                            |   SPI_CR1_BIDIOE     /* 1: Output enabled */
-                            | ! SPI_CR1_BIDIMODE   /* 0: 2-Line (uni)directional data */
-                            ;
-
+        spi_master_begin(&spi_, ss_pin);
+        // Sigh.  While this fixes the initialisation, it generates huge tables?
+        ssPinCR1_[ss_pin] = SPI_CR1_DEFAULT_INIT_VALUE;
     };
 
-    void end(const uint8_t ss_pin) const {
-        pinMode(ss_pin, INPUT /* XXX DEFAULT */);
+    void end(const uint8_t ss_pin = BOARD_SPI_DEFAULT_SS) const {
+        spi_master_end(&spi_, ss_pin);
     };
-
-    void end(void) const {
-        /* XXX Semantic inconsistency with begin(void) */
-        spi_master_end(&spi_);
-    }
 
     void setBitOrder(const SPIBitOrder bitOrder) const {
         setBitOrder(BOARD_SPI_DEFAULT_SS, bitOrder);
@@ -132,10 +140,11 @@ public:
         return setClock(BOARD_SPI_DEFAULT_SS, hertz);
     }
     uint32_t setClock(const uint8_t ss_pin, const uint32_t hertz) const {
+        // XXX Begin rewrite below
         uint32_t outputHertz = SystemCoreClock>>1;
         uint8_t wantedDivider = 0;
         SPIClockDivider wantedDividerEnum;
-        
+
         if (hertz<outputHertz)
         {
             for (wantedDivider=1; wantedDivider < 7; wantedDivider++){
@@ -143,10 +152,11 @@ public:
                 if (hertz >= outputHertz) break;
             }
         }
-        
+
         //XXX There should be a better way than typecasting.
         wantedDividerEnum =  static_cast<SPIClockDivider>(wantedDivider<<3);
         setClockDivider(ss_pin, wantedDividerEnum);
+        // XXX End rewrite above
         return outputHertz;
     }
 
@@ -168,20 +178,22 @@ public:
 
     uint8_t transfer(uint8_t ss_pin, uint8_t data[], uint8_t len,
                      SPITransferMode mode = SPI_LAST) const {
-        activate_ss(ss_pin);
+        // Lower slave select
+        digitalWrite(ss_pin, 0);
 
         const uint32_t cr1 = ssPinCR1_[ss_pin];
 
-        len = spi_transfer(&spi_, cr1, data, len);
+        len = spi_transfer_raw(&spi_, cr1, data, len, 1);
 
-        if (mode == SPI_LAST)
-            deactivate_ss(ss_pin);
+        if (mode == SPI_LAST) {
+            // Rise slave select
+            digitalWrite(ss_pin, 1);
+        }
+
         return len;
     };
 private:
     Pin2Int7 &ssPinCR1_;
-    static inline void activate_ss(uint8_t ss_pin) { digitalWrite(ss_pin, 0); };
-    static inline void deactivate_ss(uint8_t ss_pin) { digitalWrite(ss_pin, 1); };
 };
 
 #endif//_SPI_CLASS_H_

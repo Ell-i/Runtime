@@ -119,11 +119,13 @@ $(info )
 
 all:
 	@mkdir -p $(PLATFORM)/$(VARIANT)
+	@echo "make -C $(PLATFORM)/$(VARIANT) -f $(MAKEFILE) all"
 	@$(MAKE) -C $(PLATFORM)/$(VARIANT) -f $(MAKEFILE) \
 		LOCAL_RULES=TRUE TOP=$(TOP) PLATFORM=$(PLATFORM) VARIANT=$(VARIANT) all
 
-clean:
+clean::
 	@if [ -d $(PLATFORM)/$(VARIANT) ]; then \
+		echo "make -C $(PLATFORM)/$(VARIANT) -f $(MAKEFILE) clean"; \
 		$(MAKE) -C $(PLATFORM)/$(VARIANT) -f $(MAKEFILE) \
 			LOCAL_RULES=TRUE TOP=$(TOP) PLATFORM=$(PLATFORM) VARIANT=$(VARIANT) clean; \
 		echo "cd ../..; rmdir -p $(PLATFORM)/$(VARIANT)"; \
@@ -131,6 +133,7 @@ clean:
 	fi
 
 tests:
+	@echo "make -C $(PLATFORM)/$(VARIANT) -f $(MAKEFILE) tests"
 	@$(MAKE) -C $(PLATFORM)/$(VARIANT) -f $(MAKEFILE) \
 		LOCAL_RULES=TRUE TOP=$(TOP) PLATFORM=$(PLATFORM) VARIANT=$(VARIANT) tests
 

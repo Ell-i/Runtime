@@ -62,7 +62,15 @@
  * version of the emulator, a linker order file needs to be used.
  */
 
+/**
+ * Alignment of initialisation records
+ */
+#ifndef SYSTEM_INIT_ALIGNMENT
+#define SYSTEM_INIT_ALIGNMENT 16
+#endif
+
 # include <stdint.h>
+# include <string.h>
 
 /*
  * From http://stackoverflow.com/questions/1598773/\
@@ -175,12 +183,15 @@ enum system_init_r_type {
  * in the default read-only data section, and the initialisation code
  * may explicitly call the SystemInit functions as appropriate.
  *
- * XXX FIXME Currently the record is explicitly padded to 8 bytes,
- * the linker (used for emulator) on Mac OS X places the records so.
+ * Must be aligned at a 16 bytes boundary; if you change this, you have
+ * to change quite a lot of places (linker scripts, emulator, ...)
  */
 typedef struct {
+    // Align: 0
     const enum system_init_r_type   init_record_type;    // Type of SystemInitRecords in the union
     const uint8_t                   init_record_number;  // Number of SystemInitRecords
+    const uint16_t                  init_record_reserved;// Reserved for future use
+    // Align: 4
     const union {
         const int32_t               init_record_offset;  // Offset to be added to the addresses
                                                          // in the SystemInitRecords
@@ -188,16 +199,19 @@ typedef struct {
                                                            // or 16_with_offset
         volatile preg32_t *const    init_record_address32; // Base register address for 32_no_address
     };
+    // Align: 8
     const union {
         const SystemInitRecordAddrAndOnes *        init_records_addr_and_ones;
         const SystemInitRecordAddrOnesAndZeroes *  init_records_addr_ones_and_zeroes;
         const SystemInitRecordData16Only *         init_records_data16_only;
         const SystemInitRecordData32Only *         init_records_data32_only;
     };
+    // Align: 12
     const union {
         const SystemInitRecordRegisterOffset *     init_records_register_offsets;
     };
-} SystemInitRecordArray;
+    // Align: 16
+} __attribute__((aligned(SYSTEM_INIT_ALIGNMENT))) SystemInitRecordArray;
 
 /**
  * A linker section (aka segment) for SystemInitRecordArrays.
@@ -221,12 +235,19 @@ extern void SystemInitData32Only(       const SystemInitRecordArray *records);
 
 extern void SystemInitPeripherals(void);
 
+#  ifndef memcpy
+extern void *memcpy(void *dst, const void *src, size_t size);
+#  endif
+#  ifndef memset
+extern void *memset(void *dst, int c, size_t size);
+#  endif
+
 # ifdef __cplusplus
 }
 # endif
 
 /********************************
- * XXX TBD
+ * XXX TBD REMOVE THE USE OF THIS UGLY MACRO!
  */
 
 # define IF(x) .x=

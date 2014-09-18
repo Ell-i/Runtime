@@ -22,9 +22,9 @@
 
 #include <Register.h>
 
-class RegisterRCC_CFGR : public Register {
+class Register_RCC_CFGR : public Register {
 public:
-    RegisterRCC_CFGR() : Register("RCC", "CFGR", 32, 0) {}
+    Register_RCC_CFGR() : Register("RCC", "CFGR", 32, 0) {}
     uint32_t operator = (uint32_t arg);
 };
 

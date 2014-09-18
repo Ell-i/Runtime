@@ -41,10 +41,10 @@
 #include <arduelli_thread.h> // XXX TBD -- is this the right file name?
 #include <Arduino_Stream.h>
 
-class Serial : public Stream {
+class SerialClass : public Stream {
 public:
     const USART usart_;
-    constexpr Serial(const USART &);
+    constexpr SerialClass(const USART &);
     void begin(uint32_t) const;
     void write(uint8_t) const;
 };
@@ -52,27 +52,43 @@ public:
 #define DEFINE_SERIAL(usart_number, tx_letter, tx_pin, tx_af, rx_letter, rx_pin, rx_af) \
     ({ DEFINE_USART_STRUCT(usart_number, tx_letter, tx_pin, tx_af, rx_letter, rx_pin, rx_af) })
 
-constexpr Serial::Serial(const USART &usart)
+constexpr SerialClass::SerialClass(const USART &usart)
     : usart_(usart) {}
 
-inline void Serial::begin(uint32_t baudrate) const {
+ARDUINO_INLINE_MEMBER_FUNCTION
+void SerialClass::begin(uint32_t baudrate) const {
     /* Place the GPIO pins into the right alternative function */
     PinFunctionActivate(&usart_.usart_tx_function_);
     PinFunctionActivate(&usart_.usart_rx_function_);
 
     /* Set the baud rate -- use 16 bit oversampling */
-    usart_.usart_->BRR = SystemCoreClock / baudrate;
+    usart_.usart_->BRR = (SystemCoreClock / baudrate);
 
     /* Enable the transmitter and the USART */
-    usart_.usart_->CR1 |= USART_CR1_TE | USART_CR1_UE;
+    usart_.usart_->CR1 |= (USART_CR1_TE | USART_CR1_UE);
 }
 
-inline void Serial::write(uint8_t c) const {
-    usart_.usart_->TDR = c;
+ARDUINO_INLINE_MEMBER_FUNCTION
+void SerialClass::write(uint8_t c) const {
 
+# if defined(STM32F0XX)
+
+    usart_.usart_->TDR = c;
     while ((usart_.usart_->ISR & USART_ISR_TXE) == 0) {
         yield();
     }
+
+# elif defined(STM32F40_41xxx)
+
+    usart_.usart_->DR = c;
+    while ((usart_.usart_->SR & USART_SR_TXE) == 0) {
+        yield();
+    }
+
+# else
+#  error "Unsupported MCU."
+# endif
+
 }
 
 #endif//_ARDUINO_SERIAL_H_

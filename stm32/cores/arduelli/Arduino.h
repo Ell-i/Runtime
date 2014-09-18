@@ -23,16 +23,19 @@
  * @brief The Arduino IDE compatible header.
  */
 
+#include <arduelli_api_definitions.h>
+
 #include <main.h>
 #if defined(ELLI_STM32F051_ELLDUINO)
 # include <ellduino_gpio.h> // XXX To be placed into the variant.h!
 # include <ellduino_timer.h>
 # include <ellduino_usart.h>
+# include <ellduino_Serial.h>
 #elif defined(ELLI_STM32F407_DISCOVERY)
 # include <stm32f4discovery_gpio.h> // XXX To be placed into the variant.h!
 # include <stm32f4discovery_timer.h>
 # include <stm32f4discovery_usart.h>
-// # include <stm32f4discovery_Serial.h>
+# include <stm32f4discovery_Serial.h>
 #elif defined(ELLI_STM32F334_NUCLEO)
 # include <stm32f334nucleo_gpio.h> // XXX To be placed into the variant.h!
 # include <stm32f334nucleo_timer.h>
