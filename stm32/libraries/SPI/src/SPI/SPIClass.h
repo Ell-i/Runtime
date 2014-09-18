@@ -23,24 +23,26 @@
  * @brief The Arduino library SPI class
  */
 
-#ifndef _SPI_CLASS_H_
-#define _SPI_CLASS_H_
+#ifndef  _SPI_CLASS_H_
+# define _SPI_CLASS_H_
 
-#include <SPI/spiStruct.h>
-#include <SPI/spiAPI.h>
-#if defined(ELLI_STM32F051_ELLDUINO)
-# include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
-#elif defined(ELLI_STM32F407_DISCOVERY)
-# include <stm32f4discovery_gpio.h>
-#else
-# error "The SPI library is not yet supported with this board."
-#endif
-#include <wiring_digital.h>
-#include <TinyMap.h>
+# include <SPI/spiStruct.h>
+# include <SPI/spiAPI.h>
+# if defined(ELLI_STM32F051_ELLDUINO)
+#  include <ellduino_gpio.h>   // XXX To be placed into the variant.h!
+# elif defined(ELLI_STM32F407_DISCOVERY)
+#  include <stm32f4discovery_gpio.h>
+# elif defined(ELLI_STM32F334_NUCLEO)
+#  include <stm32f334nucleo_gpio.h>
+# else
+#  error "The SPI library is not yet supported with this board."
+# endif
+# include <wiring_digital.h>
+# include <TinyMap.h>
 
-#ifndef BOARD_SPI_DEFAULT_SS
-#define BOARD_SPI_DEFAULT_SS 10 /* XXX */
-#endif
+# ifndef BOARD_SPI_DEFAULT_SS
+#  define BOARD_SPI_DEFAULT_SS 10 /* XXX */
+# endif
 
 enum SPITransferMode {
     SPI_CONTINUE,
@@ -78,9 +80,9 @@ typedef TinyMap<uint8_t,uint32_t,7> Pin2Int7;
 
 //XXX TODO: Figure out a better implementation for setClock
 
-# if defined(STM32F0XX)
+# if defined(SPI_CR1_CRCL)
 #  define SPI_CR1_CRCL_OR_DFF SPI_CR1_CRCL /* 0: N/A (8-bit CRC length) */
-# elif defined(STM32F40_41xxx)
+# elif defined(SPI_CR1_DFF)
 #  define SPI_CR1_CRCL_OR_DFF SPI_CR1_DFF  /* 0: 8-bit data format */
 # else
 #  error "Unsupported MCU."

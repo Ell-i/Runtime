@@ -35,13 +35,13 @@
  */
 
 DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2,
-                  SPI_INIT_STM32F0_DefaultRecordsData,
-                  SPI_INIT_STM32F0_DefaultRecordsOffsets,
-                  SPI_INIT_STM32F0_DefaultRecordsCount);
+                  SPI_INIT_STM32F_DefaultRecordsData,
+                  SPI_INIT_STM32F_DefaultRecordsOffsets,
+                  SPI_INIT_STM32F_DefaultRecordsCount);
 DEFINE_SPI_DEVICE(/*SPI*/2, /*APB*/1,
-                  SPI_INIT_STM32F0_DefaultRecordsData,
-                  SPI_INIT_STM32F0_DefaultRecordsOffsets,
-                  SPI_INIT_STM32F0_DefaultRecordsCount);
+                  SPI_INIT_STM32F_DefaultRecordsData,
+                  SPI_INIT_STM32F_DefaultRecordsOffsets,
+                  SPI_INIT_STM32F_DefaultRecordsCount);
 
 struct SPIdynamicFields _SPI1dynamicFields;
 struct SPIdynamicFields _SPI2dynamicFields;

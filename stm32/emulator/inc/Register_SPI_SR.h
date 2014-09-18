@@ -32,6 +32,7 @@ public:
         {}
     uint32_t operator = (uint32_t arg);
     uint16_t operator & (uint16_t) const;
+    uint16_t operator & (uint32_t) const;
 };
 
 #endif //_REGISTER_SPI_SR_H_

@@ -25,7 +25,9 @@
 
 void setup() {
     SPI.begin();
+#ifdef SPI2
     SPI_2.begin();
+#endif
 }
 
 void loop() {

@@ -26,10 +26,10 @@
 #include "Arduino_Serial.h"
 
 // (usart_number, tx_letter, tx_pin, tx_af, rx_letter, rx_pin, rx_af)
-static const class Serial Serial1  DEFINE_SERIAL(1, A, 9, 7, A, 10, 7);  // USART
-static const class Serial Serial2  DEFINE_SERIAL(2, A, 2, 7, A, 3, 7);   // USART
-static const class Serial Serial3  DEFINE_SERIAL(3, B, 8, 7, B, 9, 7);   // USART
+static const class SerialClass Serial1  DEFINE_SERIAL(1, A, 9, 7, A, 10, 7);  // USART
+static const class SerialClass Serial2  DEFINE_SERIAL(2, A, 2, 7, A, 3, 7);   // USART
+static const class SerialClass Serial3  DEFINE_SERIAL(3, B, 8, 7, B, 9, 7);   // USART
 
-static const class Serial &Serial = Serial2;
+static const class SerialClass &Serial = Serial2;
 
 #endif //_STM32F334NUCLEO_SERIAL_H_

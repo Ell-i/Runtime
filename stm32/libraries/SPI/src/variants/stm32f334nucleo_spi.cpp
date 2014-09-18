@@ -21,12 +21,12 @@
  * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#include "variants/stm32f4discovery_spi.h"
+#include "variants/stm32f334nucleo_spi.h"
 
 #include "SPIInitSTM32F0.cppinc"
 
 /*
- * Boot-time definitions for the STM32F4 series MCU SPIs.
+ * Boot-time definitions for the STM32F334 series MCU SPIs.
  *
  * These macros here generate SystemInitRecord structures to the
  * SYSTEM_INIT_SECTION linker section.  The boot time initialisation
@@ -34,22 +34,19 @@
  * peripheral ports accordingly.
  */
 
-# warning TBD
+# warning "Does not work yet with STM32F334.  Please fix."
+
 DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2,
                   SPI_INIT_STM32F_DefaultRecordsData,
                   SPI_INIT_STM32F_DefaultRecordsOffsets,
                   SPI_INIT_STM32F_DefaultRecordsCount);
-DEFINE_SPI_DEVICE(/*SPI*/2, /*APB*/1,
-                  SPI_INIT_STM32F_DefaultRecordsData,
-                  SPI_INIT_STM32F_DefaultRecordsOffsets,
-                  SPI_INIT_STM32F_DefaultRecordsCount);
+
 
 struct SPIdynamicFields _SPI1dynamicFields;
-struct SPIdynamicFields _SPI2dynamicFields;
+
 
 /**
  * XXX.  Linking hack, to be removed once linking gets fixed.
  */
 
 const void * __SPI1 = &SPI1_INIT;
-const void * __SPI2 = &SPI2_INIT;

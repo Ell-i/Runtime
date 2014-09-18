@@ -25,7 +25,7 @@
 #include <system_init.h>
 
 /*
- * Boot-time definitions for the STM32F0 series MCU SPI registers.
+ * Boot-time definitions for the STM32F series MCU SPI registers.
  */
 
 # ifndef offsetof
@@ -68,9 +68,9 @@ static const uint8_t  p ## _ ## r ## _offset =  offsetof(p, r)/sizeof(uint32_t);
         |   SPI_CR1_SSI        /* Internal NSS high, needed for master mode */
         |   SPI_CR1_SSM        /* Software Slave management enabled */
         | ! SPI_CR1_RXONLY     /* 0: Full duplex */
-# if defined(STM32F0XX)
+# if defined(SPI_CR1_CRCL)
         | ! SPI_CR1_CRCL       /* 0: N/A (8-bit CRC length) */
-# elif defined(STM32F40_41xxx)
+# elif defined(SPI_CR1_DFF)
         | ! SPI_CR1_DFF        /* 0: 8-bit data format */
 # else
 #  error "Unsupported MCU."
@@ -81,15 +81,15 @@ static const uint8_t  p ## _ ## r ## _offset =  offsetof(p, r)/sizeof(uint32_t);
         | ! SPI_CR1_BIDIMODE   /* 0: 2-Line (uni)directional data */
         );
 
-const SystemInitRecordData16Only SPI_INIT_STM32F0_DefaultRecordsData[] = {
+const SystemInitRecordData32Only SPI_INIT_STM32F_DefaultRecordsData[] = {
     { SPI_TypeDef_CR2_value },
     { SPI_TypeDef_CR1_value },
 };
 
-const SystemInitRecordRegisterOffset SPI_INIT_STM32F0_DefaultRecordsOffsets[] = {
+const SystemInitRecordRegisterOffset SPI_INIT_STM32F_DefaultRecordsOffsets[] = {
     { SPI_TypeDef_CR2_offset },
     { SPI_TypeDef_CR1_offset },
 };
 
-const uint8_t SPI_INIT_STM32F0_DefaultRecordsCount =
-    COUNT_OF(SPI_INIT_STM32F0_DefaultRecordsData);
+const uint8_t SPI_INIT_STM32F_DefaultRecordsCount =
+    COUNT_OF(SPI_INIT_STM32F_DefaultRecordsData);

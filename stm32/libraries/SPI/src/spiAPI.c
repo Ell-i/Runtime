@@ -43,7 +43,7 @@ size_t spi_transfer_write(
 
     if (len == 0) return 0;
 
-# if defined(STM32F0XX)
+# if defined(STM32F0XX) || defined(STM32F334x8)
     for(size_t count = 0; count < len; count++) {
         *DR8 = data[count];
         while (!(spi->spi_->SR & SPI_SR_FRLVL))
@@ -123,7 +123,7 @@ size_t spi_transfer_read(
 
     if (len == 0) return 0;
 
-# if defined(STM32F0XX)
+# if defined(STM32F0XX) || defined(STM32F334x8)
     for(size_t count = 0; count < len; count++) {
         *DR8 = data[count];
         while (!(spi->spi_->SR & SPI_SR_FRLVL))

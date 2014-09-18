@@ -23,6 +23,8 @@
 #include "ellduino_Serial.h"
 #elif defined(ELLI_STM32F407_DISCOVERY)
 #include "stm32f4discovery_Serial.h"
+#elif defined(ELLI_STM32F334_NUCLEO)
+#include "stm32f334nucleo_Serial.h"
 #else
 #error "Unknown board."
 #endif

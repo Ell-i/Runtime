@@ -92,11 +92,11 @@
     SPI ## spi ## _INIT                                                 \
     __attribute__((section(SYSTEM_INIT_SECTION(1, SPI ## spi))))        \
         = {                                                             \
-        IF(init_record_type)   DATA16_WITH_OFFSETS,                     \
+        IF(init_record_type)   DATA32_WITH_OFFSETS,                     \
         IF(init_record_number) init_records_count,                      \
         IF(init_record_reserved) 0,                                     \
-        { IF(init_record_address16) &SPI ## spi->CR1 },                 \
-        { IF(init_records_data16_only) init_records_data, },            \
+        { IF(init_record_address32) (volatile preg32_t* const) &SPI ## spi->CR1 }, \
+        { IF(init_records_data32_only) init_records_data, },            \
         { IF(init_records_register_offsets) init_records_offsets },     \
     }
 
@@ -147,15 +147,5 @@ struct SPI {
         IF(spi_clk_function_)   DEFINE_PIN_FUNCTION(clk_port, clk_pin, clk_af),    \
         IF(spi_dynamic_)        dynamicFields,                                     \
     }
-
-#if 0
-/**
- * Constant boot-time initialisation structures, defined in SPIInitSTM32F0cpp
- */
-
-extern const SystemInitRecordData16Only     SPI_INIT_STM32F0_DefaultRecordsData[];
-extern const SystemInitRecordRegisterOffset SPI_INIT_STM32F0_DefaultRecordsOffsets[];
-extern const uint8_t                        SPI_INIT_STM32F0_DefaultRecordsCount;
-#endif
 
 #endif //_SPISTRUCT_H_

@@ -23,6 +23,8 @@
 # include <variants/ellduino_spi.h>    // XXX To be placed into the variant.h!
 #elif defined(ELLI_STM32F407_DISCOVERY)
 # include <variants/stm32f4discovery_spi.h>
+#elif defined(ELLI_STM32F334_NUCLEO)
+# include <variants/stm32f334nucleo_spi.h>
 #else
 # error "The SPI library is not yet supported with this board."
 #endif

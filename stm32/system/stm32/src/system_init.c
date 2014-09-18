@@ -86,6 +86,16 @@ void SystemInitData32Only(const SystemInitRecordArray *ra) {
     }
 }
 
+void SystemInitData32WithOffsets(const SystemInitRecordArray *ra) {
+    const SystemInitRecordData32Only *r     = ra->init_records_data32_only;
+    const SystemInitRecordRegisterOffset *o = ra->init_records_register_offsets;
+
+    register volatile preg32_t *a = ra->init_record_address32;
+    for (int i = 0; i < ra->init_record_number; i++) {
+        a[(o++)->init_offset] = (r++)->init_data32;
+    }
+}
+
 /*
  * Function pointer table, indexed by the system_init_r_type enum.
  */
@@ -97,6 +107,7 @@ const SystemInitFunctionType SystemInitFunctions[SYSTEM_INIT_TYPE_NUMBER] = {
     [DATA16_ONLY]          = SystemInitData16Only,
     [DATA16_WITH_OFFSETS]  = SystemInitData16WithOffsets,
     [DATA32_ONLY]          = SystemInitData32Only,
+    [DATA32_WITH_OFFSETS]  = SystemInitData32WithOffsets,
 };
 
 /*

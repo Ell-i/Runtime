@@ -20,29 +20,28 @@
  * Authors:  Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
 
-#ifndef _STM32F4DISCOVERY_SPI_H_
-# define _STM32F4DISCOVERY_SPI_H_
+#ifndef _STM32F334NUCLEO_SPI_H_
+# define _STM32F334NUCLEO_SPI_H_
 
 # include <system_init.h>
 # include <SPI/spiStruct.h>
 
-# warning NOT PORTED YET.
+# warning "For a functional STM32F334nucleo system, more work is needed.  Will not work."
 
 /**
  * Declarations for externally visible SPI init records.
  *
- * STM32F0 has SPI ports 1 and 2.
+ * STM32F334 has SPI port 1.
  */
 SPI_INIT_DEFAULT(1);
-SPI_INIT_DEFAULT(2);
 
-#define BOARD_SPI_DEFAULT_SS 10 /* XXX: Should be D10 but that is not defined yet */
+# define BOARD_SPI_DEFAULT_SS 10 /* XXX: Should be D10 but that is not defined yet */
 
 # ifdef __cplusplus
 extern "C" {
 # endif
 
-/* Defined in stm32f4discovery_spi.cpp */
+/* Defined in stm32f334nucleo_spi.cpp */
 extern struct SPIdynamicFields _SPI1dynamicFields;
 extern struct SPIdynamicFields _SPI2dynamicFields;
 
@@ -51,7 +50,6 @@ extern struct SPIdynamicFields _SPI2dynamicFields;
 # endif
 
 DEFINE_SPI_STRUCT(1, A, 15, 0, B,  4, 0, B,  5, 0, B,  3, 0, &_SPI1dynamicFields) ;
-DEFINE_SPI_STRUCT(2, B, 12, 0, B, 14, 0, B, 15, 0, B, 13, 0, &_SPI2dynamicFields);
 
 # ifdef __cplusplus
 
@@ -60,8 +58,7 @@ DEFINE_SPI_STRUCT(2, B, 12, 0, B, 14, 0, B, 15, 0, B, 13, 0, &_SPI2dynamicFields
 extern Pin2Int7 spimap1, spimap2;
 
 static const class SPIClass SPI  (SPI1struct, spimap1);
-static const class SPIClass SPI_2(SPI2struct, spimap2);
 
 # endif //__cplusplus
 
-#endif//_STM32F4DISCOVERY_SPI_H_
+#endif//_STM32F334NUCLEO_SPI_H_

@@ -165,6 +165,7 @@ enum system_init_r_type {
     DATA16_ONLY = 2,
     DATA16_WITH_OFFSETS = 3,
     DATA32_ONLY = 4,
+    DATA32_WITH_OFFSETS = 5,
     SYSTEM_INIT_TYPE_NUMBER
 };
 
@@ -232,6 +233,7 @@ extern void SystemInitAddrOnesAndZeroes(const SystemInitRecordArray *records);
 extern void SystemInitData16Only(       const SystemInitRecordArray *records);
 extern void SystemInitData16WithOffset( const SystemInitRecordArray *records);
 extern void SystemInitData32Only(       const SystemInitRecordArray *records);
+extern void SystemInitData32WithOffset( const SystemInitRecordArray *records);
 
 extern void SystemInitPeripherals(void);
 

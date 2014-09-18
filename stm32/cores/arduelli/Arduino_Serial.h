@@ -35,9 +35,9 @@
 # include <stm32f4discovery_gpio.h>  // XXX To be placed into the variant.h!
 # include <stm32f4discovery_usart.h> // XXX To be placed into the variant.h!
 #elif defined(ELLI_STM32F334_NUCLEO)
-# include <stm32f3xx.h>           // XXX To be placed into the variant.h!
-# include <stm32f334nucleo_gpio.h>  // XXX To be placed into the variant.h!
-# include <stm32f334nucleo_usart.h> // XXX To be placed into the variant.h!
+# include <stm32f3xx.h>              // XXX To be placed into the variant.h!
+# include <stm32f334nucleo_gpio.h>   // XXX To be placed into the variant.h!
+# include <stm32f334nucleo_usart.h>  // XXX To be placed into the variant.h!
 #else
 # error "Unknown board.  Please define."
 #endif
@@ -75,7 +75,7 @@ void SerialClass::begin(uint32_t baudrate) const {
 ARDUINO_INLINE_MEMBER_FUNCTION
 void SerialClass::write(uint8_t c) const {
 
-# if defined(STM32F0XX)
+# if defined(STM32F0XX) || defined(STM32F334x8)
 
     usart_.usart_->TDR = c;
     while ((usart_.usart_->ISR & USART_ISR_TXE) == 0) {

@@ -23,6 +23,8 @@
 #  include <stm32f0xx.h>
 # elif defined(__STM32F407__)
 #  include <stm32f4xx.h>
+# elif defined(__STM32F334__)
+#  include <stm32f3xx.h>
 # else
 #  error "Unknown MCU."
 # endif
@@ -35,6 +37,19 @@ uint32_t Register_SPI_SR::operator = (uint32_t arg) {
 uint16_t Register_SPI_SR::operator &  (uint16_t arg) const {
     dr_.printout("=", dr_.value_);
     printout("&(16b)", value_ & arg);
+    // XXX SPI_SR_FRLVL should probably be part of value_,
+    // but defining it in the constructor causes a circular
+    // makefile dependency.  Hence we "cheat" and add it here.  YMMV.
+    uint32_t v = value_;
+#ifdef SPI_SR_FRLVL
+    v |= SPI_SR_FRLVL;
+#endif
+    return v & arg;
+}
+
+uint16_t Register_SPI_SR::operator &  (uint32_t arg) const {
+    dr_.printout("=", dr_.value_);
+    printout("&", value_ & arg);
     // XXX SPI_SR_FRLVL should probably be part of value_,
     // but defining it in the constructor causes a circular
     // makefile dependency.  Hence we "cheat" and add it here.  YMMV.
