@@ -66,11 +66,14 @@ protected:
 public:
     static UniversalSynchronousAsynchronousReceiverTransmitter USART1;
     static UniversalSynchronousAsynchronousReceiverTransmitter USART2;
+    static UniversalSynchronousAsynchronousReceiverTransmitter USART3;
 };
 
 UniversalSynchronousAsynchronousReceiverTransmitter *const USART1 =
     &UniversalSynchronousAsynchronousReceiverTransmitter::USART1;
 UniversalSynchronousAsynchronousReceiverTransmitter *const USART2 =
+    &UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
+UniversalSynchronousAsynchronousReceiverTransmitter *const USART3 =
     &UniversalSynchronousAsynchronousReceiverTransmitter::USART2;
 
 #endif //_USART_H_
