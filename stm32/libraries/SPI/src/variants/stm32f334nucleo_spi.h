@@ -26,8 +26,6 @@
 # include <system_init.h>
 # include <SPI/spiStruct.h>
 
-# warning "For a functional STM32F334nucleo system, more work is needed.  Will not work."
-
 /**
  * Declarations for externally visible SPI init records.
  *
@@ -43,19 +41,18 @@ extern "C" {
 
 /* Defined in stm32f334nucleo_spi.cpp */
 extern struct SPIdynamicFields _SPI1dynamicFields;
-extern struct SPIdynamicFields _SPI2dynamicFields;
 
 # ifdef __cplusplus
 }
 # endif
 
-DEFINE_SPI_STRUCT(1, A, 15, 0, B,  4, 0, B,  5, 0, B,  3, 0, &_SPI1dynamicFields) ;
+DEFINE_SPI_STRUCT(1, B, 6, 5, A, 6, 5, A, 7, 5, A, 5, 5, &_SPI1dynamicFields) ;
 
 # ifdef __cplusplus
 
 #  include <SPI/SPIClass.h>
 
-extern Pin2Int7 spimap1, spimap2;
+extern Pin2Int7 spimap1;
 
 static const class SPIClass SPI  (SPI1struct, spimap1);
 

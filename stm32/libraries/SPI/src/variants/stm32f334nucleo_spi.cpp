@@ -34,8 +34,6 @@
  * peripheral ports accordingly.
  */
 
-# warning "Does not work yet with STM32F334.  Please fix."
-
 DEFINE_SPI_DEVICE(/*SPI*/1, /*APB*/2,
                   SPI_INIT_STM32F_DefaultRecordsData,
                   SPI_INIT_STM32F_DefaultRecordsOffsets,
