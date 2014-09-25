@@ -39,7 +39,7 @@
 class UniversalSynchronousAsynchronousReceiverTransmitter {
 public:
 #if defined(__STM32F407__)
-    DEFINE_REGISTER(16, USART, SR,       0);
+    DEFINE_REGISTER(16, USART, SR,       USART_SR_TXE);
     DEFINE_REGISTER(16, USART, DR,       0);
     DEFINE_REGISTER(16, USART, BRR,      0);
     DEFINE_REGISTER(16, USART, CR1,      0);
