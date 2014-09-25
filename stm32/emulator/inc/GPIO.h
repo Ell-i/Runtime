@@ -24,11 +24,19 @@
 #include <Register_GPIO_PUPDR.h>
 #include <Register_GPIO_IDR.h>
 #include <Register_GPIO_ODR.h>
-#include <Register_GPIO_BSRR.h>
-//#include <Register_GPIO_LCKR.h>
-#include <Register_GPIO_AFR.h>
-#include <Register_GPIO_BRR.h>
-
+#if defined(__STM32F407__) || defined(__STM32F334__)
+    #include <Register_GPIO_BSRRL.h>
+    //#include <Register_GPIO_LCKR.h>
+    #include <Register_GPIO_AFR.h>
+    #include <Register_GPIO_BSRRH.h>
+#elif defined(__STM32F051__)
+    #include <Register_GPIO_BSRR.h>
+    //#include <Register_GPIO_LCKR.h>
+    #include <Register_GPIO_AFR.h>
+    #include <Register_GPIO_BRR.h>
+#else
+    # error "Unknown MCU die.  Please define."
+#endif
 
 class GeneralPurposeInputOutput {
 public:
@@ -39,18 +47,10 @@ public:
     Register_GPIO_ODR ODR;
     Register_GPIO_IDR IDR;
 #if defined(__STM32F407__) || defined(__STM32F334__)
-    // XXX REWRITE
-    DEFINE_REGISTER(32, GPIO, MODER, 0);
-    //DEFINE_REGISTER(32, GPIO, OTYPER, 0);
-    //DEFINE_REGISTER(32, GPIO, OSPEEDR, 0);
-    DEFINE_REGISTER(32, GPIO, PUPDR, 0);
-    DEFINE_REGISTER(32, GPIO, IDR, 0);
-    //DEFINE_REGISTER(32, GPIO, ODR, 0);
-#if defined(__STM32F407__) || defined(__STM32F334__)
-    //Add partial emulator support for STM32F334
-    DEFINE_REGISTER(16, GPIO, BSRRL, 0);
-    DEFINE_REGISTER(16, GPIO, BSRRH, 0);
-    DEFINE_REGISTER(32, GPIO, AFR, 0)[2];
+    Register_GPIO_BSRRL BSRRL;
+    Register_GPIO_AFR AFR[2];
+    //Register_GPIO_LCKR LCKR;
+    Register_GPIO_BSRRH BSRRH;
 #elif defined(__STM32F051__)
     Register_GPIO_BSRR BSRR;
     Register_GPIO_AFR AFR[2];
@@ -62,9 +62,14 @@ public:
 protected:
     GeneralPurposeInputOutput()
         : ODR(IDR)
-#if defined(__STM32F051__)
+#if defined(__STM32F407__) || defined(__STM32F334__)
+        , BSRRL(ODR)
+        , BSRRH(ODR)
+#elif defined(__STM32F051__)
         , BSRR(ODR)
         , BRR(ODR)
+#else
+# error "Unknown MCU die.  Please define."
 #endif
         {}
 public:

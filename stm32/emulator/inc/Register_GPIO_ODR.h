@@ -27,6 +27,8 @@
 #include <Register.h>
 
 class Register_GPIO_IDR;
+class Register_GPIO_BSRRL;
+class Register_GPIO_BSRRH;
 class Register_GPIO_BSRR;
 class Register_GPIO_BRR;
 
@@ -39,6 +41,8 @@ public:
         {}
     uint32_t  operator = (uint32_t arg);
 private:
+	friend class Register_GPIO_BSRRL;
+    friend class Register_GPIO_BSRRH;
     friend class Register_GPIO_BSRR;
     friend class Register_GPIO_BRR;
     void assign(uint32_t arg);

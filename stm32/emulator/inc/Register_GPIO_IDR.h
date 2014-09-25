@@ -39,4 +39,4 @@ private:
     void assign(uint32_t arg);
 };
 
-#endif
+#endif//_REGISTER_GPIO_IDR_H_
