@@ -41,7 +41,7 @@ public:
         {}
     uint32_t  operator = (uint32_t arg);
 private:
-	friend class Register_GPIO_BSRRL;
+    friend class Register_GPIO_BSRRL;
     friend class Register_GPIO_BSRRH;
     friend class Register_GPIO_BSRR;
     friend class Register_GPIO_BRR;

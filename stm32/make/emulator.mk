@@ -25,7 +25,6 @@ EXTRA_CFLAGS += \
 	-I$(TOP)system/stm32/inc \
 	-I$(TOP)system/stm32/CMSIS/Include \
 	-I$(TOP)variants/$(VARIANT) \
-	-I$(TOP)libraries/SPI/src/variants \
 	-Wno-deprecated \
 
 #

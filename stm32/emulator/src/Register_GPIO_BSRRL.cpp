@@ -33,6 +33,7 @@ uint32_t  Register_GPIO_BSRRL::operator = (uint32_t arg) {
     value |=  (arg & 0xffff);
     odr_.assign(value);
 
-    return 0; // See STM32F0xx Refence Manual RM0091 Doc ID 018940 Rev 5 page 162.
+    return 0; // See STM32F4xx Refence Manual RM0090 Doc ID 018909 Rev 7 page 281.
+    		  // See STM32F334xx Refence Manual RM0364 Doc ID 025177 Rev 1 page 156.
 }
 
