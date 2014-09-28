@@ -66,7 +66,7 @@
  * Alignment of initialisation records
  */
 #ifndef SYSTEM_INIT_ALIGNMENT
-#define SYSTEM_INIT_ALIGNMENT 16
+#define SYSTEM_INIT_ALIGNMENT 4
 #endif
 
 # include <stdint.h>
