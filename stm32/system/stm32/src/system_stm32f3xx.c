@@ -8,7 +8,7 @@
   *
   * 1. This file provides two functions and one global variable to be called from
   *    user application:
-  *      - SystemInit(): This function is called at startup just after reset and 
+  *      - SystemInit(): This function is called at startup just after reset and
   *                      before branch to main program. This call is made inside
   *                      the "startup_stm32f3xx.s" file.
   *
@@ -102,7 +102,7 @@
 /** @addtogroup STM32F3xx_System_Private_Defines
   * @{
   */
-#if !defined  (HSE_VALUE) 
+#if !defined  (HSE_VALUE)
   #define HSE_VALUE    ((uint32_t)8000000) /*!< Default value of the External oscillator in Hz.
                                                 This value can be provided and adapted by the user application. */
 #endif /* HSE_VALUE */
@@ -137,7 +137,7 @@
       2) by calling HAL API function HAL_RCC_GetHCLKFreq()
       3) each time HAL_RCC_ClockConfig() is called to configure the system clock frequency
          Note: If you use this function to configure the system clock there is no need to
-               call the 2 first functions listed above, since SystemCoreClock variable is 
+               call the 2 first functions listed above, since SystemCoreClock variable is
                updated automatically.
   */
 uint32_t SystemCoreClock = 8000000;

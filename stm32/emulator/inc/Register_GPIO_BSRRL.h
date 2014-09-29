@@ -21,16 +21,21 @@
  * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
  */
 
-#ifndef _REGISTER_GPIO_PUPDR_H_
-#define _REGISTER_GPIO_PUPDR_H_
+#ifndef _REGISTER_GPIO_BSRRL_H_
+#define _REGISTER_GPIO_BSRRL_H_
 
 #include <Register.h>
 
-class Register_GPIO_PUPDR : public Register {
-public:
-    Register_GPIO_PUPDR() : Register("GPIO", "PUPDR", 32, 0) {}
+class Register_GPIO_ODR;
 
+class Register_GPIO_BSRRL : public Register {
+    Register_GPIO_ODR & odr_;
+public:
+    Register_GPIO_BSRRL(Register_GPIO_ODR &odr)
+        : Register("GPIO", "BSRRL", 32, 0)
+        , odr_(odr)
+        {}
     uint32_t  operator = (uint32_t arg);
 };
 
-#endif//_REGISTER_GPIO_PUPDR_H_
+#endif//_REGISTER_GPIO_BSRRL_H_

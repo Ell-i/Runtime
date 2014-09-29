@@ -107,7 +107,7 @@ const SystemInitRecordData32Only USART_INIT_DefaultRecords[] = {
 };
 
 /*
- * Boot-time definitions for the STM32F334 series MCU USARTs.
+ * Boot-time definitions for the STM32F4 series MCU USARTs.
  *
  * These macros here generate SystemInitRecord structures to the
  * SYSTEM_INIT_SECTION linker section.  The boot time initialisation

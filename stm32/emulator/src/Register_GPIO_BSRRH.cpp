@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 ELL-i co-operative.
+ * Copyright (c) 2014 ELL-i co-operative.
  *
  * This is part of ELL-i software.
  *
@@ -21,16 +21,18 @@
  * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
  */
 
-#ifndef _REGISTER_GPIO_PUPDR_H_
-#define _REGISTER_GPIO_PUPDR_H_
+#include <Register_GPIO_BSRRH.h>
+#include <Register_GPIO_IDR.h>
+#include <Register_GPIO_ODR.h>
 
-#include <Register.h>
+uint32_t  Register_GPIO_BSRRH::operator = (uint32_t arg) {
+    printout("=", 0);
 
-class Register_GPIO_PUPDR : public Register {
-public:
-    Register_GPIO_PUPDR() : Register("GPIO", "PUPDR", 32, 0) {}
+    uint32_t value = odr_.value_;
+    value &= ~(arg & 0xffff);
+    odr_.assign(value);
 
-    uint32_t  operator = (uint32_t arg);
-};
+    return 0; // See STM32F4xx Refence Manual RM0090 Doc ID 018909 Rev 7 page 281.
+    		  // See STM32F334xx Refence Manual RM0364 Doc ID 025177 Rev 1 page 156.
+}
 
-#endif//_REGISTER_GPIO_PUPDR_H_
