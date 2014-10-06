@@ -49,6 +49,10 @@ public:
     uint16_t  operator &  (uint16_t) const; // Used by SPI, Serial, ...
     operator uint32_t () volatile { return value_; }
 
+    uint32_t          registerValue()  const;
+    const std::string registerPeriph() const;
+    const std::string registerName()   const;
+
 protected:
     void printout(const std::string opStr, uint32_t result) const;
 };

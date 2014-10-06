@@ -19,6 +19,7 @@
 
 #include <Arduino.h>
 #include <SPI.h>
+//#include <GPIO.h>
 
 /**
  * C test wrappers for calling our APIs from Robot Framework Python code
@@ -40,6 +41,12 @@ extern "C" {
      */
     int main() {
         return 0;
+    }
+
+    // void (*gpioPeripheralValues)(std::string periph, std::string name, uint32_t value) ) /*, std::string periph, std::string name, uint32_t value)*/ {
+    void gpioCallback(const std::string &port, CALLBACK(GPIO_MODER_CALLBACK)
+        /*void (*gpioPeripheralValues)(const char* periph, const char* name, uint32_t value)*/) {
+        GPIOA->GPIO_MODER_VALUES(port, GPIO_MODER_CALLBACK);
     }
 
     /*
