@@ -35,10 +35,6 @@ GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOG;
 GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOH;
 GeneralPurposeInputOutput GeneralPurposeInputOutput::GPIOI;
 
-/*
-Implement here a generic fiunction, which initiate callbacks according to the port e.g. GPIOA, GPIOB, GPIOC etc
-*/
-
 void GeneralPurposeInputOutput::GPIO_MODER_VALUES( GeneralPurposeInputOutput *const gpioPort
 	, CALLBACK(GPIO_MODER_CALLBACK) ) {
 	GPIO_MODER_CALLBACK( gpioPort->MODER.registerPeriph().c_str()
@@ -129,43 +125,3 @@ void GeneralPurposeInputOutput::GPIO_BRR_VALUES( GeneralPurposeInputOutput *cons
 #else
 # error "Unknown MCU die.  Please define."
 #endif
-
-/*
-void GeneralPurposeInputOutput::GPIO_MODER_VALUES( const std::string &port, CALLBACK(GPIO_MODER_CALLBACK) ) {
-#if defined(__STM32F407__) || defined(__STM32F334__)
-	if (port == "A") {
-		GPIO_MODER_CALLBACK(GPIOA.MODER.registerPeriph().c_str(), GPIOA.MODER.registerName().c_str(), GPIOA.MODER.registerValue());
-	}
-	else if (port == "B") {
-		GPIO_MODER_CALLBACK(GPIOB.MODER.registerPeriph().c_str(), GPIOB.MODER.registerName().c_str(), GPIOB.MODER.registerValue());
-	}
-	else if (port == "C") {
-		GPIO_MODER_CALLBACK(GPIOC.MODER.registerPeriph().c_str(), GPIOC.MODER.registerName().c_str(), GPIOC.MODER.registerValue());
-	}
-	else {
-
-	}
-#elif defined(__STM32F051__)
-	if (port == "A") {
-		GPIO_MODER_CALLBACK(GPIOA.MODER.registerPeriph().c_str(), GPIOA.MODER.registerName().c_str(), GPIOA.MODER.registerValue());
-	}
-	else if (port == "B") {
-		GPIO_MODER_CALLBACK(GPIOB.MODER.registerPeriph().c_str(), GPIOB.MODER.registerName().c_str(), GPIOB.MODER.registerValue());
-	}
-	else if (port == "C") {
-		GPIO_MODER_CALLBACK(GPIOC.MODER.registerPeriph().c_str(), GPIOC.MODER.registerName().c_str(), GPIOC.MODER.registerValue());
-	}
-	else if (port == "D") {
-		GPIO_MODER_CALLBACK(GPIOD.MODER.registerPeriph().c_str(), GPIOD.MODER.registerName().c_str(), GPIOD.MODER.registerValue());
-	}
-	else if (port == "F") {
-		GPIO_MODER_CALLBACK(GPIOF.MODER.registerPeriph().c_str(), GPIOF.MODER.registerName().c_str(), GPIOF.MODER.registerValue());
-	}
-	else {
-
-	}
-#else
-# error "Unknown MCU die.  Please define."
-#endif
-}
-*/
