@@ -85,18 +85,18 @@ public:
     static GeneralPurposeInputOutput GPIOI;
 
 #define CALLBACK(register) void (*register)(const char* periph, const char* name, uint32_t value)
-    void GPIO_MODER_VALUES( const std::string &port, CALLBACK(GPIO_MODER_CALLBACK) );
-    void GPIO_PUPDR_VALUES( const std::string &port, CALLBACK(GPIO_PUPDR_CALLBACK) );
-    void GPIO_ODR_VALUES( const std::string &port, CALLBACK(GPIO_ODR_CALLBACK) );
-    void GPIO_IDR_VALUES( const std::string &port, CALLBACK(GPIO_IDR_CALLBACK) );
+    void GPIO_MODER_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_MODER_CALLBACK) );
+    void GPIO_PUPDR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_PUPDR_CALLBACK) );
+    void GPIO_ODR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_ODR_CALLBACK) );
+    void GPIO_IDR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_IDR_CALLBACK) );
 #if defined(__STM32F407__) || defined(__STM32F334__)
-    void GPIO_BSRRL_VALUES( const std::string &port, CALLBACK(GPIO_BSRRL_CALLBACK) );
-    void GPIO_AFR_VALUES( const std::string &port, CALLBACK(GPIO_AFR_CALLBACK) );
-    void GPIO_BSRRH_VALUES(const std::string &port, CALLBACK(GPIO_BSRRH_CALLBACK) );
+    void GPIO_BSRRL_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_BSRRL_CALLBACK) );
+    void GPIO_AFR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_AFR_CALLBACK) );
+    void GPIO_BSRRH_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_BSRRH_CALLBACK) );
 #elif defined(__STM32F051__)
-    void GPIO_BSRR_VALUES( const std::string &port, CALLBACK(GPIO_BSRR_CALLBACK) );
-    void GPIO_AFR_VALUES( const std::string &port, CALLBACK(GPIO_AFR_CALLBACK) );
-    void GPIO_BRR_VALUES(const std::string &port, CALLBACK(GPIO_BRR_CALLBACK) );
+    void GPIO_BSRR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_BSRR_CALLBACK) );
+    void GPIO_AFR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_AFR_CALLBACK) );
+    void GPIO_BRR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_BRR_CALLBACK) );
 #else
 # error "Unknown MCU die.  Please define."
 #endif

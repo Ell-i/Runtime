@@ -43,11 +43,271 @@ extern "C" {
         return 0;
     }
 
-    // void (*gpioPeripheralValues)(std::string periph, std::string name, uint32_t value) ) /*, std::string periph, std::string name, uint32_t value)*/ {
-    void gpioCallback(const std::string &port, CALLBACK(GPIO_MODER_CALLBACK)
-        /*void (*gpioPeripheralValues)(const char* periph, const char* name, uint32_t value)*/) {
-        GPIOA->GPIO_MODER_VALUES(port, GPIO_MODER_CALLBACK);
+    /*
+     * C interface for python callback functions
+     */
+    void t_GPIO_MODER( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+#if defined(__STM32F407__) || defined(__STM32F334__)
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_MODER_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_MODER_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_MODER_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+#elif defined(__STM32F051__)
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_MODER_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_MODER_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_MODER_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "D") == 0 ) {
+            GPIOD->GPIO_MODER_VALUES(GPIOD, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "F") == 0 ) {
+            GPIOF->GPIO_MODER_VALUES(GPIOF, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+#else
+# error "Unknown MCU die.  Please define."
+#endif
     }
+
+    void t_GPIO_PUPDR( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+#if defined(__STM32F407__) || defined(__STM32F334__)
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_PUPDR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_PUPDR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_PUPDR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+#elif defined(__STM32F051__)
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_PUPDR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_PUPDR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_PUPDR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "D") == 0 ) {
+            GPIOD->GPIO_PUPDR_VALUES(GPIOD, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "F") == 0 ) {
+            GPIOF->GPIO_PUPDR_VALUES(GPIOF, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+#else
+# error "Unknown MCU die.  Please define."
+#endif
+    }
+
+    void t_GPIO_ODR( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+#if defined(__STM32F407__) || defined(__STM32F334__)
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_ODR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_ODR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_ODR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+#elif defined(__STM32F051__)
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_ODR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_ODR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_ODR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "D") == 0 ) {
+            GPIOD->GPIO_ODR_VALUES(GPIOD, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "F") == 0 ) {
+            GPIOF->GPIO_ODR_VALUES(GPIOF, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+#else
+# error "Unknown MCU die.  Please define."
+#endif
+    }
+
+    void t_GPIO_IDR( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+#if defined(__STM32F407__) || defined(__STM32F334__)
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_IDR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_IDR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_IDR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+#elif defined(__STM32F051__)
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_IDR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_IDR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_IDR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "D") == 0 ) {
+            GPIOD->GPIO_IDR_VALUES(GPIOD, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "F") == 0 ) {
+            GPIOF->GPIO_IDR_VALUES(GPIOF, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+#else
+# error "Unknown MCU die.  Please define."
+#endif
+    }
+#if defined(__STM32F407__) || defined(__STM32F334__)
+    void t_GPIO_BSRRL( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_BSRRL_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_BSRRL_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_BSRRL_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+    }
+
+    void t_GPIO_AFR( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_AFR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_AFR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_AFR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+    }
+
+    void t_GPIO_BSRRH( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_BSRRH_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_BSRRH_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_BSRRH_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+    }
+#elif defined(__STM32F051__)
+    void t_GPIO_BSRR( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_BSRR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_BSRR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_BSRR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "D") == 0 ) {
+            GPIOD->GPIO_BSRR_VALUES(GPIOD, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "F") == 0 ) {
+            GPIOF->GPIO_BSRR_VALUES(GPIOF, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+    }
+
+    void t_GPIO_AFR( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_AFR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_AFR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_AFR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "D") == 0 ) {
+            GPIOD->GPIO_AFR_VALUES(GPIOD, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "F") == 0 ) {
+            GPIOF->GPIO_AFR_VALUES(GPIOF, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+    }
+
+    void t_GPIO_BRR( const char *port, CALLBACK(GPIO_MODER_CALLBACK) ) {
+        if ( strcmp(port, "A") == 0 ) {
+            GPIOA->GPIO_BRR_VALUES(GPIOA, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "B") == 0 ) {
+            GPIOB->GPIO_BRR_VALUES(GPIOB, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "C") == 0 ) {
+            GPIOC->GPIO_BRR_VALUES(GPIOC, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "D") == 0 ) {
+            GPIOD->GPIO_BRR_VALUES(GPIOD, GPIO_MODER_CALLBACK);
+        }
+        else if ( strcmp(port, "F") == 0 ) {
+            GPIOF->GPIO_BRR_VALUES(GPIOF, GPIO_MODER_CALLBACK);
+        }
+        else {
+            std::cout << "The port is wrong. Please check valid port for the board" << std::endl;
+        }
+    }
+#else
+# error "Unknown MCU die.  Please define."
+#endif
 
     /*
      * C interface for the Arduino Digital API calls
