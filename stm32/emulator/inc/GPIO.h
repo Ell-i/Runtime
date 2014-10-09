@@ -112,3 +112,24 @@ GeneralPurposeInputOutput *const GPIOF = &GeneralPurposeInputOutput::GPIOF;
 GeneralPurposeInputOutput *const GPIOG = &GeneralPurposeInputOutput::GPIOG;
 GeneralPurposeInputOutput *const GPIOH = &GeneralPurposeInputOutput::GPIOH;
 GeneralPurposeInputOutput *const GPIOI = &GeneralPurposeInputOutput::GPIOI;
+
+/*
+ * Define macro for GPIO array index calculation from const char* string
+ * for table based approach and code readability
+ */
+#define IDX(port) (port[0] - 'A')
+
+/*
+ * An array of GPIO ports, the index of which is calculated according to
+ * the GPIO port for the board
+ */
+GeneralPurposeInputOutput *const GPIOPORT[] = { GPIOA
+    , GPIOB
+    , GPIOC
+    , GPIOD
+    , GPIOE
+    , GPIOF
+    , GPIOG
+    , GPIOH
+    , GPIOI
+};
