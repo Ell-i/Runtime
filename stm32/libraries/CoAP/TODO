@@ -1,0 +1,22 @@
+CLEAN UP ETHERNET HEADER DEFINITION!  See ethernet.h
+
+Move MAC address handling to the driver, add an API
+
+Refactor the code so that it gets compiled and optimised as a large single object:
+
+In the overall.c file, define the packet structure, similar to the test case
+
+include all the stuff there
+
+eth_input is a real function, called from enc28j60 code
+- even it could be inlined but one function overhead is not that bad
+
+inline ip_input, udp_input, and icmp_input
+
+udp socket handlers are again separate functions, called through pointers
+
+udp_output is a real function, called from CoAP
+
+make sure ip_output is called via a tail call from udp_output and icmp
+- make static and tail called, allowing optimised call passing
+
