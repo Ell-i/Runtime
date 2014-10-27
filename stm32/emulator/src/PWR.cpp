@@ -17,7 +17,20 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
+ */
+
 #include <PWR.h>
 
 PowerController PowerController::PWR;
 
+#if defined(__STM32F407__)
+void PowerController::PWR_CR_VALUES( PowerController *const pwr, CALLBACK(PWR_CR_CALLBACK) ) {
+	PWR_CR_CALLBACK( pwr->CR.registerPeriph().c_str()
+		, pwr->CR.registerName().c_str()
+		, pwr->CR.registerValue()
+		, pwr->CR.registerOpStr().c_str()
+		);
+}
+#endif

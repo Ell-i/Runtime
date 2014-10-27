@@ -25,12 +25,15 @@
 #include <string>
 #include <stdint.h>
 
+#define CALLBACK(register) void (*register)(const char* periph, const char* name, uint32_t value, const char* opStr)
+
 class Register {
 protected:
     uint32_t          value_;
     const std::string periph_;
     const std::string name_;
     uint8_t           size_;
+    std::string       opStr_;
 
     Register(std::string periph, std::string name,
              uint8_t size, uint32_t value)
@@ -45,16 +48,17 @@ public:
     uint32_t  operator &= (uint32_t);
     uint32_t  operator =  (uint32_t);
     uint32_t  operator =  (uint32_t) volatile;
-    uint32_t  operator &  (uint32_t) const;
-    uint16_t  operator &  (uint16_t) const; // Used by SPI, Serial, ...
+    uint32_t  operator &  (uint32_t);
+    uint16_t  operator &  (uint16_t); // Used by SPI, Serial, ...
     operator uint32_t () volatile { return value_; }
 
     uint32_t          registerValue()  const;
     const std::string registerPeriph() const;
     const std::string registerName()   const;
+    std::string       registerOpStr()  const;
 
 protected:
-    void printout(const std::string opStr, uint32_t result) const;
+    void printout(const std::string opStr, uint32_t result);
 };
 
 #define DEFINE_REGISTER(size, periph, name, value)            \

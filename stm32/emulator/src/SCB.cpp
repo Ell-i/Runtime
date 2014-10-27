@@ -17,7 +17,36 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
+ */
+
 #include <SCB.h>
 
 SystemControlBlock SystemControlBlock::SCB;
 
+#if defined(__STM32F407__) || defined(__STM32F334__)
+void SystemControlBlock::SCB_CPUID_VALUES( SystemControlBlock *const scb, CALLBACK(SCB_CPUID_CALLBACK) ) {
+	SCB_CPUID_CALLBACK( scb->CPUID.registerPeriph().c_str()
+		, scb->CPUID.registerName().c_str()
+		, scb->CPUID.registerValue()
+		, scb->CPUID.registerOpStr().c_str()
+		);
+}
+
+void SystemControlBlock::SCB_ICSR_VALUES( SystemControlBlock *const scb, CALLBACK(SCB_ICSR_CALLBACK) ) {
+	SCB_ICSR_CALLBACK( scb->ICSR.registerPeriph().c_str()
+		, scb->ICSR.registerName().c_str()
+		, scb->ICSR.registerValue()
+		, scb->ICSR.registerOpStr().c_str()
+		);
+}
+
+void SystemControlBlock::SCB_VTOR_VALUES( SystemControlBlock *const scb, CALLBACK(SCB_VTOR_CALLBACK) ) {
+	SCB_VTOR_CALLBACK( scb->VTOR.registerPeriph().c_str()
+		, scb->VTOR.registerName().c_str()
+		, scb->VTOR.registerValue()
+		, scb->VTOR.registerOpStr().c_str()
+		);
+}
+#endif

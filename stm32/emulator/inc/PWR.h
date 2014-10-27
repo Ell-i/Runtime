@@ -17,20 +17,35 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
+
 #ifndef _PWR_H_
 #define _PWR_H_
 
 #include <Register.h>
+#if defined(__STM32F407__)
+# include <Register_PWR_CR.h>
+#endif
 
 class PowerController {
 public:
 #if defined(__STM32F407__)
-    DEFINE_REGISTER(32, PWR, CR,       0x00004000); // XXX Check, set to reset value
+    //DEFINE_REGISTER(32, PWR, CR,       0x00004000); // XXX Check, set to reset value
+    Register_PWR_CR CR;
 #endif
 protected:
-    PowerController() {}
+    PowerController()
+#if defined(__STM32F407__)
+    	: CR(0x00004000)
+#endif
+    	{}
 public:
     static PowerController PWR;
+#if defined(__STM32F407__)
+    void PWR_CR_VALUES( PowerController *const pwr, CALLBACK(PWR_CR_CALLBACK) );
+#endif
 };
 
 PowerController *const PWR = &PowerController::PWR;

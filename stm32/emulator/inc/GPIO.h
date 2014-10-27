@@ -17,6 +17,10 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
+
 #include <Register.h>
 #include <Register_GPIO_MODER.h>
 //#include <Register_GPIO_OTYPER.h>
@@ -84,7 +88,6 @@ public:
     static GeneralPurposeInputOutput GPIOH;
     static GeneralPurposeInputOutput GPIOI;
 
-#define CALLBACK(register) void (*register)(const char* periph, const char* name, uint32_t value)
     void GPIO_MODER_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_MODER_CALLBACK) );
     void GPIO_PUPDR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_PUPDR_CALLBACK) );
     void GPIO_ODR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_ODR_CALLBACK) );
