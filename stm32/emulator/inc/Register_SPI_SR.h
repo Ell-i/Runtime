@@ -17,11 +17,16 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
+
 #ifndef  _REGISTER_SPI_SR_H_
 # define _REGISTER_SPI_SR_H_
 
 # include <Register.h>
 # include <Register_SPI_DR.h>
+
 
 class Register_SPI_SR : public Register {
     Register_SPI_DR & dr_;
@@ -31,8 +36,8 @@ public:
         , dr_(dr)
         {}
     uint32_t operator = (uint32_t arg);
-    uint16_t operator & (uint16_t) const;
-    uint16_t operator & (uint32_t) const;
+    uint16_t operator & (uint16_t);
+    uint16_t operator & (uint32_t);
 };
 
 #endif //_REGISTER_SPI_SR_H_

@@ -18,24 +18,20 @@
  */
 
 /**
- * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
  */
 
-#ifndef _REGISTER_SPI_DR_H_
-#define _REGISTER_SPI_DR_H_
+#ifndef _REGISTER_USART_SR_H_
+#define _REGISTER_USART_SR_H_
 
 #include <Register.h>
 
-class Register_SPI_SR;
-
-class Register_SPI_DR : public Register {
+class Register_USART_SR : public Register {
 public:
-    Register_SPI_DR() : Register("SPI", "DR", 16, 0) {}
-
-    uint32_t operator = (uint32_t arg);
-
-private:
-    friend class Register_SPI_SR;
+	Register_USART_SR(uint16_t val)
+		: Register("USART", "SR", 16, val)
+		{}
+	uint32_t operator = (uint32_t arg);
 };
 
-#endif //_REGISTER_SPI_DR_H_
+#endif//_REGISTER_USART_SR_H_

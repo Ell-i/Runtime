@@ -18,24 +18,12 @@
  */
 
 /**
- * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
  */
 
-#ifndef _REGISTER_SPI_DR_H_
-#define _REGISTER_SPI_DR_H_
+#include <Register_TIM_CCR4.h>
 
-#include <Register.h>
-
-class Register_SPI_SR;
-
-class Register_SPI_DR : public Register {
-public:
-    Register_SPI_DR() : Register("SPI", "DR", 16, 0) {}
-
-    uint32_t operator = (uint32_t arg);
-
-private:
-    friend class Register_SPI_SR;
-};
-
-#endif //_REGISTER_SPI_DR_H_
+uint32_t Register_TIM_CCR4::operator = (uint32_t arg) {
+	printout("=", arg);
+	return value_ = arg;
+}
