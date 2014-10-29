@@ -110,7 +110,7 @@ enum enc_reg_t {
     E_CON2      = ENC_SFR_REG(0x6E),
     E_RX_WM     = ENC_SFR_REG(0x70),
     E_INT_ENA   = ENC_SFR_REG(0x72),
-    E_IDLE_D    = ENC_SFR_REG(0x74),
+    E_ID_LED    = ENC_SFR_REG(0x74),
 
     E_GP_DATA   = ENC_SFR_REG(0x80), /* 8-bit register, ok to access as 16 bits */
     E_RX_DATA   = ENC_SFR_REG(0x82), /* 8-bit register, ok to access as 16 bits */
