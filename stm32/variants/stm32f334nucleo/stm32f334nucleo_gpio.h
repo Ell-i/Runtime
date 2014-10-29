@@ -155,7 +155,7 @@ DEFINE_GPIO_PIN_DUMMY(F, 15);
 static const struct GPIO GPIOPIN[] = {
     DEFINE_GPIO_PIN(A,  3),   /*  0 PA3  D0 RX2 */
     DEFINE_GPIO_PIN(A,  2),   /*  1 PA2  D1 TX2 */
-    DEFINE_GPIO_PIN(A,  10),  /*  2 PA10 D2 */
+    DEFINE_GPIO_PIN(C,  10),  /*  2 PA10 D2 */
     DEFINE_GPIO_PIN(B,  3),   /*  3 PB3  D3 TIM2_CH2 */
     DEFINE_GPIO_PIN(B,  5),   /*  4 PB5  D4 */
     DEFINE_GPIO_PIN(B,  4),   /*  5 PB3  D5 TIM3_CH1 */
