@@ -17,7 +17,7 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ENCX24J600.h>
+#include <encX24j600/ENCX24J600.h>
 #include <Arduino.h>
 
 #ifdef EMULATOR
