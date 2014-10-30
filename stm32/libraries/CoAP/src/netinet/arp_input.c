@@ -35,6 +35,15 @@
  * XXX
  */
 
+#ifndef DEBUG_WRITE
+# if 0
+#  define DEBUG_WRITE(...)
+# else
+#  define DEBUG_WRITE debug_write
+extern void debug_write(int c);
+# endif
+#endif
+
 void arp_input(struct arp *const arp) {
 #if 0
     /**
@@ -45,6 +54,8 @@ void arp_input(struct arp *const arp) {
         return;
 #endif
 
+    DEBUG_WRITE('a');
+
     /*
      * Switch on opcode
      */
@@ -54,11 +65,13 @@ void arp_input(struct arp *const arp) {
         net_error("Unknown ARP opcode %d.\n", ntohs(arp->arp_opcode));
         return;
     case CONSTEXPR_HTONS(ARP_OPCODE_REQUEST):
+        DEBUG_WRITE('A');
         if (arp->arp_dst_ip_addr != ip_local_address.s_addr) {
             // Not us
             return;
         }
         // The ethernet src and dst have already been swapped
+        DEBUG_WRITE('R');
         arp->arp_opcode = CONSTEXPR_HTONS(ARP_OPCODE_REPLY);
         memcpy(arp->arp_dst_eth_addr, arp->arp_src_eth_addr, sizeof(arp->arp_dst_eth_addr));
         memcpy(arp->arp_src_eth_addr, ether_local_address,   sizeof(arp->arp_src_eth_addr));
