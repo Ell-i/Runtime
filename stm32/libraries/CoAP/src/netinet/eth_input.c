@@ -18,7 +18,7 @@
  */
 
 /**
- * Minimal Ethernet 
+ * Minimal Ethernet
  *
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  */
@@ -58,7 +58,7 @@ void eth_input(struct ether_header *const ether) {
     /*
      * Swap source and destination address for return packet.
      *
-     * If the upper layers need the src/dst information, they 
+     * If the upper layers need the src/dst information, they
      * must be written with this swapping in mind.
      */
     // XXX Check that the following produces optimal code.  Revise if not.
