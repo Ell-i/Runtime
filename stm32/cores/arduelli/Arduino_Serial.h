@@ -51,6 +51,9 @@ public:
     constexpr SerialClass(const USART &);
     void begin(uint32_t) const;
     void write(uint8_t) const;
+    void writeHex(uint32_t) const;
+private:
+    const uint8_t hex_digits[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 };
 
 #define DEFINE_SERIAL(usart_number, tx_letter, tx_pin, tx_af, rx_letter, rx_pin, rx_af) \
@@ -93,6 +96,16 @@ void SerialClass::write(uint8_t c) const {
 #  error "Unsupported MCU."
 # endif
 
+}
+
+ARDUINO_INLINE_MEMBER_FUNCTION
+void SerialClass::writeHex(uint32_t n) const {
+    int32_t  i;
+    uint32_t j;
+    for (i=7; i>=0; i--) {
+        j = (n >> (4*i)) & 0xf;
+        write(hex_digits[j]);
+    }
 }
 
 #endif//_ARDUINO_SERIAL_H_
