@@ -39,7 +39,11 @@
 
 
 # ifdef __cplusplus
-#  include <enc28j60/ENC28J60.h>
+#  if 0
+#   include <enc28j60/ENC28J60.h>
+#  else
+#   include <encX24j600/ENCX24J600.h>
+#  endif
 # endif
 
 // Define the semantics for the return value
@@ -74,12 +78,12 @@ typedef struct CoAPClass {
 public:
     void begin(in_addr_t ip_address = IP_ADDRESS_UNSPECIFIED) {
         assert(((uint32_t)PACKET_BUFFER_ETHER) % 4 == 2);
-        // XXX ENC28J60.begin(ether_local_address);
-        ENC28J60.begin();
+        // XXX ETHERNET.begin(ether_local_address);
+        ETHERNET.begin();
     }
     void loop(void) {
-        if (ENC28J60.availablePackets()) {
-            ENC28J60.receivePacket(PACKET_BUFFER_START, PACKET_BUFFER_SIZE);
+        if (ETHERNET.availablePackets()) {
+            ETHERNET.receivePacket(PACKET_BUFFER_START, PACKET_BUFFER_SIZE);
             eth_input(PACKET_BUFFER_ETHER);
         }
     }
