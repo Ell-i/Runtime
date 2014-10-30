@@ -100,7 +100,7 @@ ENCX24J600Class::sendPacket(uint8_t *buffer, size_t len) const {
     /*
      * Write the packet to the ENCX24J600 packet buffer.
      */
-    reg_set(E_GP_RD_PT, TX_BUFFER_START);
+    reg_set(E_GP_WR_PT, TX_BUFFER_START);
 
     *(buffer - 1) = ENC_SPI_WRITE_MEM;
     spi_transfer_send(buffer-1, len+1);

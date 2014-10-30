@@ -38,24 +38,24 @@ struct {
     IF(eth) {
         IF(ether_dhost) { 1,   2,  3,  4,  5,  6 }, // XXX TBD
         IF(ether_shost) { 10, 11, 12, 13, 14, 15 },
-        IF(ether_type ) ETHERTYPE_IP,
+        IF(ether_type ) CONSTEXPR_HTONS(ETHERTYPE_IP),
     },
     IF(ip) {
         IF(ip_vhl   ) IP_VHL_DEFAULT,
         IF(ip_tos   ) 0,
-        IF(ip_len   ) sizeof(ip) + sizeof(udp),
-        IF(ip_id    ) 0x4321,
+        IF(ip_len   ) CONSTEXPR_HTONS(sizeof(ip) + sizeof(udp)),
+        IF(ip_id    ) CONSTEXPR_HTONS(0x4321),
         { IF(ip_off   ) 0, },
         IF(ip_ttl   ) 1,
         IF(ip_p     ) IPPROTO_UDP,
-        IF(ip_sum   ) 0,  // XXX TBD
+        IF(ip_sum   ) CONSTEXPR_HTONS(0x62ae),
         IF(ip_src   ) { { IF(s_bytes) { 10, 0, 0, 1 } } },
         IF(ip_dst   ) { { IF(s_bytes) { 10, 0, 0, 2 } } },
     },
     IF(udp) {
-        IF(udp_sport) 's',
-        IF(udp_dport) UDP_PORT_ECHO,
-        IF(udp_len  ) 0,
+        IF(udp_sport) CONSTEXPR_HTONS('s'),
+        IF(udp_dport) CONSTEXPR_HTONS(UDP_PORT_ECHO),
+        IF(udp_len  ) CONSTEXPR_HTONS(sizeof(udp)),
         IF(udp_sum  ) 0,
     },
 };

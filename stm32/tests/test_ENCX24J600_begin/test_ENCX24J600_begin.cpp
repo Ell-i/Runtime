@@ -24,12 +24,17 @@
 #include <unistd.h>
 #endif
 
+#define DEBUG 4
+
 void setup() {
+    pinMode(DEBUG, OUTPUT);
+    digitalWrite(DEBUG, 0);
     Serial.begin(57600);
     ENCX24J600.begin();
 }
 
 void loop() {
+    digitalWrite(DEBUG, 1);
 #ifdef EMULATOR
     _exit(0);
 #endif

@@ -36,6 +36,7 @@ void setup() {
     pinMode(DEBUG, OUTPUT);
     digitalWrite(DEBUG, 1);
     Serial.begin(57600);
+    Serial.write('B');
     ENCX24J600.begin();
     digitalWrite(DEBUG, 0);
 }
@@ -44,7 +45,9 @@ void loop() {
     while (ENCX24J600.availablePackets() <= 0)
         ;
     digitalWrite(DEBUG, 1);
+    Serial.write('r');
     ENCX24J600.receivePacket(buffer, sizeof(buffer));
+    Serial.write('o');
     digitalWrite(DEBUG, 0);
 #ifdef EMULATOR
     _exit(0);
