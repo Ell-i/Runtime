@@ -29,6 +29,8 @@
 #include <netinet/arp.h>
 #include <netinet/util.h>
 
+#include <system_init.h>
+
 /**
  * XXX
  */
