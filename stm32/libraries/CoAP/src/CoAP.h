@@ -34,7 +34,7 @@
 # include <netinet/ip.h>       // XXX Define in_addr_t, IP_MSS, to be removed
 # include <netinet/ethernet.h> // XXX Define ether_header, to be removed
 
-# include <coap/coap_options.h> 
+# include <coap/coap_options.h>
 # include <coap/coap_codes.h>
 
 
@@ -62,14 +62,14 @@ typedef struct CoAPClass {
     // XXX Move to some other header, buffer.h?
     // XXX And define properly
     uint8_t packet_buffer_[
-        ALIGNMENT_OFFSET 
-        + sizeof(struct ether_header) 
+        ALIGNMENT_OFFSET
+        + sizeof(struct ether_header)
         + IP_MSS]
     __attribute__((aligned(8)));
 #define PACKET_BUFFER_SIZE    (sizeof(packet_buffer_) - ALIGNMENT_OFFSET)
 #define PACKET_BUFFER_START          (packet_buffer_  + ALIGNMENT_OFFSET)
 #define PACKET_BUFFER_ETHER   ((struct ether_header *)PACKET_BUFFER_START)
-    
+
 # ifdef __cplusplus
 public:
     void begin(in_addr_t ip_address = IP_ADDRESS_UNSPECIFIED) {
