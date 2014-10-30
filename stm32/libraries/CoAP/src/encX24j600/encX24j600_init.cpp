@@ -48,6 +48,7 @@ const struct encX24j600_register_init_static_16bit ENCX24J600Class::encX24j600_i
     D16(E_RX_START,  RX_BUFFER_START),
     D16(E_RX_TAIL,   RX_BUFFER_END & ~0x01), // Clear low-order bit for an even address
     D16(E_RX_HEAD,   RX_BUFFER_START),
+    D16(E_RX_RD_PT,  RX_BUFFER_START),
 
     /**********************************
      * Section 8.5: Packet filtering
