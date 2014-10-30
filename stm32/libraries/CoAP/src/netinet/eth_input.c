@@ -29,6 +29,15 @@
 #include <netinet/arp.h>
 #include <netinet/util.h>
 
+#ifndef DEBUG_WRITE
+# if 0
+#  define DEBUG_WRITE(...)
+# else
+#  define DEBUG_WRITE debug_write
+extern void debug_write(int c);
+# endif
+#endif
+
 uint8_t ether_local_address[ETHER_ADDR_LEN] = { 0, 0, 0, 0, 0, 0 }; // XXX better default?
 
 /**
@@ -43,6 +52,8 @@ void eth_input(struct ether_header *const ether) {
      */
     XXX;
 #endif
+
+    DEBUG_WRITE('e');
 
     /*
      * Swap source and destination address for return packet.
@@ -67,12 +78,15 @@ void eth_input(struct ether_header *const ether) {
      */
     switch (ether->ether_type) {
     case CONSTEXPR_HTONS(ETHERTYPE_IP):
+        DEBUG_WRITE('i');
         ip_input ((struct ip *) ((char *)ether + ETHER_HEADER_LEN));
         return;
     case CONSTEXPR_HTONS(ETHERTYPE_ARP):
+        DEBUG_WRITE('a');
         arp_input((struct arp *)((char *)ether + ETHER_HEADER_LEN));
         return;
     default:
+        DEBUG_WRITE('u');
         net_error("Unknown ethernet protocol %d.\n", ether->ether_type);
         return; // Unknown protocol -- dropped silently
     }
