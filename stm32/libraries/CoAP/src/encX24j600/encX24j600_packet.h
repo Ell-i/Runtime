@@ -36,10 +36,7 @@ typedef struct {
     // Start of the actual RX header
     uint16_t rx_next;
     uint16_t rx_length;
-    uint8_t  rx_flags0;
-    uint8_t  rx_flags1;
-    uint8_t  rx_flags2;
-    uint8_t  rx_padding2;
+    uint8_t  rx_flags[4];
 } enc_rx_packet_header_t;
 
 inline int
@@ -59,7 +56,8 @@ ENCX24J600Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
     enc_rx_packet_header_t rx_header;
 
     rx_header.rx_cmd = ENC_SPI_READ_RX;
-    spi_transfer((unsigned char *)&rx_header, sizeof(enc_rx_packet_header_t));
+    spi_transfer((unsigned char *)&rx_header.rx_cmd,
+                 sizeof(enc_rx_packet_header_t) - sizeof(rx_header.rx_padding0));
 
     register unsigned int plen = rx_header.rx_length;
     register unsigned int next = rx_header.rx_next;
