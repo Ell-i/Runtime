@@ -59,6 +59,7 @@ endif
 
 SYSTEM_OBJS += \
 	system_init.o \
+	memory.o \
 	$(VARIANT)_gpio.o \
 	$(VARIANT)_timer.o \
 	$(VARIANT)_usart.o \
