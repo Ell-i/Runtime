@@ -115,6 +115,12 @@ ENCX24J600Class::begin() const {
      * Initialise the PHY
      */
     // XXX no-op at the moment
+
+    /*
+     * Disable all interrupts
+     */
+    reg_set(E_INT_ENA,0);
+
     digitalWrite(DEBUG_PIN, 1);
 }
 
