@@ -115,5 +115,13 @@ ENCX24J600Class::begin() const {
     digitalWrite(DEBUG_PIN, 1);
 }
 
+inline void
+ENCX24J600Class::readEthernetAddr(uint8_t *buffer) const {
 
+    uint16_t *addr = (uint16_t *) buffer;
+    addr[0] = reg_get(MAC_ADDR1);
+    addr[1] = reg_get(MAC_ADDR2);
+    addr[2] = reg_get(MAC_ADDR3);
+
+}
 #endif // _ENCX24J600_INIT_H_
