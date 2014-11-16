@@ -56,6 +56,8 @@ public:
     int  receivePacket(uint8_t *buffer, size_t len) const;
     void sendPacket   (uint8_t *buffer, size_t len) const;
 
+    void readEthernetAddr(uint8_t *buffer) const;
+
     static const struct encX24j600_register_init_static_16bit encX24j600_init[];
     static const size_t encX24j600_init_size;
 

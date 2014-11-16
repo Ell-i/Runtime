@@ -92,3 +92,6 @@ void eth_input(struct ether_header *const ether) {
     }
 }
 
+void eth_set_address(const uint8_t *const address) {
+    memcpy(ether_local_address, address, ETHER_ADDR_LEN);
+}

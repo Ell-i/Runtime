@@ -70,6 +70,7 @@ extern "C" {
 # endif
 extern void eth_input(struct ether_header *const eth_packet);
 extern void eth_output(const void *payload, uint16_t payload_len);
+extern void eth_set_address(const uint8_t *const address);
 # ifdef __cplusplus
 }
 # endif
