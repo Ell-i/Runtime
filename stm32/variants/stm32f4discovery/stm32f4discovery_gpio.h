@@ -250,6 +250,7 @@ static const struct GPIO GPIOPIN[] = {
     DEFINE_GPIO_PIN(C,  1),   /* 58 PC1  A4  ADC1_11*/
     DEFINE_GPIO_PIN(C,  0),   /* 59 PC0  A5  ADC1_10 */
 #endif
+    DEFINE_GPIO_PIN(C, 11),   /* XXX Modify with real value / PoElli ENCX24J600 INT */
 };
 
 #endif //_STM32F4DISCOVERY_GPIO_H_

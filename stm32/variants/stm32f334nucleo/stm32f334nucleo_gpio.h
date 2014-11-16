@@ -181,6 +181,7 @@ static const struct GPIO GPIOPIN[] = {
     DEFINE_GPIO_PIN(C,  1),   /* 58 PC1  A4  ADC1_7*/
     DEFINE_GPIO_PIN(C,  0),   /* 59 PC0  A5  ADC1_6 */
 #endif
+    DEFINE_GPIO_PIN(D,  2),   /* 22 PD2      PoElli ENCX24J600 INT */
 };
 
 #endif //_STM32F334NUCLEO_GPIO_H_
