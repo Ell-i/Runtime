@@ -20,7 +20,7 @@
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
-#include <ENCX24J600.h>
+#include <encX24j600/ENCX24J600.h>
 #include <ethernet.h>
 #include <ip.h>
 #include <udp.h>
@@ -28,6 +28,7 @@
 
 #define DEBUG_LED 4
 
+uint8_t address[ETHER_ADDR_LEN];
 uint8_t buffer[2048 + 8/*XXX*/] __attribute__((aligned(8)));
 struct ether_header *const ether_header = (struct ether_header *)(buffer+8);
 
@@ -40,6 +41,8 @@ void setup() {
     Serial.begin(57600);
     Serial.write('B');
     ETHERNET.begin();
+    ETHERNET.readEthernetAddr(address);
+    eth_set_address(address);
     Serial.write('s');
 }
 
