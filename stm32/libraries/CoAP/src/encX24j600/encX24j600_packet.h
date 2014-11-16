@@ -85,6 +85,17 @@ ENCX24J600Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
      * incoming packets are discarded.
      * Wrap around if necessary: first
      * increase to prevent negative values.
+     * Example for next = RX_BUFFER_START:
+     *
+     * {START-2}{START-1}[ START ][START+1]
+     * [ END-1 ][  END  ]{ END+1 }{ END+2 }
+     *    -2       -1        0        1
+     * (next-2)           ( next )
+     *
+     * As (START) and the imaginary (END+1)
+     * are in the same position, they are
+     * chosen to enable the value conversion
+     * for the wrap around.
      */
     next -= 2;
     if (next < RX_BUFFER_START) {
