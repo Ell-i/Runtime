@@ -35,6 +35,9 @@ ENCX24J600Class::begin() const {
 
     spi_master_begin(&ENCX24J600_SPI, ss_pin_);
 
+    /* Set the interrupt line pin to input mode */
+    pinMode(int_pin_, INPUT);
+
     /* Reset routine, see Section 8.1 of the Data shsset (39935c.pdf) */
 
 #if 1

@@ -25,6 +25,7 @@
 
 # define ENCX24J600_SPI    SPI1struct /* XXX Move to the constructor */
 # define ENCX24J600_CS_PIN 2
+# define ENCX24J600_INT_PIN 22 /* XXX Modify with correct value */
 
 # include <encX24j600/ENCX24J600Class.h>
 
