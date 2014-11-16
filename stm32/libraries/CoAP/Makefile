@@ -41,8 +41,8 @@ LIB ?= libCoAP.a
 
 D := $(TOP)libraries/CoAP/src/
 
-vpath %.cpp $(D) $(D)coap $(D)enc28j60 $(D)encX24j600 $(D)netinet
-vpath %.c   $(D) $(D)coap $(D)enc28j60 $(D)encX24j600 $(D)netinet
+vpath %.cpp $(D) $(D)coap $(D)encX24j600 $(D)netinet
+vpath %.c   $(D) $(D)coap $(D)encX24j600 $(D)netinet
 
 EXTRA_CFLAGS  += -I$(TOP)libraries/SPI/src
 
@@ -53,7 +53,7 @@ EXTRA_CFLAGS  += -I$(TOP)libraries/SPI/src
 LIB_OBJS := eth_input.o arp_input.o
 LIB_OBJS += ip_input.o ip_output.o icmp_input.o ip_checksum.o
 LIB_OBJS += udp.o coap_input.o coap_handle.o
-LIB_OBJS += enc28j60_init.o ethernet_output.o
+LIB_OBJS += ethernet_output.o
 
 #
 # Set up the compilation environment, identical to the Arduino IDE,
