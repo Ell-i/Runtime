@@ -44,7 +44,7 @@ int memcmp(const void *str1, const void *str2, size_t size) {
     const char *s2 = (const char *)str2;
 
     while (size--) {
-        unsigned int d = *s1++ - *s2++;
+        int d = *s1++ - *s2++;
         if (d != 0)
             return d;
     }
