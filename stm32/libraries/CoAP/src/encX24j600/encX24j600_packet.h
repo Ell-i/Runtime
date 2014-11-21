@@ -74,8 +74,35 @@ ENCX24J600Class::receivePacket(uint8_t *buffer, size_t maxlen) const {
     /*
      * Go to the beginning of the next packet.
      */
-    reg_set(E_RX_TAIL, next);
     reg_set(E_RX_RD_PT, next);
+
+    /*
+     * Set the tail pointer to (next - 2),
+     * as suggested by the datasheet.
+     * If E_RX_TAIL points to the same
+     * address as E_RX_HEAD, the receive
+     * buffer is considered full, and
+     * incoming packets are discarded.
+     * Wrap around if necessary: first
+     * increase to prevent negative values.
+     * Example for next = RX_BUFFER_START:
+     *
+     * {START-2}{START-1}[ START ][START+1]
+     * [ END-1 ][  END  ]{ END+1 }{ END+2 }
+     *    -2       -1        0        1
+     * (next-2)           ( next )
+     *
+     * As (START) and the imaginary (END+1)
+     * are in the same position, they are
+     * chosen to enable the value conversion
+     * for the wrap around.
+     */
+    next -= 2;
+    if (next < RX_BUFFER_START) {
+        next += RX_BUFFER_END + 1;
+        next -= RX_BUFFER_START;
+    }
+    reg_set(E_RX_TAIL, next);
 
     /* Decrement the packet count */
     spi_master_activate(ss_pin_);

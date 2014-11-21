@@ -40,7 +40,8 @@ public:
     // XXX Currently we have to define this here as _static_ for constant
     // propagation to work correctly.  Must try again later with better gcc / LLVM.
     // ss_pin_ should be const non-static, set from the constructor.
-    const static pin_t ss_pin_ = ENCX24J600_CS_PIN; // XXX Must allow constant propagration.
+    const static pin_t ss_pin_  = ENCX24J600_CS_PIN; // XXX Must allow constant propagration.
+    const static pin_t int_pin_ = ENCX24J600_INT_PIN; // XXX Must allow constant propagration.
 
     const static uint32_t spiCR1value = SPI_CR1_DEFAULT_INIT_VALUE;
 
@@ -55,6 +56,15 @@ public:
 
     int  receivePacket(uint8_t *buffer, size_t len) const;
     void sendPacket   (uint8_t *buffer, size_t len) const;
+
+    void readEthernetAddr(uint8_t *buffer) const;
+
+    void enableInterrupt(const enum E_INT_ENA mask) const;
+    void disableInterrupt(const enum E_INT_ENA mask) const;
+    void clearInterrupt(const enum E_INT_ENA mask) const;
+
+    void enableGlobalInterrupts(void) const;
+    void disableGlobalInterrupts(void) const;
 
     static const struct encX24j600_register_init_static_16bit encX24j600_init[];
     static const size_t encX24j600_init_size;
@@ -129,6 +139,7 @@ ENCX24J600Class::spi_transfer(uint8_t *buffer, uint16_t len) const {
 }
 
 # include <encX24j600/encX24j600_reg.h>
+# include <encX24j600/encX24j600_int.h>
 # include <encX24j600/encX24j600_begin.h>
 # include <encX24j600/encX24j600_packet.h>
 

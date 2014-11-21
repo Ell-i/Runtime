@@ -21,18 +21,37 @@
  * @author: Pekka Nikander <pekka.nikander@ell-i.org>  2014
  * @author Ivan Raul <ivan.raul@ell-i.org> 2014
  *
- * @brief ENC28J600 ethernet interface
+ * @brief ENCX24J600 ethernet interface
  */
 
-#include <encX24j600/ENCX24J600.h>
-#include <netinet/ethernet.h>
+#ifndef  _ENCX24J600_INT_H_
+# define _ENCX24J600_INT_H_
 
-void eth_output(const void *payload, uint16_t payload_len) {
-   /*
-     * XXX
-     *
-     * This implementation assumes there is free space before the
-     * Ethernet Header start to store the command.
-     */
-    ENCX24J600.sendPacket((uint8_t *) payload - ETHER_HEADER_LEN, payload_len + ETHER_HEADER_LEN);
+# include <encX24j600/ENCX24J600.h>
+
+inline void
+ENCX24J600Class::enableInterrupt(const enum E_INT_ENA mask) const {
+    reg_set_bits(E_INT_ENA, mask);
 }
+
+inline void
+ENCX24J600Class::disableInterrupt(const enum E_INT_ENA mask) const {
+    reg_clr_bits(E_INT_ENA, mask);
+}
+
+inline void
+ENCX24J600Class::clearInterrupt(const enum E_INT_ENA mask) const {
+    reg_clr_bits(E_IR, mask);
+}
+
+inline void
+ENCX24J600Class::enableGlobalInterrupts(void) const {
+    spi_send_single_byte(ENC_SPI_SET_EIE);
+}
+
+inline void
+ENCX24J600Class::disableGlobalInterrupts(void) const {
+    spi_send_single_byte(ENC_SPI_CLR_EIE);
+}
+
+#endif //_ENCX24J600_INT_H_

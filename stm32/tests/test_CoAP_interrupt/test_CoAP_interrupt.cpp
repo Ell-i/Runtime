@@ -43,12 +43,16 @@ void setup() {
     ETHERNET.begin();
     ETHERNET.readEthernetAddr(address);
     eth_set_address(address);
+    ETHERNET.enableInterrupt(PKT_IE);
+    ETHERNET.enableGlobalInterrupts();
     Serial.write('s');
+    Serial.write('\r');
+    Serial.write('\n');
 }
 
 void loop() {
     Serial.write('w');
-    while (!(ETHERNET.availablePackets()))
+    while (digitalRead(ETHERNET.int_pin_))
         ;
 
     Serial.write('r');
@@ -57,7 +61,8 @@ void loop() {
     Serial.write('.');
     eth_input(ether_header);
     digitalWrite(DEBUG_LED, 0);
-
+    Serial.write('\r');
+    Serial.write('\n');
 
 #ifdef EMULATOR
     _exit(0);

@@ -28,7 +28,7 @@
 #include <ip.h>
 #include <ethernet.h>
 
-uint8_t buffer[2048];
+uint8_t buffer[2048 + 8/*XXX*/] __attribute__((aligned(8)));
 
 #define DEBUG 4
 
@@ -46,7 +46,7 @@ void loop() {
         ;
     digitalWrite(DEBUG, 1);
     Serial.write('r');
-    ENCX24J600.receivePacket(buffer, sizeof(buffer));
+    ENCX24J600.receivePacket(buffer + 8, sizeof(buffer) - 8);
     Serial.write('o');
     digitalWrite(DEBUG, 0);
 #ifdef EMULATOR
