@@ -33,7 +33,7 @@ RUN git --git-dir /home/Runtime/.git --work-tree /home/Runtime checkout feature-
 
 RUN git clone https://github.com/asifsardar26/ELL-i-PyBot-Tests /home/Runtime/robot_tests/
 
-RUN git clone git://github.com/RIOT-OS/RIOT /home
+RUN git clone git://github.com/RIOT-OS/RIOT /home/RIOT
 
 #WORKDIR /home/Runtime/stm32/tests/robot_library/
 #RUN make PLATFORM=emulator
