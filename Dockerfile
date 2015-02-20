@@ -2,8 +2,6 @@ FROM 32bit/ubuntu:14.04
 
 MAINTAINER Asif Sardar <engr.asif.sardar@gmail.com>
 
-USER elli
-
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y \
@@ -43,5 +41,7 @@ RUN git clone git://github.com/RIOT-OS/RIOT /home
 VOLUME ["/home"]
 
 WORKDIR /home/Runtime/robot_tests
+
+USER elli
 
 CMD ["/bin/bash"]
