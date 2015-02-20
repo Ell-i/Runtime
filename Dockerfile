@@ -11,7 +11,15 @@ RUN apt-get update && apt-get install -y \
 	git \
 	python2.7 \
 	python2.7-dev \
-	python-setuptools
+	python-setuptools \
+	wget \
+	nano
+
+ADD https://launchpad.net/gcc-arm-embedded/4.9/4.9-2014-q4-major/+download/gcc-arm-none-eabi-4_9-2014q4-20141203-linux.tar.bz2 /home/Downloads/
+WORKDIR /home/Downloads/
+RUN tar xvjf gcc-arm-none-eabi-4_9-2014q4-20141203-linux.tar.bz2
+
+ENV PATH /home/Downloads/gcc-arm-none-eabi-4_9-2014q4/bin:$PATH
 
 RUN easy_install -Z robotframework
 RUN easy_install -Z docutils
