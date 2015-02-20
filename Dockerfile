@@ -42,6 +42,4 @@ VOLUME ["/home"]
 
 WORKDIR /home/Runtime/robot_tests
 
-USER elli
-
 CMD ["/bin/bash"]
