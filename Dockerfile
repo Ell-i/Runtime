@@ -40,6 +40,6 @@ RUN git clone git://github.com/RIOT-OS/RIOT /home/RIOT
 
 VOLUME ["/home"]
 
-WORKDIR /home/Runtime/robot_tests
+WORKDIR /home/Runtime
 
 CMD ["/bin/bash"]
