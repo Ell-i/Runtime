@@ -17,6 +17,10 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
+
 #ifndef _REGISTER_SPI_DR_H_
 #define _REGISTER_SPI_DR_H_
 

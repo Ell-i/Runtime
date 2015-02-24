@@ -24,14 +24,18 @@
 #ifndef  _SPI_H_
 # define _SPI_H_
 
-# include <Register.h>
-# include <Register_SPI_SR.h>
-# include <Register_SPI_DR.h>
+#include <Register.h>
+#include <Register_SPI_CR1.h>
+#include <Register_SPI_CR2.h>
+#include <Register_SPI_SR.h>
+#include <Register_SPI_DR.h>
 
 class SerialPeripheralInterface {
 public:
-    DEFINE_REGISTER(16, SPI, CR1,      0);
-    DEFINE_REGISTER(16, SPI, CR2,      0);
+    //DEFINE_REGISTER(16, SPI, CR1,      0);
+    //DEFINE_REGISTER(16, SPI, CR2,      0);
+    Register_SPI_CR1 CR1;
+    Register_SPI_CR2 CR2;
     Register_SPI_SR SR;
     Register_SPI_DR DR;
 protected:

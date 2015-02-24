@@ -17,6 +17,10 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
+
 #include <Register.h>
 #include <Register_GPIO_MODER.h>
 //#include <Register_GPIO_OTYPER.h>
@@ -72,6 +76,7 @@ protected:
 # error "Unknown MCU die.  Please define."
 #endif
         {}
+
 public:
     static GeneralPurposeInputOutput GPIOA;
     static GeneralPurposeInputOutput GPIOB;
@@ -82,6 +87,23 @@ public:
     static GeneralPurposeInputOutput GPIOG;
     static GeneralPurposeInputOutput GPIOH;
     static GeneralPurposeInputOutput GPIOI;
+
+    void GPIO_MODER_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_MODER_CALLBACK) );
+    void GPIO_PUPDR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_PUPDR_CALLBACK) );
+    void GPIO_ODR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_ODR_CALLBACK) );
+    void GPIO_IDR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_IDR_CALLBACK) );
+#if defined(__STM32F407__) || defined(__STM32F334__)
+    void GPIO_BSRRL_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_BSRRL_CALLBACK) );
+    void GPIO_AFR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_AFR_CALLBACK) );
+    void GPIO_BSRRH_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_BSRRH_CALLBACK) );
+#elif defined(__STM32F051__)
+    void GPIO_BSRR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_BSRR_CALLBACK) );
+    void GPIO_AFR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_AFR_CALLBACK) );
+    void GPIO_BRR_VALUES( GeneralPurposeInputOutput *const gpioPort, CALLBACK(GPIO_BRR_CALLBACK) );
+#else
+# error "Unknown MCU die.  Please define."
+#endif
+
 };
 
 GeneralPurposeInputOutput *const GPIOA = &GeneralPurposeInputOutput::GPIOA;
@@ -93,3 +115,24 @@ GeneralPurposeInputOutput *const GPIOF = &GeneralPurposeInputOutput::GPIOF;
 GeneralPurposeInputOutput *const GPIOG = &GeneralPurposeInputOutput::GPIOG;
 GeneralPurposeInputOutput *const GPIOH = &GeneralPurposeInputOutput::GPIOH;
 GeneralPurposeInputOutput *const GPIOI = &GeneralPurposeInputOutput::GPIOI;
+
+/*
+ * Define macro for GPIO array index calculation from const char* string
+ * for table based approach and code readability
+ */
+#define IDX(port) (port[0] - 'A')
+
+/*
+ * An array of GPIO ports, the index of which is calculated according to
+ * the GPIO port for the board
+ */
+GeneralPurposeInputOutput *const GPIOPORT[] = { GPIOA
+    , GPIOB
+    , GPIOC
+    , GPIOD
+    , GPIOE
+    , GPIOF
+    , GPIOG
+    , GPIOH
+    , GPIOI
+};
