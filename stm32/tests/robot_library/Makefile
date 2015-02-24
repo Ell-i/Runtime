@@ -25,6 +25,7 @@ APP_OBJS := $(APP).o $(VARIANT).o
 
 EXTRA_CFLAGS += \
 	-I$(TOP)libraries/SPI/src/variants \
+	-I$(TOP)emulator/inc \
 
 include $(TOP)make/app.mk
 

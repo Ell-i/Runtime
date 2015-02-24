@@ -72,17 +72,24 @@ endif
 
 ifeq ($(PLATFORM),emulator)
 
-all:  $(APP) lib$(APP).so
+all:  $(APP) lib$(APP).so pythonCallback.so
 
 clean::
 	rm -f $(PRE_OBJS)
 	rm -f $(POST_OBJS)
 	rm -f lib$(APP).so
+	rm -f pythonCallback.so
+	rm -f python.o
+	rm -f ./-lpython2.7
 
 $(APP):	$(APP_OBJS) libsystem_$(VARIANT).a $(LIBES_LIBS) $(PRE_OBJS) $(POST_OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS)
 
 lib$(APP).so: $(APP_OBJS) libsystem_$(VARIANT).a $(LIBES_LIBS) $(PRE_OBJS) $(POST_OBJS)
+	$(LD) $(LDFLAGS) $(SHAREDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIB_OBJS) \
+		$(LIBS) $(POST_OBJS) $(HOST_LIBS)
+
+pythonCallback.so: $(APP_OBJS) libsystem_$(VARIANT).a $(LIBES_LIBS) $(PRE_OBJS) $(POST_OBJS)
 	$(LD) $(LDFLAGS) $(SHAREDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIB_OBJS) \
 		$(LIBS) $(POST_OBJS) $(HOST_LIBS)
 

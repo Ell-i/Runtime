@@ -17,6 +17,10 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
+
 #ifndef _REGISTER_RCC_CFGR_H_
 #define _REGISTER_RCC_CFGR_H_
 
@@ -24,7 +28,7 @@
 
 class Register_RCC_CFGR : public Register {
 public:
-    Register_RCC_CFGR() : Register("RCC", "CFGR", 32, 0) {}
+    Register_RCC_CFGR(uint32_t val) : Register("RCC", "CFGR", 32, val) {}
     uint32_t operator = (uint32_t arg);
 };
 

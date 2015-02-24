@@ -34,7 +34,7 @@ uint32_t Register_SPI_SR::operator = (uint32_t arg) {
     return value_;
 }
 
-uint16_t Register_SPI_SR::operator &  (uint16_t arg) const {
+uint16_t Register_SPI_SR::operator &  (uint16_t arg) {
     dr_.printout("=", dr_.value_);
     printout("&(16b)", value_ & arg);
     // XXX SPI_SR_FRLVL should probably be part of value_,
@@ -47,7 +47,7 @@ uint16_t Register_SPI_SR::operator &  (uint16_t arg) const {
     return v & arg;
 }
 
-uint16_t Register_SPI_SR::operator &  (uint32_t arg) const {
+uint16_t Register_SPI_SR::operator &  (uint32_t arg) {
     dr_.printout("=", dr_.value_);
     printout("&", value_ & arg);
     // XXX SPI_SR_FRLVL should probably be part of value_,

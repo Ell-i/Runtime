@@ -17,7 +17,50 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Asif Sardar <engr.asif.sardar@gmail.com>  2014
+ */
+
 #include <FLASH.h>
 
 Flash Flash::FLASH;
 
+void Flash::FLASH_ACR_VALUES( Flash *const flash, CALLBACK(FLASH_ACR_CALLBACK) ) {
+	FLASH_ACR_CALLBACK( flash->ACR.registerPeriph().c_str()
+		, flash->ACR.registerName().c_str()
+		, flash->ACR.registerValue()
+		, flash->ACR.registerOpStr().c_str()
+		);
+}
+
+void Flash::FLASH_KEYR_VALUES( Flash *const flash, CALLBACK(FLASH_KEYR_CALLBACK) ) {
+	FLASH_KEYR_CALLBACK( flash->KEYR.registerPeriph().c_str()
+		, flash->KEYR.registerName().c_str()
+		, flash->KEYR.registerValue()
+		, flash->KEYR.registerOpStr().c_str()
+		);
+}
+
+void Flash::FLASH_OPTKEYR_VALUES( Flash *const flash, CALLBACK(FLASH_OPTKEYR_CALLBACK) ) {
+	FLASH_OPTKEYR_CALLBACK( flash->OPTKEYR.registerPeriph().c_str()
+		, flash->OPTKEYR.registerName().c_str()
+		, flash->OPTKEYR.registerValue()
+		, flash->OPTKEYR.registerOpStr().c_str()
+		);
+}
+
+void Flash::FLASH_SR_VALUES( Flash *const flash, CALLBACK(FLASH_SR_CALLBACK) ) {
+	FLASH_SR_CALLBACK( flash->SR.registerPeriph().c_str()
+		, flash->SR.registerName().c_str()
+		, flash->SR.registerValue()
+		, flash->SR.registerOpStr().c_str()
+		);
+}
+
+void Flash::FLASH_CR_VALUES( Flash *const flash, CALLBACK(FLASH_CR_CALLBACK) ) {
+	FLASH_CR_CALLBACK( flash->CR.registerPeriph().c_str()
+		, flash->CR.registerName().c_str()
+		, flash->CR.registerValue()
+		, flash->CR.registerOpStr().c_str()
+		);
+}
