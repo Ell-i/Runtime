@@ -42,7 +42,7 @@ else
 CC  := g++
 CXX := g++
 LD  := g++ -m32 -march=i386
-LD_SCRIPT := -Xlinker -export-dynamic
+LD_SCRIPT := -Xlinker -T -Xlinker $(LD_LINKER_FILE)
 endif
 AR  := ar
 ELF2HEX := :
@@ -67,9 +67,9 @@ $(eval LIBS := \
 #Currently, the support is added for Linux only.
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-EXTRA_CFLAGS += -I/usr/include/python2.7/ -I/lib/i386-linux-gnu/
+EXTRA_CFLAGS += -I/opt/pym32/include/python2.7/ -I/lib/i386-linux-gnu/
 EXTRA_CFLAGS += -pthread -fno-strict-aliasing -fwrapv -Wall -fPIC
-LIBS        += -L/usr/lib/python2.7/ -L/lib/i386-linux-gnu/ -L/lib32 -L/usr/lib32
+LIBS        += -L/opt/pym32/lib/ -L/lib/i386-linux-gnu/ -L/lib32 -L/usr/lib32
 LIBS        += -lpython2.7 -lpthread -ldl -lutil -lm
 endif
 

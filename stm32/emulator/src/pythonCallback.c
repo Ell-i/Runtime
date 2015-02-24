@@ -1,4 +1,4 @@
-#include </usr/include/python2.7/Python.h>
+#include </opt/pym32/include/python2.7/Python.h>
 
 static PyObject *my_callback = NULL;
 
