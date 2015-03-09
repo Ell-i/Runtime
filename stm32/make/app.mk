@@ -78,6 +78,7 @@ clean::
 	rm -f $(PRE_OBJS)
 	rm -f $(POST_OBJS)
 	rm -f lib$(APP).so
+	rm -f pythonCallback.so
 
 $(APP):	$(APP_OBJS) libsystem_$(VARIANT).a $(LIBES_LIBS) $(PRE_OBJS) $(POST_OBJS)
 	$(LD) $(LDFLAGS) -o $@ $(PRE_OBJS) $(APP_OBJS) $(LIBS) $(POST_OBJS)
