@@ -67,10 +67,12 @@ $(eval LIBS := \
 #Currently, the support is added for Linux only.
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-EXTRA_CFLAGS += -I/opt/pym32/include/python2.7/ -I/lib/i386-linux-gnu/
+#EXTRA_CFLAGS += -I/opt/pym32/include/python2.7/ -I/lib/i386-linux-gnu/
+EXTRA_CFLAGS += $(shell pkg-config --cflags python2)
 EXTRA_CFLAGS += -pthread -fno-strict-aliasing -fwrapv -Wall -fPIC
-LIBS        += -L/opt/pym32/lib/ -L/lib/i386-linux-gnu/ -L/lib32 -L/usr/lib32
-LIBS        += -lpython2.7 -lpthread -ldl -lutil -lm
+LIBS        += $(shell pkg-config --libs python2) -lpthread -ldl -lutil -lm
+#LIBS        += -L/opt/pym32/lib/ -L/lib/i386-linux-gnu/ -L/lib32 -L/usr/lib32
+#LIBS        += -lpython2.7 -lpthread -ldl -lutil -lm
 endif
 
 CFLAGS   += $(EXTRA_CFLAGS)
