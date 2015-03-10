@@ -17,23 +17,46 @@
  * along with ELL-i software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @author Pekka Nikander <pekka.nikander@ell-i.org>  2014
+ */
+
 #ifndef _SCB_H_
 #define _SCB_H_
 
 #include <Register.h>
+#if defined(__STM32F407__) || defined(__STM32F334__)
+# include <Register_SCB_CPUID.h>
+# include <Register_SCB_ICSR.h>
+# include <Register_SCB_VTOR.h>
+#endif
 
 class SystemControlBlock {
 public:
 #if defined(__STM32F407__) || defined(__STM32F334__)
     /* XXX Set to reset value */
-    DEFINE_REGISTER(32, SCB, CPUID,    0x410FC241);
-    DEFINE_REGISTER(32, SCB, ICSR,     0x00000000);
-    DEFINE_REGISTER(32, SCB, VTOR,     0x00000000);
+    //DEFINE_REGISTER(32, SCB, CPUID,    0x410FC241);
+    //DEFINE_REGISTER(32, SCB, ICSR,     0x00000000);
+    //DEFINE_REGISTER(32, SCB, VTOR,     0x00000000);
+    Register_SCB_CPUID CPUID;
+    Register_SCB_ICSR ICSR;
+    Register_SCB_VTOR VTOR;
 #endif
 protected:
-    SystemControlBlock() {}
+    SystemControlBlock()
+#if defined(__STM32F407__) || defined(__STM32F334__)
+    	: CPUID(0x410FC241)
+    	, ICSR(0x00000000)
+    	, VTOR(0x00000000)
+#endif
+    	{}
 public:
     static SystemControlBlock SCB;
+#if defined(__STM32F407__) || defined(__STM32F334__)
+    void SCB_CPUID_VALUES( SystemControlBlock *const scb, CALLBACK(SCB_CPUID_CALLBACK) );
+    void SCB_ICSR_VALUES( SystemControlBlock *const scb, CALLBACK(SCB_ICSR_CALLBACK) );
+    void SCB_VTOR_VALUES( SystemControlBlock *const scb, CALLBACK(SCB_VTOR_CALLBACK) );
+#endif
 };
 
 SystemControlBlock *const SCB = &SystemControlBlock::SCB;
